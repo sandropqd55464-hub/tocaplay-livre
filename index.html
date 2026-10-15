@@ -148,9 +148,21 @@ h2{font-size:18px;font-weight:700;margin:20px 0 10px}
 /* Barra inferior */
 nav{position:fixed;left:0;right:0;bottom:0;z-index:25;display:flex;justify-content:space-around;
   background:rgba(11,20,16,.96);backdrop-filter:blur(10px);border-top:1px solid var(--line);padding:6px 0 calc(6px + var(--safe-b))}
-nav button{display:flex;flex-direction:column;align-items:center;gap:3px;font-size:11.5px;color:var(--muted);padding:4px 8px;font-weight:500;flex:1}
-nav button.on{color:var(--green)}
-nav svg{width:24px;height:24px}
+nav button{display:flex;flex-direction:column;align-items:center;gap:3px;font-size:11.5px;padding:4px 8px;font-weight:700;flex:1;
+  color:#e6b422;letter-spacing:.2px}
+nav button span{background:linear-gradient(100deg,#b8860b 0%,#ffd700 30%,#fff3b0 45%,#ffd700 60%,#b8860b 100%);background-size:250% 100%;
+  -webkit-background-clip:text;background-clip:text;color:transparent;animation:goldText 3.2s linear infinite}
+nav svg{width:25px;height:25px;stroke:#f2c230;filter:drop-shadow(0 0 3px rgba(255,200,40,.45));animation:goldGlow 2.6s ease-in-out infinite}
+nav button:nth-child(2) svg,nav button:nth-child(2) span{animation-delay:.25s}
+nav button:nth-child(3) svg,nav button:nth-child(3) span{animation-delay:.5s}
+nav button:nth-child(4) svg,nav button:nth-child(4) span{animation-delay:.75s}
+nav button:nth-child(5) svg,nav button:nth-child(5) span{animation-delay:1s}
+nav button.on svg{stroke:#ffe066;fill:rgba(255,215,0,.18);filter:drop-shadow(0 0 7px rgba(255,215,0,.85));transform:translateY(-1px) scale(1.08)}
+nav button.on{position:relative}
+nav button.on::after{content:'';position:absolute;bottom:-2px;width:26px;height:3px;border-radius:3px;background:linear-gradient(90deg,#b8860b,#ffd700,#b8860b);box-shadow:0 0 8px rgba(255,215,0,.8)}
+@keyframes goldText{to{background-position:-250% 0}}
+@keyframes goldGlow{0%,100%{filter:drop-shadow(0 0 2px rgba(255,200,40,.35))}50%{filter:drop-shadow(0 0 7px rgba(255,215,0,.85))}}
+@media (prefers-reduced-motion:reduce){nav svg,nav button span{animation:none}}
 
 /* Player completo */
 .sheet{position:fixed;inset:0;z-index:50;background:var(--bg);display:flex;flex-direction:column;
@@ -186,7 +198,11 @@ nav svg{width:24px;height:24px}
 .tv-card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:14px;text-align:left;display:flex;flex-direction:column;gap:10px}
 .tv-card.on{border-color:var(--green);background:var(--card2)}
 .tv-logo{width:46px;height:46px;border-radius:12px;display:grid;place-items:center;font-weight:800;color:#fff;background:linear-gradient(135deg,#ff2d2d,#b80000)}
+.tv-logo{position:relative;overflow:hidden}
+.tv-logo img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;border-radius:inherit}
 .tv-card b{font-size:15px}.tv-card small{color:var(--muted);font-size:12.5px;line-height:1.35}
+.tv-now{font-size:13px;color:var(--muted);margin-top:8px}
+.tv-bar .pill.on{background:var(--green)!important;color:#06120c}
 .tv-note{color:var(--muted);font-size:13px;line-height:1.45;margin-top:14px}
 .form select{background:var(--bg2);border:1px solid var(--line);border-radius:12px;padding:13px 14px;font-size:16px;outline:0}
 
@@ -317,18 +333,21 @@ nav svg{width:24px;height:24px}
 
   <!-- FAVORITOS -->
   <section class="view" id="v-tv">
-    <h2>TV ao vivo</h2>
+    <h2>TV e vídeos</h2>
     <div id="tvPlayerBox" hidden>
       <div class="tv-player" id="tvPlayer"></div>
+      <div class="tv-now" id="tvNow"></div>
       <div class="tv-bar">
+        <button class="pill" id="tvModeVid">▶ Vídeos do canal</button>
+        <button class="pill" id="tvModeLive">🔴 Ao vivo</button>
         <button class="pill wa" id="tvWa">WhatsApp</button>
-        <button class="pill" id="tvOpenYt">Abrir no YouTube</button>
         <button class="pill" id="tvClose">Fechar vídeo</button>
       </div>
     </div>
+    <div class="chips" id="tvCats" style="margin-top:6px"></div>
     <h2 id="tvListTitle">Canais</h2>
     <div class="tv-grid" id="tvGrid"></div>
-    <p class="tv-note">Os vídeos tocam pelo player oficial do YouTube. Se o canal não estiver ao vivo, aparece o aviso do próprio YouTube. Algumas transmissões (como jogos) só podem ser vistas no YouTube: nesse caso, toque em <b>Abrir no YouTube</b>.</p>
+    <p class="tv-note">Tudo toca aqui dentro, pelo player oficial do YouTube. Se um vídeo aparecer como indisponível, é porque o dono do canal bloqueou para outros sites: toque em <b>⏭</b> no player para ir ao próximo vídeo.</p>
   </section>
 
   <section class="view" id="v-favs">
@@ -374,11 +393,11 @@ nav svg{width:24px;height:24px}
 
 <!-- BARRA INFERIOR -->
 <nav>
-  <button class="on" data-view="home"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 10.5 12 3l9 7.5V20a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/></svg>Início</button>
-  <button data-view="search"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>Buscar</button>
-  <button data-view="tv"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="6" width="18" height="13" rx="2"/><path d="m8 2 4 4 4-4"/></svg>TV</button>
-  <button data-view="favs"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m12 3 2.8 5.7 6.2.9-4.5 4.4 1 6.2-5.5-2.9-5.5 2.9 1-6.2L3 9.6l6.2-.9z"/></svg>Favoritas</button>
-  <button data-view="account"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg>Conta</button>
+  <button class="on" data-view="home"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 10.5 12 3l9 7.5V20a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/></svg><span>Início</span></button>
+  <button data-view="search"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg><span>Buscar</span></button>
+  <button data-view="tv"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="6" width="18" height="13" rx="2"/><path d="m8 2 4 4 4-4"/></svg><span>TV</span></button>
+  <button data-view="favs"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m12 3 2.8 5.7 6.2.9-4.5 4.4 1 6.2-5.5-2.9-5.5 2.9 1-6.2L3 9.6l6.2-.9z"/></svg><span>Favoritas</span></button>
+  <button data-view="account"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg><span>Conta</span></button>
 </nav>
 
 <!-- PLAYER COMPLETO -->
@@ -1007,35 +1026,54 @@ document.addEventListener('click', e=>{
   const o=e.target.closest('[data-plopen]'); if(o) openPlaylist(o.dataset.plopen);
 });
 
-/* ---------- TV ao vivo (YouTube) ---------- */
+/* ---------- TV e vídeos (YouTube) ---------- */
 const TV_CHANNELS = (typeof CONFIG!=='undefined' && CONFIG.TV_CHANNELS) || [];
-let tvCurrent = null;
+const TV_CATS = ['Todos', ...[...new Set(TV_CHANNELS.map(c=>c.cat).filter(Boolean))]];
+let tvCurrent = null, tvMode = 'videos', tvCat = 'Todos';
+function tvAvatar(c){
+  const m = (c.url||'').match(/youtube\.com\/@([\w.-]+)/);
+  const src = c.avatar || (m ? `https://unavatar.io/youtube/${m[1]}?fallback=false` : '');
+  return src ? `<img src="${esc(src)}" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="this.remove()">` : '';
+}
 function renderTv(){
-  $('#tvGrid').innerHTML = TV_CHANNELS.length ? TV_CHANNELS.map((c,i)=>`
+  $('#tvCats').innerHTML = TV_CATS.length>2 ? TV_CATS.map(c=>`<button class="chip ${c===tvCat?'on':''}" data-tvcat="${esc(c)}">${esc(c)}</button>`).join('') : '';
+  const list = TV_CHANNELS.map((c,i)=>({c,i})).filter(x=>tvCat==='Todos'||x.c.cat===tvCat);
+  $('#tvGrid').innerHTML = list.length ? list.map(({c,i})=>`
     <button class="tv-card ${tvCurrent===c?'on':''}" data-tv="${i}">
-      <div class="tv-logo" style="${c.color?`background:${esc(c.color)}`:''}">${esc(c.short||initials(c.name))}</div>
-      <div><b>${esc(c.name)}</b><br><small>${esc(c.desc||'Ao vivo no YouTube')}</small></div>
+      <div class="tv-logo" style="${c.color?`background:${esc(c.color)}`:''}">${esc(c.short||initials(c.name))}${tvAvatar(c)}</div>
+      <div><b>${esc(c.name)}</b><br><small>${esc(c.desc||c.cat||'YouTube')}</small></div>
     </button>`).join('') : emptyBox('Nenhum canal','Adicione canais no config.js.');
 }
-function openTv(c){
-  tvCurrent = c;
+function tvSrc(c, mode){
+  const base='autoplay=1&playsinline=1&rel=0&modestbranding=1';
+  if(c.videoId) return `https://www.youtube.com/embed/${encodeURIComponent(c.videoId)}?${base}`;
+  if(c.playlist) return `https://www.youtube.com/embed/videoseries?list=${encodeURIComponent(c.playlist)}&${base}`;
+  if(mode==='live') return `https://www.youtube.com/embed/live_stream?channel=${encodeURIComponent(c.channelId)}&${base}`;
+  // vídeos enviados pelo canal: a playlist "UU..." sempre existe e roda dentro do app
+  return `https://www.youtube.com/embed/videoseries?list=${encodeURIComponent('UU'+c.channelId.slice(2))}&${base}`;
+}
+function openTv(c, mode){
+  tvCurrent = c; tvMode = mode || (c.live==='first' ? 'live' : 'videos');
   if(!audio.paused){ audio.pause(); toast('Rádio pausada para ver a TV'); }
-  const src = c.videoId
-    ? `https://www.youtube.com/embed/${encodeURIComponent(c.videoId)}?autoplay=1&playsinline=1&rel=0`
-    : `https://www.youtube.com/embed/live_stream?channel=${encodeURIComponent(c.channelId)}&autoplay=1&playsinline=1&rel=0`;
-  $('#tvPlayer').innerHTML = `<iframe src="${src}" title="${esc(c.name)}" allow="autoplay; encrypted-media; picture-in-picture; fullscreen" allowfullscreen referrerpolicy="strict-origin-when-cross-origin"></iframe>`;
+  stopSong();
+  $('#tvPlayer').innerHTML = `<iframe src="${tvSrc(c,tvMode)}" title="${esc(c.name)}" allow="autoplay; encrypted-media; picture-in-picture; fullscreen" allowfullscreen referrerpolicy="strict-origin-when-cross-origin"></iframe>`;
   $('#tvPlayerBox').hidden = false; $('#tvListTitle').textContent='Outros canais';
+  $('#tvNow').innerHTML = `<b style="color:var(--txt)">${esc(c.name)}</b> · ${tvMode==='live'?'🔴 ao vivo (só funciona quando o canal está transmitindo)':'últimos vídeos do canal'}`;
+  $('#tvModeLive').hidden = !c.live || !c.channelId; $('#tvModeVid').hidden = !c.live || !c.channelId;
+  $('#tvModeLive').classList.toggle('on', tvMode==='live'); $('#tvModeVid').classList.toggle('on', tvMode!=='live');
   renderTv(); scrollTo({top:0,behavior:'smooth'});
-  if(sb) sb.from('plays').insert({station_id:'tv:'+(c.channelId||c.videoId), station_name:'📺 '+c.name}).then(()=>{});
+  if(sb) sb.from('plays').insert({station_id:'tv:'+(c.channelId||c.videoId||c.playlist), station_name:'📺 '+c.name}).then(()=>{});
 }
 function stopTv(){
   if(!tvCurrent) return;
   tvCurrent=null; $('#tvPlayer').innerHTML=''; $('#tvPlayerBox').hidden=true; $('#tvListTitle').textContent='Canais'; renderTv();
 }
 $('#tvGrid').addEventListener('click', e=>{ const b=e.target.closest('[data-tv]'); if(b) openTv(TV_CHANNELS[+b.dataset.tv]); });
+$('#tvCats').addEventListener('click', e=>{ const b=e.target.closest('[data-tvcat]'); if(b){ tvCat=b.dataset.tvcat; renderTv(); } });
 $('#tvClose').onclick = stopTv;
-$('#tvOpenYt').onclick = ()=>{ if(!tvCurrent) return; window.open(tvCurrent.url || `https://www.youtube.com/channel/${tvCurrent.channelId}/live`, '_blank'); };
-$('#tvWa').onclick = ()=>tvCurrent && openWhatsApp(`📺 Estou assistindo *${tvCurrent.name}* ao vivo no TocaPlay Livre! ${SITE}`);
+$('#tvModeLive').onclick = ()=>tvCurrent && openTv(tvCurrent,'live');
+$('#tvModeVid').onclick = ()=>tvCurrent && openTv(tvCurrent,'videos');
+$('#tvWa').onclick = ()=>tvCurrent && openWhatsApp(`📺 Estou assistindo *${tvCurrent.name}* no TocaPlay Livre! ${SITE}`);
 renderTv();
 
 /* ---------- Navegação ---------- */

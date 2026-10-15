@@ -70,6 +70,14 @@ Abra o site no Chrome do Android → menu ⋮ → **Instalar app** (ou **Adicion
 - **Compartilhar:** o botão **Compartilhar** da playlist gera um link; quem abrir recebe a playlist pronta para salvar.
 - As playlists ficam salvas no aparelho de cada pessoa.
 
+## TV e vídeos
+- Os canais ficam no `config.js` (lista `TV_CHANNELS`), separados por categoria: Esportes, Sertanejo, Gospel, Pregações, Funk e Urbana, Pagode, Infantil e Notícias.
+- A **foto de cada canal** é buscada pelo endereço @ do canal (serviço gratuito unavatar.io). Se não carregar, aparecem as iniciais. Para fixar uma foto, coloque `avatar: 'link-da-imagem'` no canal.
+- **Vídeos novos entram sozinhos:** o app sempre mostra os últimos vídeos publicados pelo canal.
+- Ao tocar num canal, abrem os **últimos vídeos do canal dentro do app**. Canais com o botão **🔴 Ao vivo** também mostram a transmissão quando estão ao vivo; os de notícias já abrem no ao vivo.
+- Se um vídeo aparecer como indisponível, o dono do canal bloqueou a exibição em outros sites; é só pular para o próximo no próprio player.
+- Canais aguardando ID estão no `config.js` como linhas comentadas (`//`).
+
 ## No carro
 - Conecte o celular ao carro por **Bluetooth** ou cabo e toque a rádio pelo TocaPlay.
 - O nome da rádio aparece na tela do carro, e os botões **⏮ ⏭ do volante** trocam de rádio (na lista ou na playlist que estiver tocando).
@@ -81,4 +89,4 @@ Abra o site no Chrome do Android → menu ⋮ → **Instalar app** (ou **Adicion
 - **Rádio fora do ar:** algumas emissoras mudam o link; o app avisa e é só escolher outra.
 - **Tela bloqueada:** no Android a rádio continua tocando com controles na notificação. No iPhone, ela também toca com a tela bloqueada se o app foi aberto pela tela inicial.
 - **Mais tocadas no seu app:** rode no SQL Editor a consulta comentada no final do `supabase.sql`.
-- **Atualizou o `index.html` e o celular mostra a versão velha?** No `sw.js`, aumente o número em `tocaplay-v7` (ex.: `tocaplay-v8`).
+- **Atualizou o `index.html` e o celular mostra a versão velha?** No `sw.js`, aumente o número em `tocaplay-v10` (ex.: `tocaplay-v11`).
