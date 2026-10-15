@@ -55,5 +55,5 @@ const CONFIG = {
   ADSENSE_SLOT: '',     // opcional: ID de um bloco fixo; os Anúncios automáticos funcionam sem isso
 
   // E-mail de contato mostrado nas páginas Sobre e Privacidade (deixe '' para não mostrar)
-  CONTACT_EMAIL: '',
+  CONTACT_EMAIL: 'sandropqd55464@gmail.com',
 };
