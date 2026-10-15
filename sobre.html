@@ -57,7 +57,7 @@
 </main>
 <script>
   // Mostra o e-mail de contato definido no config.js
-  (function(){ var e=(window.CONFIG&&CONFIG.CONTACT_EMAIL)||''; document.querySelectorAll('[data-contact]').forEach(function(el){
+  (function(){ var e=(typeof CONFIG!=='undefined'&&CONFIG.CONTACT_EMAIL)||''; document.querySelectorAll('[data-contact]').forEach(function(el){
     if(e){ el.innerHTML='E-mail: <a href="mailto:'+e+'">'+e+'</a>'; } else { el.textContent='Use o botão Compartilhar do app para falar com a gente pelo WhatsApp.'; } }); })();
 </script>
 </body>

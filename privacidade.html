@@ -48,7 +48,7 @@
   <p style="margin-top:30px"><a href="sobre.html">Sobre</a> · <a href="como-usar.html">Como usar</a> · <a href="radios-por-estado.html">Rádios por estado</a></p>
 </main>
 <script>
-  (function(){ var e=(window.CONFIG&&CONFIG.CONTACT_EMAIL)||''; document.querySelectorAll('[data-contact]').forEach(function(el){
+  (function(){ var e=(typeof CONFIG!=='undefined'&&CONFIG.CONTACT_EMAIL)||''; document.querySelectorAll('[data-contact]').forEach(function(el){
     if(e){ el.innerHTML='E-mail: <a href="mailto:'+e+'">'+e+'</a>'; } else { el.textContent='Use o botão Compartilhar do app para falar com a gente pelo WhatsApp.'; } }); })();
 </script>
 </body>
