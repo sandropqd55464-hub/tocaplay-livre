@@ -14,6 +14,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="config.js"></script>
 <style>
 :root{
   --bg:#0b1410; --bg2:#111d17; --card:#16251d; --card2:#1d3026; --line:#25392e;
@@ -147,6 +148,12 @@ nav svg{width:24px;height:24px}
 .p-actions{display:flex;justify-content:center;gap:12px;margin-top:22px;flex-wrap:wrap}
 .pill{display:flex;align-items:center;gap:6px;padding:10px 14px;border-radius:999px;background:var(--card);font-size:13.5px;font-weight:600}
 .pill.on{color:var(--yellow)}
+.pill.wa,.btn.wa{background:#25d366;color:#05210f}
+.btn.wa{display:flex;align-items:center;justify-content:center;gap:8px}
+.tabs2{display:flex;background:var(--bg2);border-radius:12px;padding:4px;margin-top:14px}
+.tabs2 button{flex:1;padding:10px;border-radius:9px;font-weight:600;color:var(--muted)}
+.tabs2 button.on{background:var(--card2);color:var(--txt)}
+.form select{background:var(--bg2);border:1px solid var(--line);border-radius:12px;padding:13px 14px;font-size:16px;outline:0}
 
 /* Diálogo do timer */
 .modal{position:fixed;inset:0;z-index:60;background:rgba(0,0,0,.6);display:none;align-items:flex-end;justify-content:center}
@@ -255,6 +262,7 @@ nav svg{width:24px;height:24px}
     <button class="icon-btn" id="pFav" aria-label="Favoritar"></button>
   </div>
   <div class="p-actions">
+    <button class="pill wa" id="waBtn"><svg width="17" height="17" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2Zm0 18.2a8.2 8.2 0 0 1-4.2-1.2l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2Zm4.5-6.1c-.2-.1-1.5-.7-1.7-.8s-.4-.1-.6.1l-.8 1c-.1.2-.3.2-.5.1a6.7 6.7 0 0 1-3.3-2.9c-.2-.4.2-.4.7-1.3.1-.2 0-.3 0-.5l-.8-1.8c-.2-.5-.4-.4-.6-.4h-.5a1 1 0 0 0-.7.3 3 3 0 0 0-.9 2.2 5.2 5.2 0 0 0 1.1 2.7 11.8 11.8 0 0 0 4.5 4c1.7.7 2.3.8 3.2.6a2.7 2.7 0 0 0 1.7-1.2 2.2 2.2 0 0 0 .2-1.2c-.1-.1-.3-.2-.5-.3Z"/></svg>WhatsApp</button>
     <button class="pill" id="sleepBtn"><svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8Z"/></svg><span id="sleepTxt">Desligar em…</span></button>
     <button class="pill" id="volBtn"><svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M11 5 6 9H3v6h3l5 4zM15.5 8.5a5 5 0 0 1 0 7"/></svg><span id="pQuality"></span></button>
   </div>
@@ -274,17 +282,7 @@ nav svg{width:24px;height:24px}
 <div class="toast" id="toast"></div>
 
 <script>
-/* =========================================================
-   CONFIGURAÇÃO — preencha com os dados do seu Supabase
-   (Supabase → Project Settings → API). A chave "anon" é pública
-   e pode ficar aqui; a segurança vem das regras RLS do banco.
-   ========================================================= */
-const CONFIG = {
-  SUPABASE_URL: 'COLE_AQUI_A_URL_DO_SUPABASE',      // ex: https://xxxx.supabase.co
-  SUPABASE_ANON_KEY: 'COLE_AQUI_A_ANON_KEY',
-  ADSENSE_CLIENT: '',   // ex: 'ca-pub-1234567890' (deixe vazio até o AdSense aprovar)
-  ADSENSE_SLOT: '',     // ID do bloco de anúncio
-};
+/* Configuração fica em config.js */
 
 /* ---------- utilidades ---------- */
 const $ = s => document.querySelector(s);
@@ -535,40 +533,51 @@ function renderFavs(){
 }
 
 /* Conta */
+let authMode='signup';
+const inviteCard = `<div class="card"><p><b style="color:var(--txt)">Gostou do TocaPlay?</b> Chame os amigos para ouvir também.</p>
+  <div class="form"><button class="btn wa" data-invite>Indicar no WhatsApp</button></div></div>`;
 function renderAccount(){
   const box=$('#accountBox'), av=$('#avatarBtn');
-  av.textContent = user ? (user.email||'?')[0].toUpperCase() : '?';
+  const nome = user?.user_metadata?.name || '';
+  av.textContent = user ? (nome||user.email||'?')[0].toUpperCase() : '?';
   if(!sb){
-    box.innerHTML = `<div class="card"><p><b style="color:var(--txt)">Modo sem conta.</b> Suas favoritas ficam salvas neste aparelho. O login aparece aqui assim que o Supabase for configurado.</p></div>`;
+    box.innerHTML = `<div class="card"><p><b style="color:var(--txt)">Modo sem conta.</b> Suas favoritas ficam salvas neste aparelho. O cadastro aparece aqui assim que o Supabase for configurado.</p></div>` + inviteCard;
     return;
   }
   if(user){
-    box.innerHTML = `<div class="card"><p>Conectado como</p><div style="font-weight:700;font-size:17px;margin:4px 0 12px;word-break:break-all">${esc(user.email)}</div>
-      <p>Suas favoritas estão sincronizadas em todos os aparelhos.</p><div class="form"><button class="btn ghost" id="logoutBtn">Sair da conta</button></div></div>`;
+    box.innerHTML = `<div class="card"><p>Olá,</p><div style="font-weight:800;font-size:20px;margin:2px 0 4px">${esc(nome||'ouvinte')} 👋</div>
+      <p style="word-break:break-all">${esc(user.email)}</p>
+      <p style="margin-top:10px">Suas favoritas estão sincronizadas em todos os aparelhos.</p><div class="form"><button class="btn ghost" id="logoutBtn">Sair da conta</button></div></div>` + inviteCard;
     $('#logoutBtn').onclick = async()=>{ await sb.auth.signOut(); toast('Você saiu da conta'); };
     return;
   }
-  box.innerHTML = `<div class="card"><p>Entre para guardar suas favoritas na nuvem e ouvir em qualquer aparelho. <b style="color:var(--txt)">É opcional</b> — o app funciona sem conta.</p>
+  const isUp = authMode==='signup';
+  box.innerHTML = `<div class="card"><p>Cadastre-se grátis para guardar suas favoritas na nuvem e ouvir em qualquer aparelho.</p>
+    <div class="tabs2"><button data-mode="signup" class="${isUp?'on':''}">Criar conta</button><button data-mode="login" class="${isUp?'':'on'}">Já tenho conta</button></div>
     <form class="form" id="authForm">
+      ${isUp?`<input id="nome" placeholder="Seu nome" required autocomplete="name" maxlength="60">
+      <select id="ufCad" required><option value="">Seu estado</option>${STATES.map(s=>`<option>${s}</option>`).join('')}</select>`:''}
       <input type="email" id="email" placeholder="Seu e-mail" required autocomplete="email">
-      <input type="password" id="pass" placeholder="Senha (mín. 6 caracteres)" minlength="6" required autocomplete="current-password">
-      <button class="btn" id="authBtn">Entrar</button>
-      <button type="button" class="btn ghost" id="signupBtn">Criar conta grátis</button>
-      <button type="button" class="link" id="resetBtn" style="margin-top:4px">Esqueci minha senha</button>
-    </form></div>`;
+      <input type="password" id="pass" placeholder="Senha (mín. 6 caracteres)" minlength="6" required autocomplete="${isUp?'new-password':'current-password'}">
+      <button class="btn" id="authBtn">${isUp?'Criar minha conta':'Entrar'}</button>
+      ${isUp?'':'<button type="button" class="link" id="resetBtn" style="margin-top:4px">Esqueci minha senha</button>'}
+    </form></div>` + inviteCard;
+  box.querySelectorAll('[data-mode]').forEach(b=>b.onclick=()=>{ authMode=b.dataset.mode; renderAccount(); });
   const creds = ()=>({email:$('#email').value.trim(), password:$('#pass').value});
   $('#authForm').onsubmit = async e=>{
-    e.preventDefault(); const b=$('#authBtn'); b.disabled=true; b.textContent='Entrando…';
-    const {error} = await sb.auth.signInWithPassword(creds());
-    b.disabled=false; b.textContent='Entrar';
-    if(error) toast(error.message.includes('Invalid')?'E-mail ou senha incorretos':'Erro: '+error.message);
+    e.preventDefault(); const b=$('#authBtn'); b.disabled=true; b.textContent='Aguarde…';
+    if(isUp){
+      const {data,error} = await sb.auth.signUp({...creds(), options:{emailRedirectTo:location.origin, data:{name:$('#nome').value.trim(), state:$('#ufCad').value}}});
+      b.disabled=false; b.textContent='Criar minha conta';
+      if(error) return toast(error.message.includes('registered')?'Este e-mail já tem conta. Toque em "Já tenho conta"':'Erro: '+error.message);
+      toast(data.session ? 'Conta criada! Bem-vindo 🎉' : 'Quase lá! Confirme pelo link enviado ao seu e-mail');
+    }else{
+      const {error} = await sb.auth.signInWithPassword(creds());
+      b.disabled=false; b.textContent='Entrar';
+      if(error) toast(error.message.includes('Invalid')?'E-mail ou senha incorretos':error.message.includes('confirm')?'Confirme seu e-mail antes de entrar':'Erro: '+error.message);
+    }
   };
-  $('#signupBtn').onclick = async()=>{
-    const c=creds(); if(!$('#authForm').reportValidity()) return;
-    const {data,error} = await sb.auth.signUp({...c, options:{emailRedirectTo:location.origin}});
-    if(error) return toast('Erro: '+error.message);
-    toast(data.session ? 'Conta criada! 🎉' : 'Enviamos um link de confirmação para seu e-mail');
-  };
+  if(isUp) return;
   $('#resetBtn').onclick = async()=>{
     const email=$('#email').value.trim(); if(!email) return toast('Digite seu e-mail primeiro');
     const {error} = await sb.auth.resetPasswordForEmail(email,{redirectTo:location.origin});
@@ -605,6 +614,10 @@ $('#pFav').onclick = ()=>current && toggleFav(current);
 $('#sleepBtn').onclick = ()=>$('#sleepModal').classList.add('open');
 $('#sleepModal').onclick = e=>{ const b=e.target.closest('[data-min]'); if(b) setSleep(+b.dataset.min); $('#sleepModal').classList.remove('open'); };
 $('#volBtn').onclick = ()=>toast('Use o volume do seu aparelho');
+const SITE = location.origin;
+function openWhatsApp(text){ window.open('https://wa.me/?text='+encodeURIComponent(text), '_blank'); }
+$('#waBtn').onclick = ()=>openWhatsApp(`📻 Estou ouvindo *${current?.name||'rádio'}* ao vivo no TocaPlay Livre! Rádios do Brasil grátis: ${SITE}`);
+document.addEventListener('click', e=>{ if(e.target.closest('[data-invite]')) openWhatsApp(`📻 Conhece o *TocaPlay Livre*? Milhares de rádios do Brasil ao vivo, grátis, direto no celular: ${SITE}`); });
 $('#shareBtn').onclick = async()=>{
   const text = `Estou ouvindo ${current?.name} no TocaPlay Livre 📻`;
   try{ if(navigator.share) await navigator.share({title:'TocaPlay Livre', text, url:location.origin}); else { await navigator.clipboard.writeText(`${text} ${location.origin}`); toast('Link copiado!'); } }catch{}
@@ -620,6 +633,16 @@ if(CONFIG.ADSENSE_CLIENT && CONFIG.ADSENSE_SLOT){
 
 /* ---------- Início do app ---------- */
 renderChips(); renderFavs(); renderAccount(); loadHome(); updatePlayer();
+
+/* Contagem de acessos: 1 registro por aparelho por dia (anônimo) */
+(function logVisit(){
+  if(!sb) return;
+  let dev = store.get('tp_dev', null);
+  if(!dev){ dev = (crypto.randomUUID ? crypto.randomUUID() : String(Math.random()).slice(2)+Date.now()); store.set('tp_dev', dev); }
+  const today = new Date().toISOString().slice(0,10);
+  if(store.get('tp_visit_day','')===today) return;
+  sb.from('visits').insert({device_id:dev}).then(({error})=>{ if(!error) store.set('tp_visit_day', today); });
+})();
 if('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js').catch(()=>{});
 </script>
 </body>

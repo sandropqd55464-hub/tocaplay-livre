@@ -1,0 +1,144 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Painel TocaPlay</title>
+<link rel="icon" href="icon.svg" type="image/svg+xml">
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="config.js"></script>
+<style>
+:root{--bg:#0b1410;--card:#16251d;--card2:#1d3026;--line:#25392e;--txt:#eef5f0;--muted:#8fa89a;--green:#19c37d;--yellow:#ffd23f}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--txt);font-family:'Outfit',system-ui,sans-serif;padding:16px;min-height:100vh}
+main{max-width:1000px;margin:0 auto}
+header{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;gap:10px}
+.logo{display:flex;align-items:center;gap:10px;font-weight:800;font-size:20px}
+.logo img{width:40px;height:40px;border-radius:11px}
+.logo small{display:block;font-size:12px;color:var(--muted);font-weight:600}
+button{font:inherit;cursor:pointer;border:0}
+.btn{background:var(--green);color:#06120c;font-weight:700;padding:12px 16px;border-radius:12px}
+.btn.ghost{background:transparent;color:var(--txt);border:1px solid var(--line);padding:9px 14px}
+.login{max-width:380px;margin:12vh auto 0;background:var(--card);border:1px solid var(--line);border-radius:20px;padding:22px}
+.login h1{font-size:20px;margin-bottom:6px}.login p{color:var(--muted);font-size:14px;margin-bottom:14px}
+.login input{width:100%;background:#111d17;border:1px solid var(--line);color:var(--txt);border-radius:12px;padding:13px;font-size:16px;margin-bottom:10px;font-family:inherit}
+.login .btn{width:100%}
+.err{color:#ff7b7b;font-size:14px;margin-top:10px;min-height:20px}
+.tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px}
+.tile{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:14px}
+.tile .n{font-size:30px;font-weight:800;margin-top:4px}
+.tile .l{font-size:13px;color:var(--muted);font-weight:600}
+.tile.hl{background:linear-gradient(135deg,#1c4a33,#16251d)}
+.tile.hl .n{color:var(--yellow)}
+.box{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:16px;margin-top:12px}
+.box h2{font-size:16px;margin-bottom:12px}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+@media(max-width:700px){.grid2{grid-template-columns:1fr}}
+.chart{display:flex;align-items:flex-end;gap:3px;height:150px;border-bottom:1px solid var(--line);padding-top:16px}
+.bar{flex:1;background:var(--green);border-radius:4px 4px 0 0;min-height:2px;position:relative}
+.bar:hover{background:var(--yellow)}
+.bar span{position:absolute;bottom:100%;left:50%;transform:translateX(-50%);font-size:10px;color:var(--muted);display:none;white-space:nowrap}
+.bar:hover span{display:block}
+.axis{display:flex;justify-content:space-between;font-size:11px;color:var(--muted);margin-top:4px}
+.rank{list-style:none}
+.rank li{display:flex;justify-content:space-between;gap:10px;padding:8px 0;border-bottom:1px solid var(--line);font-size:14px}
+.rank li:last-child{border:0}.rank b{color:var(--yellow)}
+table{width:100%;border-collapse:collapse;font-size:14px}
+th{text-align:left;color:var(--muted);font-weight:600;padding:8px 6px;border-bottom:1px solid var(--line)}
+td{padding:9px 6px;border-bottom:1px solid var(--line);word-break:break-all}
+.scroll{overflow-x:auto}
+.muted{color:var(--muted);font-size:13px}
+.empty{color:var(--muted);font-size:14px;padding:10px 0}
+</style>
+</head>
+<body>
+<main id="app"></main>
+<script>
+const $=s=>document.querySelector(s);
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const fmt=n=>Number(n||0).toLocaleString('pt-BR');
+const app=$('#app');
+const ready = CONFIG.SUPABASE_URL.startsWith('https://');
+const sb = ready ? supabase.createClient(CONFIG.SUPABASE_URL, CONFIG.SUPABASE_ANON_KEY) : null;
+
+function head(withLogout){
+  return `<header><div class="logo"><img src="icon.svg" alt=""><div>Painel TocaPlay<small>Só você vê esta página</small></div></div>
+    ${withLogout?'<div style="display:flex;gap:8px"><button class="btn ghost" id="reload">Atualizar</button><button class="btn ghost" id="out">Sair</button></div>':''}</header>`;
+}
+
+function loginView(msg=''){
+  app.innerHTML = `<div class="login"><h1>🔒 Painel do dono</h1>
+    <p>Entre com o mesmo e-mail e senha da sua conta no TocaPlay.</p>
+    <form id="f"><input type="email" id="e" placeholder="E-mail" required autocomplete="email">
+    <input type="password" id="p" placeholder="Senha" required autocomplete="current-password">
+    <button class="btn" id="b">Entrar</button></form><div class="err" id="err">${esc(msg)}</div></div>`;
+  $('#f').onsubmit=async ev=>{
+    ev.preventDefault(); $('#b').textContent='Entrando…';
+    const {error}=await sb.auth.signInWithPassword({email:$('#e').value.trim(),password:$('#p').value});
+    $('#b').textContent='Entrar';
+    if(error) $('#err').textContent='E-mail ou senha incorretos';
+    else load();
+  };
+}
+
+async function load(){
+  app.innerHTML = head(true)+'<p class="muted">Carregando números…</p>';
+  bind();
+  const {data,error}=await sb.rpc('admin_stats');
+  if(error){
+    if(String(error.message).includes('negado')){ await sb.auth.signOut(); return loginView('Esta conta não tem acesso ao painel.'); }
+    app.innerHTML = head(true)+`<div class="box">Erro ao carregar: ${esc(error.message)}<p class="muted" style="margin-top:8px">Confira se você rodou o supabase.sql inteiro no SQL Editor.</p></div>`;
+    return bind();
+  }
+  render(data);
+}
+
+function render(d){
+  // completa os últimos 30 dias (dias sem acesso = 0)
+  const map=Object.fromEntries((d.por_dia||[]).map(x=>[x.dia,x.acessos]));
+  const days=[]; for(let i=29;i>=0;i--){ const dt=new Date(Date.now()-i*864e5); const k=dt.toISOString().slice(0,10); days.push({k,n:map[k]||0,label:dt.toLocaleDateString('pt-BR',{day:'2-digit',month:'2-digit'})}); }
+  const max=Math.max(1,...days.map(x=>x.n));
+  app.innerHTML = head(true) + `
+  <div class="tiles">
+    <div class="tile hl"><div class="l">Usuários cadastrados</div><div class="n">${fmt(d.usuarios_total)}</div></div>
+    <div class="tile"><div class="l">Novos (7 dias)</div><div class="n">${fmt(d.usuarios_7d)}</div></div>
+    <div class="tile hl"><div class="l">Média de acessos/dia</div><div class="n">${fmt(d.media_diaria_30d)}</div></div>
+    <div class="tile"><div class="l">Acessos hoje</div><div class="n">${fmt(d.acessos_hoje)}</div></div>
+    <div class="tile"><div class="l">Pessoas no mês</div><div class="n">${fmt(d.aparelhos_30d)}</div></div>
+    <div class="tile"><div class="l">Rádios tocadas (7 dias)</div><div class="n">${fmt(d.plays_7d)}</div></div>
+  </div>
+  <div class="box"><h2>Acessos por dia (últimos 30 dias)</h2>
+    <div class="chart">${days.map(x=>`<div class="bar" style="height:${(x.n/max*100).toFixed(1)}%"><span>${x.label}: ${x.n}</span></div>`).join('')}</div>
+    <div class="axis"><span>${days[0].label}</span><span>hoje</span></div>
+    <p class="muted" style="margin-top:8px">Cada pessoa (aparelho) conta 1 vez por dia, com ou sem cadastro.</p></div>
+  <div class="grid2">
+    <div class="box"><h2>🔥 Rádios mais ouvidas (7 dias)</h2>${list(d.top_radios,'nome','plays')}</div>
+    <div class="box"><h2>📍 Cadastrados por estado</h2>${list(d.por_estado,'estado','total')}</div>
+  </div>
+  <div class="box"><h2>👥 Últimos cadastros</h2>
+    ${(d.ultimos||[]).length?`<div class="scroll"><table><tr><th>Nome</th><th>E-mail</th><th>Estado</th><th>Data</th></tr>
+    ${d.ultimos.map(u=>`<tr><td>${esc(u.nome||'—')}</td><td>${esc(u.email)}</td><td>${esc(u.estado||'—')}</td><td>${new Date(u.quando).toLocaleDateString('pt-BR')}</td></tr>`).join('')}</table></div>`
+    :'<div class="empty">Ninguém se cadastrou ainda.</div>'}
+  </div>
+  <p class="muted" style="margin:14px 0 30px;text-align:center">Atualizado em ${new Date().toLocaleString('pt-BR')}</p>`;
+  bind();
+}
+function list(arr,k,v){
+  if(!arr||!arr.length) return '<div class="empty">Sem dados ainda.</div>';
+  return `<ol class="rank">${arr.map((x,i)=>`<li><span>${i+1}. ${esc(x[k])}</span><b>${fmt(x[v])}</b></li>`).join('')}</ol>`;
+}
+function bind(){
+  const o=$('#out'); if(o) o.onclick=async()=>{ await sb.auth.signOut(); loginView(); };
+  const r=$('#reload'); if(r) r.onclick=load;
+}
+
+(async()=>{
+  if(!sb){ app.innerHTML = head(false)+'<div class="box">Preencha o arquivo <b>config.js</b> com os dados do Supabase para usar o painel.</div>'; return; }
+  const {data}=await sb.auth.getSession();
+  data.session ? load() : loginView();
+})();
+</script>
+</body>
+</html>
