@@ -6,8 +6,8 @@
    das regras do banco. NUNCA cole a chave "service_role".
    ========================================================= */
 const CONFIG = {
-       SUPABASE_URL: 'https://odyrlnniwwefdwspzlch.supabase.co',
-     SUPABASE_ANON_KEY: 'sb_publishable_vjFTbDiH7vbS047zvZsOCQ_gtbTIIcE',
+  SUPABASE_URL: 'https://odyrlnniwwefdwspzlch.supabase.co',
+  SUPABASE_ANON_KEY: 'sb_publishable_vjFTbDiH7vbS047zvZsOCQ_gtbTIIcE',
 
   // Canais da aba "TV" (YouTube). Tocam os vídeos do canal dentro do app.
   // cat = categoria (vira um botão de filtro). live: true = mostra o botão "Ao vivo";
@@ -50,7 +50,10 @@ const CONFIG = {
     // Ana Castela: o link @anacastela leva a outro canal ("Ana Cordero") — confirmar o link oficial.
   ],
 
-  // Google AdSense — deixe vazio até a conta ser aprovada
-  ADSENSE_CLIENT: '',   // ex: 'ca-pub-1234567890123456'
-  ADSENSE_SLOT: '',     // ID do bloco de anúncio
+  // Google AdSense
+  ADSENSE_CLIENT: 'ca-pub-9758861492456093',
+  ADSENSE_SLOT: '',     // opcional: ID de um bloco fixo; os Anúncios automáticos funcionam sem isso
+
+  // E-mail de contato mostrado nas páginas Sobre e Privacidade (deixe '' para não mostrar)
+  CONTACT_EMAIL: '',
 };

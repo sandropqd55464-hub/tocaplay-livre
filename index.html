@@ -6,6 +6,8 @@
 <title>TocaPlay Livre</title>
 <meta name="description" content="TocaPlay Livre - Rádios do Brasil 100% gratuito">
 <meta name="theme-color" content="#0b1410">
+<meta name="google-adsense-account" content="ca-pub-9758861492456093">
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9758861492456093" crossorigin="anonymous"></script>
 <link rel="manifest" href="manifest.json">
 <link rel="icon" href="icon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="icon-192.png">
@@ -126,6 +128,8 @@ h2{font-size:18px;font-weight:700;margin:20px 0 10px}
 .row span{color:var(--muted)}
 
 /* Anúncio */
+.site-links{display:flex;flex-wrap:wrap;justify-content:center;gap:6px 18px;margin:26px 0 8px;font-size:13.5px}
+.site-links a{color:var(--muted);text-decoration:none}.site-links a:hover{color:var(--yellow)}
 .ad-slot{margin:18px 0;min-height:0}
 .ad-slot:empty{display:none}
 
@@ -312,6 +316,7 @@ nav button.on::after{content:'';position:absolute;bottom:-2px;width:26px;height:
     <div class="ad-slot" id="adHome"></div>
     <div class="list" id="homeList"></div>
     <button class="more" id="homeMore" hidden>Carregar mais rádios</button>
+    <nav class="site-links"><a href="sobre.html">Sobre o TocaPlay</a><a href="como-usar.html">Como usar</a><a href="radios-por-estado.html">Rádios por estado</a><a href="privacidade.html">Privacidade</a></nav>
   </section>
 
   <!-- BUSCAR -->
@@ -378,6 +383,9 @@ nav button.on::after{content:'';position:absolute;bottom:-2px;width:26px;height:
     <div class="card">
       <div class="row">Versão <span>1.0.0</span></div>
       <div class="row">Fonte das rádios <span>radio-browser.info</span></div>
+      <div class="row"><a class="link" href="sobre.html">Sobre o TocaPlay</a></div>
+      <div class="row"><a class="link" href="como-usar.html">Como usar</a></div>
+      <div class="row"><a class="link" href="radios-por-estado.html">Rádios por estado</a></div>
       <div class="row"><a class="link" href="privacidade.html">Política de privacidade</a></div>
     </div>
   </section>
@@ -1165,15 +1173,20 @@ $('#shareBtn').onclick = async()=>{
 };
 
 /* ---------- Anúncios (Google AdSense, opcional) ---------- */
+// O script do AdSense já está no <head>. Um bloco fixo na tela inicial aparece só se ADSENSE_SLOT estiver preenchido.
 if(CONFIG.ADSENSE_CLIENT && CONFIG.ADSENSE_SLOT){
-  const s=document.createElement('script'); s.async=true; s.crossOrigin='anonymous';
-  s.src=`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${CONFIG.ADSENSE_CLIENT}`; document.head.appendChild(s);
   $('#adHome').innerHTML = `<ins class="adsbygoogle" style="display:block" data-ad-client="${CONFIG.ADSENSE_CLIENT}" data-ad-slot="${CONFIG.ADSENSE_SLOT}" data-ad-format="auto" data-full-width-responsive="true"></ins>`;
   (window.adsbygoogle=window.adsbygoogle||[]).push({});
 }
 
 /* ---------- Início do app ---------- */
 renderChips(); renderFavs(); renderAccount(); renderPlaylists(); loadHome(); updatePlayer(); checkImport();
+(function openStateFromLink(){
+  const m = location.hash.match(/^#uf=(.+)$/); if(!m) return;
+  const uf = decodeURIComponent(m[1]); if(!STATES.includes(uf)) return;
+  history.replaceState(history.state,'',location.pathname);
+  $('#uf').value = uf; $('#q').value=''; go('search'); doSearch();
+})();
 
 /* Contagem de acessos: 1 registro por aparelho por dia (anônimo) */
 (function logVisit(){

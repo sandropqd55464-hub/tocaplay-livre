@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Sobre - TocaPlay Livre</title>
+<meta name="description" content="Conheça o TocaPlay Livre: rádios do Brasil ao vivo, TV, vídeos e playlists, tudo grátis no celular e no computador.">
+<meta name="google-adsense-account" content="ca-pub-9758861492456093">
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9758861492456093" crossorigin="anonymous"></script>
+<link rel="icon" href="icon.svg" type="image/svg+xml">
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;800&display=swap" rel="stylesheet">
+<script src="config.js"></script>
+<style>
+  body{margin:0;background:#0b1410;color:#e6efe9;font-family:'Outfit',system-ui,sans-serif;line-height:1.65}
+  main{max-width:760px;margin:0 auto;padding:22px 18px 50px}
+  a{color:#ffd23f}
+  .top{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:10px}
+  .brand{display:flex;align-items:center;gap:10px;font-weight:800;font-size:19px;color:#fff;text-decoration:none}
+  .brand img{width:40px;height:40px;border-radius:11px}
+  .open{background:linear-gradient(90deg,#ffd23f,#19c37d);color:#06120c;font-weight:800;padding:10px 16px;border-radius:999px;text-decoration:none;font-size:14px;white-space:nowrap}
+  h1{font-size:28px;line-height:1.2;margin:22px 0 6px}
+  h2{font-size:19px;margin-top:30px;color:#19c37d}
+  p,li{color:#c4d3ca;font-size:16px}
+  .lead{font-size:18px;color:#e6efe9}
+  .card{background:#16251d;border:1px solid #25392e;border-radius:16px;padding:16px 18px;margin:14px 0}
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:8px;margin-top:12px}
+  .grid a{display:block;background:#16251d;border:1px solid #25392e;border-radius:12px;padding:12px 14px;text-decoration:none;color:#eef5f0;font-weight:600}
+  .grid a:hover{border-color:#ffd23f}
+  .grid small{display:block;color:#8fa89a;font-weight:400}
+  footer{margin-top:40px;padding-top:16px;border-top:1px solid #25392e;display:flex;flex-wrap:wrap;gap:8px 18px;font-size:14px}
+  footer a{color:#8fa89a;text-decoration:none}
+</style>
+</head>
+<body>
+<main>
+  <div class="top"><a class="brand" href="/"><img src="icon.svg" alt="">TocaPlay Livre</a><a class="open" href="/">▶ Abrir o app</a></div>
+
+  <h1>Sobre o TocaPlay Livre</h1>
+  <p class="lead">O TocaPlay Livre nasceu de uma ideia simples: juntar num lugar só as rádios do Brasil inteiro, de graça, sem obrigar ninguém a fazer cadastro e sem precisar baixar nada da loja.</p>
+
+  <h2>O que você encontra aqui</h2>
+  <div class="card"><b>📻 Milhares de rádios ao vivo.</b> Das grandes capitais às cidades do interior, de Roraima ao Rio Grande do Sul. Dá para procurar pelo nome da rádio, pelo estado ou pelo estilo: sertanejo, gospel, pagode, notícias, esportes, MPB e muito mais.</div>
+  <div class="card"><b>📺 TV e vídeos.</b> Canais de música, pregações, programação infantil, notícias e esportes, organizados por categoria. Os vídeos novos dos canais aparecem sozinhos, sem você precisar procurar.</div>
+  <div class="card"><b>🎧 Playlists do seu jeito.</b> Junte rádios e músicas numa lista só — uma para o trabalho, outra para a academia, outra para o culto — e compartilhe com os amigos pelo WhatsApp.</div>
+  <div class="card"><b>📲 Funciona como aplicativo.</b> Instale na tela inicial do celular ou no computador. A rádio continua tocando com a tela bloqueada e aparece no Bluetooth do carro.</div>
+
+  <h2>Por que é grátis?</h2>
+  <p>O TocaPlay Livre é mantido por anúncios exibidos em algumas telas. É isso que permite oferecer tudo sem cobrar nada de quem ouve. Não vendemos dados de ninguém — veja a nossa <a href="privacidade.html">política de privacidade</a>.</p>
+
+  <h2>De onde vêm as rádios e vídeos</h2>
+  <p>As rádios vêm do <a href="https://www.radio-browser.info" rel="noopener">Radio Browser</a>, um diretório público e comunitário de emissoras de todo o mundo. As transmissões pertencem às próprias rádios. Os vídeos são exibidos pelo player oficial do YouTube, direto dos canais oficiais de cada artista ou programa.</p>
+  <p>Se você é dono de uma rádio ou canal e quer sugerir uma correção, fale com a gente.</p>
+
+  <h2>Contato</h2>
+  <p data-contact></p>
+  <footer><a href="/">Início</a><a href="sobre.html">Sobre</a><a href="como-usar.html">Como usar</a><a href="radios-por-estado.html">Rádios por estado</a><a href="privacidade.html">Privacidade</a></footer>
+</main>
+<script>
+  // Mostra o e-mail de contato definido no config.js
+  (function(){ var e=(window.CONFIG&&CONFIG.CONTACT_EMAIL)||''; document.querySelectorAll('[data-contact]').forEach(function(el){
+    if(e){ el.innerHTML='E-mail: <a href="mailto:'+e+'">'+e+'</a>'; } else { el.textContent='Use o botão Compartilhar do app para falar com a gente pelo WhatsApp.'; } }); })();
+</script>
+</body>
+</html>

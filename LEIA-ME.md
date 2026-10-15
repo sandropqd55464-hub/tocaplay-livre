@@ -14,6 +14,8 @@ Para corrigir ou mudar algo no futuro, edite os arquivos **no GitHub**; o Netlif
 | `logo.png` | Logo completa para Instagram, WhatsApp, divulgação |
 | `manifest.json`, `sw.js` | Permitem "Instalar app" na tela inicial do celular |
 | `privacidade.html` | Política de privacidade (obrigatória para o AdSense) |
+| `sobre.html`, `como-usar.html`, `radios-por-estado.html` | Páginas de conteúdo (ajudam na aprovação do AdSense e no Google) |
+| `ads.txt` | Arquivo exigido pelo AdSense (autoriza a sua conta a exibir anúncios) |
 | `netlify.toml` | Configuração do Netlify |
 | `supabase.sql` | Cria as tabelas do banco no Supabase |
 
@@ -63,6 +65,12 @@ Abra o site no Chrome do Android → menu ⋮ → **Instalar app** (ou **Adicion
    ```
 5. O AdSense também pede um arquivo `ads.txt`: crie no GitHub com a linha que eles mostrarem.
 
+## AdSense (já configurado)
+- Conta: `ca-pub-9758861492456093`. O código está no topo do `index.html` e das páginas, e o `ads.txt` está na pasta.
+- Depois de aprovado, ative os **Anúncios automáticos** no painel do AdSense (Anúncios → Visão geral → editar o site). O Google escolhe sozinho os melhores lugares.
+- Opcional: para um bloco fixo na tela inicial, crie um bloco "Display" e cole o ID em `ADSENSE_SLOT` no `config.js`.
+- O e-mail de contato das páginas fica em `CONTACT_EMAIL` no `config.js`.
+
 ## Playlists
 - **Criar sua playlist** fica na tela inicial (no computador, na coluna da esquerda).
 - **Rádios:** toque no **+** de qualquer rádio.
@@ -89,4 +97,4 @@ Abra o site no Chrome do Android → menu ⋮ → **Instalar app** (ou **Adicion
 - **Rádio fora do ar:** algumas emissoras mudam o link; o app avisa e é só escolher outra.
 - **Tela bloqueada:** no Android a rádio continua tocando com controles na notificação. No iPhone, ela também toca com a tela bloqueada se o app foi aberto pela tela inicial.
 - **Mais tocadas no seu app:** rode no SQL Editor a consulta comentada no final do `supabase.sql`.
-- **Atualizou o `index.html` e o celular mostra a versão velha?** No `sw.js`, aumente o número em `tocaplay-v10` (ex.: `tocaplay-v11`).
+- **Atualizou o `index.html` e o celular mostra a versão velha?** No `sw.js`, aumente o número em `tocaplay-v11` (ex.: `tocaplay-v12`).
