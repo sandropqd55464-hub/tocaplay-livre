@@ -63,9 +63,22 @@ Abra o site no Chrome do Android → menu ⋮ → **Instalar app** (ou **Adicion
    ```
 5. O AdSense também pede um arquivo `ads.txt`: crie no GitHub com a linha que eles mostrarem.
 
+## Playlists
+- **Criar sua playlist** fica na tela inicial (no computador, na coluna da esquerda).
+- **Rádios:** toque no **+** de qualquer rádio.
+- **Músicas:** dentro da playlist, toque em **🎵 Adicionar música**, procure no YouTube, copie o link do vídeo e cole. A música toca dentro do app pelo player oficial do YouTube e passa sozinha para a próxima.
+- **Compartilhar:** o botão **Compartilhar** da playlist gera um link; quem abrir recebe a playlist pronta para salvar.
+- As playlists ficam salvas no aparelho de cada pessoa.
+
+## No carro
+- Conecte o celular ao carro por **Bluetooth** ou cabo e toque a rádio pelo TocaPlay.
+- O nome da rádio aparece na tela do carro, e os botões **⏮ ⏭ do volante** trocam de rádio (na lista ou na playlist que estiver tocando).
+- O TocaPlay ainda **não aparece dentro do Android Auto / Apple CarPlay**: esses sistemas só aceitam aplicativos de loja (Play Store / App Store).
+- Músicas do YouTube precisam da tela ligada; rádios tocam com a tela desligada.
+
 ## Bom saber
 - **De onde vêm as rádios:** diretório público e gratuito radio-browser.info (milhares de rádios do Brasil). Só entram rádios com transmissão segura (https), que são as que tocam em site publicado.
 - **Rádio fora do ar:** algumas emissoras mudam o link; o app avisa e é só escolher outra.
 - **Tela bloqueada:** no Android a rádio continua tocando com controles na notificação. No iPhone, ela também toca com a tela bloqueada se o app foi aberto pela tela inicial.
 - **Mais tocadas no seu app:** rode no SQL Editor a consulta comentada no final do `supabase.sql`.
-- **Atualizou o `index.html` e o celular mostra a versão velha?** No `sw.js`, aumente o número em `tocaplay-v2` (ex.: `tocaplay-v3`).
+- **Atualizou o `index.html` e o celular mostra a versão velha?** No `sw.js`, aumente o número em `tocaplay-v7` (ex.: `tocaplay-v8`).
