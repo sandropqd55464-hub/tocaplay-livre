@@ -11,7 +11,8 @@
 <meta property="og:title" content="TocaPlay Livre - Rádios do Brasil ao vivo, grátis">
 <meta property="og:description" content="Milhares de rádios do Brasil, TV, pregações e playlists. Sem cadastro, direto no celular.">
 <meta property="og:url" content="https://tocaplaylivre.com.br/">
-<meta property="og:image" content="https://tocaplaylivre.com.br/og-image.png">
+<meta property="og:image" content="https://tocaplaylivre.com.br/og-image.jpg?v=2">
+<meta property="og:image:type" content="image/jpeg">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta property="og:locale" content="pt_BR">
@@ -73,7 +74,13 @@ main{padding:0 16px;max-width:760px;margin:0 auto}
 h2{font-size:18px;font-weight:700;margin:20px 0 10px}
 .hero{border-radius:20px;padding:18px;background:radial-gradient(circle at 85% 20%,rgba(255,210,63,.25),transparent 45%),
   linear-gradient(135deg,#123a28,#0e2219);border:1px solid var(--line);margin-top:4px}
-.hero h1{font-size:22px;line-height:1.15;font-weight:800}
+.hero h1{font-size:26px;line-height:1.15;font-weight:800;letter-spacing:-.3px}
+.gold{background:linear-gradient(100deg,#b8860b 0%,#ffd700 22%,#fff6c2 38%,#ffd700 52%,#e0a800 70%,#ffd700 85%,#b8860b 100%);
+  background-size:220% 100%;-webkit-background-clip:text;background-clip:text;color:transparent;
+  animation:goldText 3.5s linear infinite;filter:drop-shadow(0 0 10px rgba(255,200,40,.35))}
+.gold-big{font-size:1.18em;font-weight:900}
+@media(min-width:700px){.hero h1{font-size:32px}}
+@media (prefers-reduced-motion:reduce){.gold{animation:none}}
 .hero p{color:var(--muted);font-size:14px;margin-top:6px}
 .hero .continue{margin-top:14px;display:flex;align-items:center;gap:12px;background:rgba(0,0,0,.25);border-radius:14px;padding:10px;width:100%;text-align:left}
 
@@ -309,7 +316,7 @@ nav button.on::after{content:'';position:absolute;bottom:-2px;width:26px;height:
   <!-- INÍCIO -->
   <section class="view active" id="v-home">
     <div class="hero">
-      <h1>Rádio boa, de graça,<br>do Oiapoque ao Chuí.</h1>
+      <h1>Rádio boa, <span class="gold gold-big">de graça</span>,<br><span class="gold">do Oiapoque ao Chuí.</span></h1>
       <p>Milhares de rádios brasileiras ao vivo. Sem cadastro obrigatório.</p>
       <button class="continue" id="continueBtn" hidden></button>
     </div>
@@ -1011,7 +1018,7 @@ function plLink(p){
 }
 $('#plShare').onclick = ()=>{
   if(!openPl.stations.length) return toast('Adicione rádios ou músicas antes de compartilhar');
-  openShare({url:plLink(openPl), msg:`🎧 Ouve a minha playlist "${openPl.name}" no TocaPlay Livre:`});
+  openShare({url:plLink(openPl), msg:`Ouve a minha playlist *${openPl.name}* no *TocaPlay Livre*:`});
 };
 let pendingImport=null;
 function checkImport(){
@@ -1091,7 +1098,7 @@ $('#tvCats').addEventListener('click', e=>{ const b=e.target.closest('[data-tvca
 $('#tvClose').onclick = stopTv;
 $('#tvModeLive').onclick = ()=>tvCurrent && openTv(tvCurrent,'live');
 $('#tvModeVid').onclick = ()=>tvCurrent && openTv(tvCurrent,'videos');
-$('#tvWa').onclick = ()=>tvCurrent && openWhatsApp(`📺 Estou assistindo *${tvCurrent.name}* no TocaPlay Livre! ${SITE}`);
+$('#tvWa').onclick = ()=>tvCurrent && openWhatsApp(`Estou assistindo *${tvCurrent.name}* no *TocaPlay Livre*! ${SITE}`);
 renderTv();
 
 /* ---------- Navegação ---------- */
@@ -1114,10 +1121,10 @@ $('#shareTop').onclick = ()=>openShare(null);
 $('#shareModal').addEventListener('click', async e=>{
   const b = e.target.closest('[data-net]');
   if(!b){ if(e.target.id==='shareModal') $('#shareModal').classList.remove('open'); return; }
-  const url = shareData?.url || SITE, msg = shareData?.msg || 'Conhece o TocaPlay Livre? Milhares de rádios do Brasil ao vivo e TV, grátis, direto no celular 📻';
+  const url = shareData?.url || SITE, msg = shareData?.msg || 'Conhece o *TocaPlay Livre*? Milhares de rádios do Brasil ao vivo, TV e pregações, *de graça*, direto no celular:';
   const u = encodeURIComponent(url), t = encodeURIComponent(msg);
   const links = {
-    whatsapp:`https://wa.me/?text=${encodeURIComponent('📻 '+msg+' '+url)}`,
+    whatsapp:`https://api.whatsapp.com/send?text=${encodeURIComponent(msg+' '+url)}`,
     facebook:`https://www.facebook.com/sharer/sharer.php?u=${u}`,
     telegram:`https://t.me/share/url?url=${u}&text=${t}`,
     x:`https://twitter.com/intent/tweet?text=${t}&url=${u}`,
@@ -1174,11 +1181,11 @@ $('#sleepBtn').onclick = ()=>$('#sleepModal').classList.add('open');
 $('#sleepModal').onclick = e=>{ const b=e.target.closest('[data-min]'); if(b) setSleep(+b.dataset.min); $('#sleepModal').classList.remove('open'); };
 $('#volBtn').onclick = ()=>toast('Use o volume do seu aparelho');
 const SITE = location.origin;
-function openWhatsApp(text){ window.open('https://wa.me/?text='+encodeURIComponent(text), '_blank'); }
-$('#waBtn').onclick = ()=>openWhatsApp(`📻 Estou ouvindo *${current?.name||'rádio'}* ao vivo no TocaPlay Livre! Rádios do Brasil grátis: ${SITE}`);
-document.addEventListener('click', e=>{ if(e.target.closest('[data-invite]')) openWhatsApp(`📻 Conhece o *TocaPlay Livre*? Milhares de rádios do Brasil ao vivo, grátis, direto no celular: ${SITE}`); });
+function openWhatsApp(text){ window.open('https://api.whatsapp.com/send?text='+encodeURIComponent(text), '_blank'); }
+$('#waBtn').onclick = ()=>openWhatsApp(`Estou ouvindo *${current?.name||'rádio'}* ao vivo no *TocaPlay Livre*! Rádios do Brasil de graça: ${SITE}`);
+document.addEventListener('click', e=>{ if(e.target.closest('[data-invite]')) openWhatsApp(`Conhece o *TocaPlay Livre*? Milhares de rádios do Brasil ao vivo, TV e pregações, *de graça*, direto no celular: ${SITE}`); });
 $('#shareBtn').onclick = async()=>{
-  const text = `Estou ouvindo ${current?.name} no TocaPlay Livre 📻`;
+  const text = `Estou ouvindo ${current?.name} no TocaPlay Livre`;
   try{ if(navigator.share) await navigator.share({title:'TocaPlay Livre', text, url:location.origin}); else { await navigator.clipboard.writeText(`${text} ${location.origin}`); toast('Link copiado!'); } }catch{}
 };
 
