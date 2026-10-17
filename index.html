@@ -119,9 +119,13 @@ h2{font-size:18px;font-weight:700;margin:20px 0 10px}
 .feat-sound:not(.on){animation:soundPulse 2s ease-in-out infinite}
 .feat-sound.on{padding:8px 10px}
 @keyframes soundPulse{50%{box-shadow:0 0 0 6px rgba(255,210,63,.25)}}
-.feat-dots{position:absolute;z-index:3;right:16px;bottom:16px;display:flex;gap:6px}
-.feat-dots button{width:8px;height:8px;border-radius:999px;background:rgba(255,255,255,.35);transition:width .3s,background .3s}
-.feat-dots button.on{width:22px;background:var(--yellow)}
+.feat-dots{position:absolute;z-index:4;right:12px;bottom:14px;display:flex;align-items:center;gap:4px;padding:3px;border-radius:999px;
+  background:rgba(0,0,0,.5);backdrop-filter:blur(6px);font-size:12.5px;font-weight:700;color:#e6efe9;font-variant-numeric:tabular-nums}
+.feat-dots span{padding:0 4px}
+.feat-dots button{width:30px;height:30px;border-radius:50%;font-size:20px;line-height:1;color:#fff;display:grid;place-items:center}
+.feat-dots button:hover{background:rgba(255,255,255,.15)}
+.feat-prog{position:absolute;z-index:4;left:0;right:0;bottom:0;height:3px;background:rgba(255,255,255,.12)}
+.feat-prog i{display:block;height:100%;width:0;background:var(--yellow)}
 @media (prefers-reduced-motion:reduce){.feat-media .bg,.feat-media .ph i{animation:none}}
 .intro{margin-top:14px}
 .intro h1{font-size:19px;line-height:1.25;font-weight:700;letter-spacing:-.2px;color:var(--txt)}
@@ -437,6 +441,7 @@ a.pill{color:var(--txt);text-decoration:none}
         <span class="feat-cta">▶ Assistir</span>
       </div>
       <div class="feat-dots" id="featDots"></div>
+      <div class="feat-prog"><i id="featProg"></i></div>
       <button class="feat-sound" id="featSound" aria-label="Ligar som">🔇 <span>Ouvir</span></button>
     </div>
     <div class="intro">
@@ -1394,8 +1399,14 @@ $('#tvWa').onclick = ()=>tvCurrent && openWhatsApp(`Estou assistindo *${tvCurren
 renderTv();
 
 /* ---------- Página inicial: destaque e fileiras ---------- */
-const FEATURED = ((typeof CONFIG!=='undefined' && CONFIG.HOME_FEATURED) || ['Lofi Girl','CazéTV','Rev. Hernandes Dias Lopes','Elevation Worship','Galinha Pintadinha','Graça Filmes'])
-  .map(n=>TV_CHANNELS.find(c=>c.name===n)).filter(Boolean);
+const FEAT_PER_CAT = (typeof CONFIG!=='undefined' && CONFIG.HOME_PER_CATEGORY) || 2;
+const FEAT_SECONDS = (typeof CONFIG!=='undefined' && CONFIG.HOME_SECONDS) || 10;
+const FEATURED = (()=>{
+  const fixed = typeof CONFIG!=='undefined' && CONFIG.HOME_FEATURED;
+  if(fixed && fixed.length) return fixed.map(n=>TV_CHANNELS.find(c=>c.name===n)).filter(Boolean);
+  const shuffle = a => a.map(v=>[Math.random(),v]).sort((x,y)=>x[0]-y[0]).map(x=>x[1]);
+  return TV_CATS.slice(1).flatMap(cat=>shuffle(TV_CHANNELS.filter(c=>c.cat===cat && c.channelId)).slice(0,FEAT_PER_CAT));
+})();
 let featI = 0, featT = null, featYt = null, featToken = 0;
 function featStopVideo(){ featToken++; if(featYt){ try{ featYt.destroy(); }catch{} featYt=null; } const h=document.getElementById('featYt'); if(h) h.remove(); }
 function avatarUrl(c){ const m=(c.url||'').match(/youtube\.com\/@([\w.-]+)/); return c.avatar || (m ? `https://unavatar.io/youtube/${m[1]}?fallback=false` : ''); }
@@ -1430,39 +1441,45 @@ function renderFeat(){
     whenYT(()=>{
       if(token!==featToken || !document.getElementById('featYt')) return;
       let errs=0;
-      const vars={autoplay:1, mute:1, controls:0, playsinline:1, rel:0, modestbranding:1, iv_load_policy:3, disablekb:1, loop:1};
-      if(c.live==='first'){ vars.channel=undefined; }
+      const vars={autoplay:1, mute:1, controls:0, playsinline:1, rel:0, modestbranding:1, iv_load_policy:3, disablekb:1};
+      let started=false;
       featYt = new YT.Player('featYt', {width:'100%', height:'100%',
-        ...(c.live==='first' ? {videoId:'live_stream', playerVars:{...vars, channel:c.channelId}} : {playerVars:{...vars, listType:'playlist', list:uploadsList(c)}}),
+        ...(c.live==='first' ? {videoId:'live_stream', playerVars:{...vars, channel:c.channelId}} : {playerVars:{...vars, start:25, listType:'playlist', list:uploadsList(c)}}),
         events:{
           onReady:e=>{ try{ e.target.mute(); e.target.playVideo(); }catch{} featApplySound(); },
           onStateChange:e=>{
-            if(e.data===1){ const f=featYt && featYt.getIframe && featYt.getIframe(); if(f){ f.tabIndex=-1; f.classList.add('on'); } featApplySound(); }
-            if(e.data===0 && !(featSound && !featUserMuted)) featNext();
+            if(e.data===1){ const f=featYt && featYt.getIframe && featYt.getIframe(); if(f){ f.tabIndex=-1; f.classList.add('on'); } featApplySound();
+              if(!started){ started=true; featTimer(FEAT_SECONDS*1000); } }   // conta os segundos a partir do vídeo começar
+            if(e.data===0) featNext();
           },
-          onError:()=>{ if(++errs>5) return featStopVideo(); try{ featYt.nextVideo(); }catch{ featStopVideo(); } }
+          onError:()=>{ if(++errs>5){ featStopVideo(); return featTimer(5000); } try{ featYt.nextVideo(); }catch{ featStopVideo(); featTimer(5000); } }
         }});
     });
-  }
+    featTimer((FEAT_SECONDS+10)*1000);   // se o vídeo não começar, passa adiante mesmo assim
+  } else featTimer(8000);
   const live = c.live==='first';
-  $('#featTag').textContent = live ? '● Ao vivo' : (tvSubsOf(c)[0] || c.cat);
+  const sub = tvSubsOf(c)[0];
+  $('#featTag').textContent = (live ? '● Ao vivo' : c.cat) + (sub ? ' · '+sub : '');
   $('#featTag').classList.toggle('live', live);
   $('#featName').textContent = c.name;
   $('#featDesc').textContent = c.desc || '';
   $('#featHit').setAttribute('aria-label', 'Assistir '+c.name);
-  $('#featDots').innerHTML = FEATURED.map((_,i)=>`<button class="${i===featI?'on':''}" data-feat="${i}" aria-label="Destaque ${i+1}"></button>`).join('');
+  $('#featDots').innerHTML = `<button data-feat="-1" aria-label="Anterior">‹</button><span>${featI+1} / ${FEATURED.length}</span><button data-feat="1" aria-label="Próximo">›</button>`;
 }
-function featNext(step=1){ featI=(featI+step+FEATURED.length)%FEATURED.length; renderFeat(); featTimer(); }
-function featTimer(){ clearTimeout(featT);
-  const listening = featSound && !featUserMuted && !mediaBusy() && featYt;
-  featT=setTimeout(()=>{ if(curView==='home' && !document.hidden && !(featSound && !featUserMuted && !mediaBusy() && featYt)) featNext(); else featTimer(); }, listening?60000:(featVideoOk()?16000:9000)); }
+function featNext(step=1){ featI=(featI+step+FEATURED.length)%FEATURED.length; renderFeat(); }
+function featTimer(ms){
+  clearTimeout(featT);
+  const bar=$('#featProg'); bar.style.transition='none'; bar.style.width='0%'; void bar.offsetWidth;
+  bar.style.transition=`width ${ms}ms linear`; bar.style.width='100%';
+  featT=setTimeout(function tick(){ if(curView==='home' && !document.hidden) featNext(); else featT=setTimeout(tick,3000); }, ms);
+}
 $('#featSound').onclick = e=>{ e.stopPropagation();
   if($('#featSound').classList.contains('on')){ featUserMuted=true; }
   else { featSound=true; featUserMuted=false;
     if(!audio.paused) audio.pause(); if(ytP && (ytState===1||ytState===3)) ytP.pauseVideo(); }
-  featApplySound(); featTimer(); };
+  featApplySound(); };
 $('#featHit').onclick = ()=>{ const c=FEATURED[featI]; go('tv'); openTv(c); };
-$('#featDots').addEventListener('click', e=>{ const b=e.target.closest('[data-feat]'); if(b){ featI=+b.dataset.feat; renderFeat(); featTimer(); } });
+$('#featDots').addEventListener('click', e=>{ const b=e.target.closest('[data-feat]'); if(b){ e.stopPropagation(); featNext(+b.dataset.feat); } });
 (function(){ let x0=null; const f=$('#feat');
   f.addEventListener('touchstart',e=>{ x0=e.touches[0].clientX; },{passive:true});
   f.addEventListener('touchend',e=>{ if(x0==null) return; const dx=e.changedTouches[0].clientX-x0; x0=null; if(Math.abs(dx)>45){ e.preventDefault(); featNext(dx<0?1:-1); } });
@@ -1603,7 +1620,7 @@ if(CONFIG.ADSENSE_CLIENT && CONFIG.ADSENSE_SLOT){
 
 /* ---------- Início do app ---------- */
 renderChips(); renderFavs(); renderAccount(); renderPlaylists(); loadHome(); updatePlayer(); checkImport();
-renderFeat(); featTimer(); renderRows();
+renderFeat(); renderRows();
 (function openStateFromLink(){
   const m = location.hash.match(/^#uf=(.+)$/); if(!m) return;
   const uf = decodeURIComponent(m[1]); if(!STATES.includes(uf)) return;

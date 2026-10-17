@@ -123,3 +123,8 @@ Abra o site no Chrome do Android → menu ⋮ → **Instalar app** (ou **Adicion
 - **Inscrever-se** sempre visível na página inicial (para quem já é inscrito aparece "✓ Inscrito").
 - **Canais novos:** Pra. Talitha Pereira, Pr. Arthur Pereira, Semeadores Kids, Bíblia Kids. Foto do Pr. Cláudio Duarte corrigida.
 - Aba TV: no "Tudo" de uma categoria, cada canal aparece uma vez só.
+
+## Versão 14 (17/10/2026)
+- **Destaque vira apresentação do app:** puxa sozinho 2 canais de cada categoria (sorteados a cada visita) e mostra cada um por 10 segundos, com barra de progresso e contador (ex.: 3 / 19) com setas ‹ ›.
+  - Ajuste em `config.js`: `HOME_PER_CATEGORY` (canais por categoria) e `HOME_SECONDS` (segundos de cada um).
+  - Os vídeos começam a partir dos 25 segundos, para pular aberturas.

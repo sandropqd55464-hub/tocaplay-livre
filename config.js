@@ -112,6 +112,10 @@ const CONFIG = {
   ADSENSE_CLIENT: 'ca-pub-9758861492456093',
   ADSENSE_SLOT: '',     // opcional: ID de um bloco fixo; os Anúncios automáticos funcionam sem isso
 
+  // Destaque da página inicial (apresentação do app):
+  HOME_PER_CATEGORY: 2,   // quantos canais de cada categoria entram, sorteados a cada visita
+  HOME_SECONDS: 10,       // quantos segundos cada vídeo fica no destaque
+
   // E-mail do dono: ao entrar com ele na aba Perfil, aparece o botão "Abrir meu painel"
   OWNER_EMAIL: 'sandropqd55464@gmail.com',
 
