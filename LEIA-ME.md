@@ -131,3 +131,12 @@ Abra o site no Chrome do Android → menu ⋮ → **Instalar app** (ou **Adicion
 
 ## Versão 15 (17/10/2026)
 - Setas ‹ › nas fileiras "Ao vivo agora" e "Pregadores" (aparecem só quando há mais canais daquele lado).
+
+## Versão 16 (17/10/2026)
+- **Podcasts:** nova aba na barra de baixo.
+  - 13 categorias: Cristão, Estudos bíblicos, Notícias, Humor, Entrevistas, Esportes, Histórias e mistério, Educação, Saúde e bem-estar, Dinheiro e negócios, Tecnologia, Infantil e Música. Busca por nome ou assunto.
+  - Página do podcast com capa, episódios, "Ouvir o mais recente" e "Seguir" (quem a pessoa segue aparece no topo).
+  - Player com barra de tempo, voltar 15s, avançar 30s e velocidade 1x / 1,25x / 1,5x / 2x. **Continua de onde parou.**
+  - Fileira "Podcasts cristãos" na página inicial.
+  - Fonte: diretório público de podcasts da Apple (grátis, sem chave). O áudio vem direto do site de cada podcast.
+  - As categorias ficam em `index.html` → `POD_CATS` (nome e palavra de busca).
