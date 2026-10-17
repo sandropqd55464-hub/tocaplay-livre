@@ -114,6 +114,11 @@ h2{font-size:18px;font-weight:700;margin:20px 0 10px}
 .feat-name{font-size:clamp(24px,5.4vw,38px);font-weight:800;letter-spacing:-.6px;line-height:1.05;margin-top:8px;text-wrap:balance}
 .feat-desc{color:#cfe0d6;font-size:14.5px;margin-top:4px}
 .feat-cta{display:inline-flex;margin-top:12px;padding:10px 18px;border-radius:999px;background:var(--green);color:#06120c;font-weight:800;font-size:14.5px}
+.feat-sound{position:absolute;z-index:4;top:12px;right:12px;display:inline-flex;align-items:center;gap:6px;padding:8px 12px;border-radius:999px;
+  background:rgba(0,0,0,.55);color:#fff;font-weight:700;font-size:13.5px;backdrop-filter:blur(6px);border:1px solid rgba(255,255,255,.18)}
+.feat-sound:not(.on){animation:soundPulse 2s ease-in-out infinite}
+.feat-sound.on{padding:8px 10px}
+@keyframes soundPulse{50%{box-shadow:0 0 0 6px rgba(255,210,63,.25)}}
 .feat-dots{position:absolute;z-index:3;right:16px;bottom:16px;display:flex;gap:6px}
 .feat-dots button{width:8px;height:8px;border-radius:999px;background:rgba(255,255,255,.35);transition:width .3s,background .3s}
 .feat-dots button.on{width:22px;background:var(--yellow)}
@@ -210,6 +215,7 @@ h2{font-size:18px;font-weight:700;margin:20px 0 10px}
 .sub-btn{flex:none;display:inline-flex;align-items:center;justify-content:center;gap:7px;padding:11px 18px;border-radius:999px;font-weight:800;font-size:15px;
   color:#fff;background:#e62117;box-shadow:0 4px 16px rgba(230,33,23,.35)}
 .sub-btn:disabled{opacity:.6}
+.sub-card.done .sub-btn{background:var(--card2);color:var(--txt);box-shadow:none;border:1px solid var(--line)}
 .sub-btn.big{width:100%;padding:15px;font-size:16.5px}
 .sub-done{display:inline-flex;align-items:center;gap:6px;padding:6px 12px;border-radius:999px;background:var(--card2);color:var(--green);font-weight:700;font-size:13.5px}
 details.more-login{margin-top:14px}
@@ -371,7 +377,22 @@ a.pill{color:var(--txt);text-decoration:none}
 .yt-box iframe,.yt-box>div{position:absolute;inset:0;width:100%;height:100%;border:0}
 .art.song img{object-fit:cover}
 .tag-yt{display:inline-block;font-size:10.5px;font-weight:800;letter-spacing:.5px;background:#ff2d2d;color:#fff;border-radius:5px;padding:1px 5px;margin-right:5px;vertical-align:1px}
-.install-btn{display:flex;align-items:center;gap:7px;padding:9px 14px;border-radius:999px;font-weight:700;font-size:14px;background:var(--card2);border:1px solid #2f4d3c;color:var(--txt)}
+.install-btn{display:flex;align-items:center;gap:7px;padding:10px 16px;border-radius:999px;font-weight:800;font-size:14.5px;background:var(--yellow);color:#06120c;
+  box-shadow:0 4px 18px rgba(255,210,63,.45);animation:installGlow 2.4s ease-in-out infinite}
+@keyframes installGlow{0%,100%{box-shadow:0 4px 18px rgba(255,210,63,.4),0 0 0 0 rgba(255,210,63,.5)}50%{box-shadow:0 4px 18px rgba(255,210,63,.4),0 0 0 7px rgba(255,210,63,0)}}
+@media (prefers-reduced-motion:reduce){.install-btn,.feat-sound{animation:none}}
+/* Compartilhar vira botão secundário */
+.share-top{background:var(--card2)!important;color:var(--txt)!important;border:1px solid #2f4d3c;box-shadow:none!important}
+/* Faixa grande de instalar na página inicial */
+.app-banner{display:flex;align-items:center;gap:14px;margin-top:12px;padding:14px;border-radius:18px;color:#06120c;
+  background:linear-gradient(110deg,var(--yellow),#ffb703 45%,var(--green))}
+.app-banner .ic{flex:none;width:54px;height:54px;border-radius:14px;background:#06120c;display:grid;place-items:center;box-shadow:0 6px 18px rgba(0,0,0,.3)}
+.app-banner .ic img{width:40px;height:40px}
+.app-banner .tx{flex:1;min-width:0}
+.app-banner b{display:block;font-size:17px;font-weight:800;line-height:1.15}
+.app-banner small{display:block;font-size:13px;font-weight:600;opacity:.8;margin-top:2px}
+.app-banner button{flex:none;padding:12px 16px;border-radius:999px;background:#06120c;color:var(--yellow);font-weight:800;font-size:14.5px}
+@media(max-width:380px){.app-banner{flex-wrap:wrap}.app-banner button{width:100%}}
 @media(max-width:480px){.install-btn{padding:9px 11px;font-size:13.5px;gap:5px}.install-btn .lg{display:none}}
 @media(max-width:340px){.install-btn span{display:none}.install-btn{padding:9px}}
 @media(max-width:430px){header:not(.has-back) .share-top span{display:none}header:not(.has-back) .share-top{padding:9px 11px}}
@@ -416,14 +437,20 @@ a.pill{color:var(--txt);text-decoration:none}
         <span class="feat-cta">▶ Assistir</span>
       </div>
       <div class="feat-dots" id="featDots"></div>
+      <button class="feat-sound" id="featSound" aria-label="Ligar som">🔇 <span>Ouvir</span></button>
     </div>
     <div class="intro">
       <h1>Rádio boa, <span class="gold">de graça</span>, do Oiapoque ao Chuí.</h1>
       <button class="continue" id="continueBtn" hidden></button>
     </div>
+    <div class="app-banner" id="appBanner">
+      <div class="ic"><img src="icon.svg" alt=""></div>
+      <div class="tx"><b>Baixe o app TocaPlay</b><small>Grátis. Fica com ícone no seu celular ou computador.</small></div>
+      <button data-install>📲 Baixar app</button>
+    </div>
     <div class="sub-card" id="homeSub" hidden>
-      <div class="tx"><b>Inscreva-se no TocaPlay</b><small>Grátis, com 1 toque. Suas favoritas e playlists ficam guardadas.</small></div>
-      <button class="sub-btn" data-subscribe>Inscrever-se</button>
+      <div class="tx"><b id="homeSubTitle">Inscreva-se no TocaPlay</b><small id="homeSubText">Grátis, com 1 toque. Suas favoritas e playlists ficam guardadas.</small></div>
+      <button class="sub-btn" id="homeSubBtn" data-subscribe>Inscrever-se</button>
     </div>
     <div class="row-head"><h2>Ao vivo agora</h2><button data-gotv="TV Ao Vivo">Ver tudo</button></div>
     <div class="ch-row" id="rowLive"></div>
@@ -761,6 +788,7 @@ const audio = new Audio(); audio.preload='none';
 let current = store.get('tp_last', null), loading=false, sleepTimer=null, sleepAt=null, playCount=0;
 function play(s){
   if(s.yt) return playSong(s);
+  setTimeout(featQuiet,0);
   stopTv(); stopSong(); $('#ytBox').hidden=true;
   current = s; store.set('tp_last', s);
   loading = true; updatePlayer();
@@ -777,7 +805,7 @@ function toggle(){
   else audio.pause();
 }
 function stop(){ if(current?.yt){ stopSong(); updatePlayer(); return; } audio.pause(); audio.removeAttribute('src'); audio.load(); loading=false; updatePlayer(); }
-audio.addEventListener('playing',()=>{loading=false;updatePlayer();});
+audio.addEventListener('playing',()=>{loading=false;updatePlayer();featQuiet();});
 
 /* Músicas do YouTube dentro das playlists (player oficial do YouTube) */
 let ytP=null, ytReady=false, ytPending=null, ytState=-1, ytErrors=0;
@@ -788,7 +816,7 @@ function loadYtApi(){ if(document.getElementById('ytapi')) return; const sc=docu
 const ytThumb = v => `https://i.ytimg.com/vi/${v}/mqdefault.jpg`;
 function playSong(it){
   if(!ytReady){ ytPending=it; loadYtApi(); current={...it, favicon:ytThumb(it.vid)}; loading=true; updatePlayer(); return; }
-  audio.pause(); audio.removeAttribute('src'); stopTv();
+  audio.pause(); audio.removeAttribute('src'); stopTv(); setTimeout(featQuiet,0);
   current = {...it, favicon:ytThumb(it.vid)}; loading=false;
   $('#ytBox').hidden=false;
   if(!ytP){
@@ -995,7 +1023,11 @@ function renderAccount(){
   const box=$('#accountBox'), av=$('#avatarBtn');
   const nome = user?.user_metadata?.name || '';
   av.textContent = user ? (isAnon(user) ? '✓' : (nome||user.email||'?')[0].toUpperCase()) : '?';
-  $('#homeSub').hidden = !sb || !!user;
+  $('#homeSub').hidden = !sb;
+  $('#homeSub').classList.toggle('done', !!user);
+  $('#homeSubTitle').textContent = user ? 'Você está inscrito no TocaPlay' : 'Inscreva-se no TocaPlay';
+  $('#homeSubText').textContent = user ? 'Suas favoritas e playlists ficam guardadas.' : 'Grátis, com 1 toque. Suas favoritas e playlists ficam guardadas.';
+  $('#homeSubBtn').textContent = user ? '✓ Inscrito' : 'Inscrever-se';
   $('#navAccount').textContent = user ? 'Perfil' : 'Inscrever';
   $('#accountTitle').textContent = user ? 'Meu perfil' : 'Inscreva-se';
   const owner = user && user.email && user.email.toLowerCase() === String(CONFIG.OWNER_EMAIL||'').toLowerCase();
@@ -1056,11 +1088,11 @@ function bindEmailForm(isUp){
 /* Inscrever-se com 1 toque: cria uma inscrição anônima neste aparelho */
 async function subscribe(btn){
   if(!sb) return toast('Inscrição indisponível no momento');
-  if(user) return openWelcome();
+  if(user) return go('account');
   document.querySelectorAll('[data-subscribe]').forEach(b=>{ b.disabled=true; b.textContent='Inscrevendo…'; });
   const uf = store.get('tp_uf','');
   const {error} = await sb.auth.signInAnonymously({options:{data:{state: STATES.includes(uf)?uf:null}}});
-  document.querySelectorAll('[data-subscribe]').forEach(b=>{ b.disabled=false; b.textContent='Inscrever-se'; });
+  document.querySelectorAll('[data-subscribe]').forEach(b=>{ b.disabled=false; b.textContent='Inscrever-se'; }); renderAccount();
   if(error) return toast(/anonymous|disabled/i.test(error.message) ? 'Inscrição ainda não liberada. Tente mais tarde.' : 'Não deu para inscrever agora. Confira a internet e tente de novo.');
   openWelcome();
 }
@@ -1280,7 +1312,9 @@ function renderTv(){
     // "Tudo" da categoria: agrupado por subcategoria
     $('#tvListTitle').hidden = true;
     const loose = inCat.filter(c=>!tvSubsOf(c).length);
-    g.innerHTML = subs.map(sb_=>`<div class="tv-sub-h">${esc(sb_)}</div>${tvGrid(inCat.filter(c=>tvSubsOf(c).includes(sb_)))}`).join('')
+    const shown = new Set();
+    g.innerHTML = subs.map(sb_=>{ const l=inCat.filter(c=>tvSubsOf(c).includes(sb_) && !shown.has(c)); l.forEach(c=>shown.add(c));
+      return l.length ? `<div class="tv-sub-h">${esc(sb_)}</div>${tvGrid(l)}` : ''; }).join('')
       + (loose.length ? `<div class="tv-sub-h">Outros</div>${tvGrid(loose)}` : '');
     return;
   }
@@ -1369,10 +1403,21 @@ function avatarUrl(c){ const m=(c.url||'').match(/youtube\.com\/@([\w.-]+)/); re
 function featVideoOk(){
   if(typeof CONFIG!=='undefined' && CONFIG.HOME_VIDEO===false) return false;
   const cn = navigator.connection;
-  if(cn && cn.saveData) return false;
-  if(cn && cn.type) return cn.type==='wifi' || cn.type==='ethernet';
-  return matchMedia('(min-width:900px)').matches;
+  return !(cn && cn.saveData);   // só não roda se a pessoa ligou "economia de dados"
 }
+// Som do destaque: os navegadores só deixam tocar som depois do primeiro toque na tela.
+let featSound = false, featUserMuted = false;
+const mediaBusy = () => !audio.paused || !!tvCurrent || ytState===1 || ytState===3;
+function featApplySound(){
+  const want = featSound && !featUserMuted && !mediaBusy() && curView==='home';
+  if(featYt && featYt.unMute){ try{ if(want){ featYt.unMute(); featYt.setVolume(85); } else featYt.mute(); }catch{} }
+  const b=$('#featSound'); if(b){ b.classList.toggle('on', want); b.innerHTML = want ? '🔊' : '🔇 <span>Ouvir</span>'; b.setAttribute('aria-label', want?'Desligar som':'Ligar som'); }
+}
+// Outro áudio começou (rádio, música ou TV): o destaque fica mudo
+function featQuiet(){ featApplySound(); }
+// Primeiro toque em qualquer lugar: liga o som do destaque
+function featFirstTouch(e){ if(featSound) return; if(e.target && e.target.closest && e.target.closest('#featSound')) return; featSound=true; setTimeout(featApplySound,0); }
+['pointerdown','keydown'].forEach(ev=>document.addEventListener(ev, featFirstTouch, {capture:true}));
 function renderFeat(){
   if(!FEATURED.length){ $('#feat').hidden=true; return; }
   const c = FEATURED[featI], av = avatarUrl(c), m = $('#featMedia');
@@ -1390,8 +1435,11 @@ function renderFeat(){
       featYt = new YT.Player('featYt', {width:'100%', height:'100%',
         ...(c.live==='first' ? {videoId:'live_stream', playerVars:{...vars, channel:c.channelId}} : {playerVars:{...vars, listType:'playlist', list:uploadsList(c)}}),
         events:{
-          onReady:e=>{ try{ e.target.mute(); e.target.playVideo(); }catch{} },
-          onStateChange:e=>{ if(e.data===1){ const f=featYt && featYt.getIframe && featYt.getIframe(); if(f){ f.tabIndex=-1; f.classList.add('on'); } } },
+          onReady:e=>{ try{ e.target.mute(); e.target.playVideo(); }catch{} featApplySound(); },
+          onStateChange:e=>{
+            if(e.data===1){ const f=featYt && featYt.getIframe && featYt.getIframe(); if(f){ f.tabIndex=-1; f.classList.add('on'); } featApplySound(); }
+            if(e.data===0 && !(featSound && !featUserMuted)) featNext();
+          },
           onError:()=>{ if(++errs>5) return featStopVideo(); try{ featYt.nextVideo(); }catch{ featStopVideo(); } }
         }});
     });
@@ -1405,7 +1453,14 @@ function renderFeat(){
   $('#featDots').innerHTML = FEATURED.map((_,i)=>`<button class="${i===featI?'on':''}" data-feat="${i}" aria-label="Destaque ${i+1}"></button>`).join('');
 }
 function featNext(step=1){ featI=(featI+step+FEATURED.length)%FEATURED.length; renderFeat(); featTimer(); }
-function featTimer(){ clearTimeout(featT); featT=setTimeout(()=>{ if(curView==='home' && !document.hidden) featNext(); else featTimer(); }, featVideoOk()?16000:9000); }
+function featTimer(){ clearTimeout(featT);
+  const listening = featSound && !featUserMuted && !mediaBusy() && featYt;
+  featT=setTimeout(()=>{ if(curView==='home' && !document.hidden && !(featSound && !featUserMuted && !mediaBusy() && featYt)) featNext(); else featTimer(); }, listening?60000:(featVideoOk()?16000:9000)); }
+$('#featSound').onclick = e=>{ e.stopPropagation();
+  if($('#featSound').classList.contains('on')){ featUserMuted=true; }
+  else { featSound=true; featUserMuted=false;
+    if(!audio.paused) audio.pause(); if(ytP && (ytState===1||ytState===3)) ytP.pauseVideo(); }
+  featApplySound(); featTimer(); };
 $('#featHit').onclick = ()=>{ const c=FEATURED[featI]; go('tv'); openTv(c); };
 $('#featDots').addEventListener('click', e=>{ const b=e.target.closest('[data-feat]'); if(b){ featI=+b.dataset.feat; renderFeat(); featTimer(); } });
 (function(){ let x0=null; const f=$('#feat');
@@ -1476,8 +1531,8 @@ history.replaceState({view:'home'},'');
 /* ---------- Baixar / instalar o app ---------- */
 let installEvt=null;
 window.addEventListener('beforeinstallprompt', e=>{ e.preventDefault(); installEvt=e; });
-window.addEventListener('appinstalled', ()=>{ installEvt=null; $('#installBtn').hidden=true; logInstall(); renderAccount(); toast('App instalado! Procure o ícone TocaPlay 🎉'); });
-if(isStandalone()) $('#installBtn').hidden = true;
+window.addEventListener('appinstalled', ()=>{ installEvt=null; $('#installBtn').hidden=true; $('#appBanner').hidden=true; logInstall(); renderAccount(); toast('App instalado! Procure o ícone TocaPlay 🎉'); });
+if(isStandalone()){ $('#installBtn').hidden = true; $('#appBanner').hidden = true; }
 function deviceId(){
   let dev = store.get('tp_dev', null);
   if(!dev){ dev = (crypto.randomUUID ? crypto.randomUUID() : String(Math.random()).slice(2)+Date.now()); store.set('tp_dev', dev); }

@@ -115,3 +115,11 @@ Abra o site no Chrome do Android → menu ⋮ → **Instalar app** (ou **Adicion
 - **TV:** se um vídeo do canal estiver bloqueado, o player pula sozinho para o próximo; se o canal não liberar nenhum, aparece o botão "Abrir no YouTube".
 - **Aba Perfil:** antes de inscrever aparece como "Inscrever"; para o dono, mostra o botão "Abrir meu painel" (e-mail em `OWNER_EMAIL` no config.js).
 - **Fileiras** "Ao vivo agora" e "Pregadores" com foto, que abrem direto na aba TV.
+
+## Versão 13 (17/10/2026)
+- **Destaque com som:** o vídeo do topo roda também no celular. Os navegadores só liberam som depois do primeiro toque na tela; no primeiro toque o som liga sozinho. Botão "🔇 Ouvir / 🔊" no canto do destaque.
+  - Quando a pessoa toca uma rádio, uma música ou abre um vídeo, o destaque fica mudo e segue só o que ela escolheu.
+- **Baixar app em destaque:** botão amarelo pulsando no topo e faixa grande "Baixe o app TocaPlay" na página inicial.
+- **Inscrever-se** sempre visível na página inicial (para quem já é inscrito aparece "✓ Inscrito").
+- **Canais novos:** Pra. Talitha Pereira, Pr. Arthur Pereira, Semeadores Kids, Bíblia Kids. Foto do Pr. Cláudio Duarte corrigida.
+- Aba TV: no "Tudo" de uma categoria, cada canal aparece uma vez só.
