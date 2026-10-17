@@ -133,10 +133,26 @@ Abra o site no Chrome do Android → menu ⋮ → **Instalar app** (ou **Adicion
 - Setas ‹ › nas fileiras "Ao vivo agora" e "Pregadores" (aparecem só quando há mais canais daquele lado).
 
 ## Versão 16 (17/10/2026)
-- **Podcasts:** nova aba na barra de baixo.
-  - 13 categorias: Cristão, Estudos bíblicos, Notícias, Humor, Entrevistas, Esportes, Histórias e mistério, Educação, Saúde e bem-estar, Dinheiro e negócios, Tecnologia, Infantil e Música. Busca por nome ou assunto.
-  - Página do podcast com capa, episódios, "Ouvir o mais recente" e "Seguir" (quem a pessoa segue aparece no topo).
-  - Player com barra de tempo, voltar 15s, avançar 30s e velocidade 1x / 1,25x / 1,5x / 2x. **Continua de onde parou.**
-  - Fileira "Podcasts cristãos" na página inicial.
-  - Fonte: diretório público de podcasts da Apple (grátis, sem chave). O áudio vem direto do site de cada podcast.
-  - As categorias ficam em `index.html` → `POD_CATS` (nome e palavra de busca).
+- **Podcasts de vários assuntos, com preferência por vídeo.**
+  - **Em vídeo (YouTube):** Flow, Podpah, Inteligência Ltda, Ticaracaticast, Charla (esportes), Ciência Sem Fim, Jovem Nerd, Os Sócios, PrimoCast, Me Poupe!, Drauzio Varella (saúde), Modus Operandi (crimes reais), JesusCopy e Dois Dedos de Teologia. Ficam no topo da aba Podcasts, na fileira "Podcasts em vídeo" da página inicial e na categoria "Podcasts" da TV.
+  - **Só áudio:** 32 assuntos (Notícias, Humor, Esportes, Futebol, Entrevistas, Música, Educação, Ciência, História, Tecnologia, Games, Cinema e séries, Crimes reais, Saúde, Carreira, Dinheiro, Empreendedorismo, Idiomas, Concursos, Culinária, Viagem, Agro, Política, Livros, Infantil, Cristão, Católico e outros). A aba abre em "Destaques", com um pouco de cada.
+  - Ao escolher um assunto, a fileira de vídeo mostra os podcasts em vídeo daquele assunto.
+  - Episódios de áudio: "Seguir", "Continuar de onde parou", voltar 15s, avançar 30s e velocidade até 2x.
+  - Podcasts em vídeo ficam em `config.js` (categoria `'Podcasts'`); assuntos de áudio em `index.html` → `POD_CATS`.
+- Setas ‹ › também nas categorias da TV e dos Podcasts.
+
+## Versão 17 (17/10/2026)
+- **Aba Podcasts abre com todos os podcasts em vídeo (32), separados por assunto:**
+  - Entrevistas: Flow, Podpah, Inteligência Ltda, Vênus, PodDelas, À Deriva
+  - Humor: Ticaracaticast, Achismos, Papagaio Falante, Desce a Letra
+  - Esportes: Charla, Benja Me Mucho, Denílson Show
+  - Cristão: Café com Deus Pai, Karina Bacchi, Forte Podcast (Tassos Lycurgo), JesusCopy, Dois Dedos de Teologia
+  - Dinheiro e negócios: Os Sócios, PrimoCast, Me Poupe!, Joel Jota, Irmãos Dias
+  - Saúde: Drauzio Varella, Paulo Muzy, Psicologia na Prática
+  - Crimes e mistério: Beto Ribeiro, Modus Operandi, LendaCast
+  - Ciência e educação: Ciência Sem Fim, Jovem Nerd
+  - Católico: Padre Alex Nogueira
+- Embaixo continuam os podcasts só de áudio (32 assuntos).
+
+## Versão 18 (17/10/2026)
+- **Painel na lateral direita (computador):** "Rádio boa, de graça, do Oiapoque ao Chuí." com selo "100% grátis", números do app e botões "Baixar o app" e "Indicar no WhatsApp". Aparece em telas a partir de 1340px de largura.

@@ -139,6 +139,23 @@ h2{font-size:18px;font-weight:700;margin:20px 0 10px}
 .ch-row{scroll-behavior:smooth}
 .row-wrap .chip-arrow{top:40px}
 .row-wrap.pods .chip-arrow{top:59px}
+.row-wrap.vids .chip-arrow{top:52px}
+.vc{flex:none;width:200px;text-align:left;color:var(--txt);min-width:0}
+.vgrid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px 12px}
+.vgrid .vc{width:auto}
+@media(min-width:560px){.vgrid{grid-template-columns:repeat(3,1fr)}}
+@media(min-width:900px){.vgrid{grid-template-columns:repeat(4,1fr)}}
+.vsec{display:flex;align-items:baseline;justify-content:space-between;margin:20px 0 10px}
+.vsec h3{font-size:17px;font-weight:800}
+.vsec small{color:var(--muted);font-size:12.5px}
+.vc .th{position:relative;aspect-ratio:16/9;border-radius:14px;overflow:hidden;display:grid;place-items:center;box-shadow:0 8px 22px rgba(0,0,0,.35)}
+.vc .th i{width:46%;aspect-ratio:1;border-radius:50%;overflow:hidden;position:relative;display:grid;place-items:center;font-style:normal;font-weight:800;font-size:20px;color:#fff;
+  box-shadow:0 0 0 3px rgba(255,255,255,.2)}
+.vc .th i img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.vc .th em{position:absolute;right:8px;bottom:8px;font-style:normal;font-size:11px;font-weight:800;padding:3px 7px;border-radius:6px;background:rgba(0,0,0,.6)}
+.vc b{display:block;font-size:14px;margin-top:8px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.vc small{display:block;color:var(--muted);font-size:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.row-wrap.cats .chip-arrow{top:50%;width:36px;height:36px}
 .row-wrap::before,.row-wrap::after{bottom:0}
 .ch{flex:none;width:84px;text-align:center;font-size:12.5px;font-weight:600;line-height:1.25;color:var(--txt)}
 .ch .av{width:76px;height:76px;margin:0 auto 7px;border-radius:50%;display:grid;place-items:center;font-weight:800;font-size:20px;color:#fff;
@@ -395,6 +412,22 @@ a.pill{color:var(--txt);text-decoration:none}
 .pl-card b{font-size:15px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;display:block}
 .pl-card small{color:var(--muted);font-size:12.5px}
 .side{display:none}
+.side-r{display:none}
+@media (min-width:1340px){
+  .intro h1{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+  .side-r{display:block;position:fixed;top:96px;right:24px;width:min(290px, calc(100vw - max(300px, calc(50% - 380px)) - 760px - 56px));
+    max-height:calc(100vh - 200px);overflow:auto;scrollbar-width:none}
+}
+.sr-card{border-radius:22px;padding:22px 20px;border:1px solid #2f4d3c;
+  background:radial-gradient(120% 80% at 100% 0%,rgba(255,210,63,.18),transparent 60%),linear-gradient(160deg,#143a28,#0e2219)}
+.sr-free{display:inline-block;font-weight:900;font-size:13px;letter-spacing:.3px;padding:6px 12px;border-radius:999px;background:var(--green);color:#06120c}
+.sr-slogan{font-size:30px;line-height:1.08;font-weight:900;letter-spacing:-.8px;margin-top:14px;text-wrap:balance}
+.sr-nums{list-style:none;margin-top:16px;display:grid;gap:9px}
+.sr-nums li{font-size:14px;color:var(--muted);line-height:1.35}
+.sr-nums b{color:var(--txt)}
+.sr-note{color:var(--muted);font-size:12.5px;line-height:1.4;margin-top:14px}
+.sr-btn{display:block;width:100%;margin-top:10px;padding:13px;border-radius:14px;font-weight:800;font-size:15px;background:var(--yellow);color:#06120c}
+.sr-btn.wa{background:#25d366;color:#06120c}
 @media (min-width:1200px){
   .side{display:block;position:fixed;left:24px;top:96px;width:250px;max-height:calc(100vh - 260px);overflow:auto;scrollbar-width:thin}
   .side h3{font-size:13px;letter-spacing:1px;color:var(--muted);margin:18px 4px 8px}
@@ -471,6 +504,23 @@ a.pill{color:var(--txt);text-decoration:none}
   <div id="sidePl"></div>
 </aside>
 
+<!-- Painel da direita (só em telas largas) -->
+<aside class="side-r" aria-label="Sobre o TocaPlay">
+  <div class="sr-card">
+    <span class="sr-free">100% grátis</span>
+    <p class="sr-slogan">Rádio boa, <span class="gold">de graça</span>, do Oiapoque ao Chuí.</p>
+    <ul class="sr-nums">
+      <li><b>📻 Milhares</b> de rádios do Brasil ao vivo</li>
+      <li><b id="srTv">📺 100+</b> canais de TV e vídeo</li>
+      <li><b>🎙️ Podcasts</b> em vídeo e áudio</li>
+      <li><b>🎵 Playlists</b> com suas músicas</li>
+    </ul>
+    <p class="sr-note">Sem cadastro obrigatório. Funciona no celular e no computador.</p>
+    <button class="sr-btn" data-install id="srInstall">📲 Baixar o app</button>
+    <button class="sr-btn wa" data-invite>Indicar no WhatsApp</button>
+  </div>
+</aside>
+
 <main>
   <!-- INÍCIO -->
   <section class="view active" id="v-home">
@@ -506,8 +556,8 @@ a.pill{color:var(--txt);text-decoration:none}
     <div class="chips-wrap row-wrap"><button class="chip-arrow l" data-rowscroll="-1" aria-label="Voltar"><svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg></button><div class="ch-row" id="rowLive"></div><button class="chip-arrow r" data-rowscroll="1" aria-label="Ver mais"><svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></svg></button></div>
     <div class="row-head"><h2>Pregadores</h2><button data-gotv="Cristão" data-gosub="Pregações">Ver tudo</button></div>
     <div class="chips-wrap row-wrap"><button class="chip-arrow l" data-rowscroll="-1" aria-label="Voltar"><svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg></button><div class="ch-row" id="rowPreg"></div><button class="chip-arrow r" data-rowscroll="1" aria-label="Ver mais"><svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></svg></button></div>
-    <div id="rowPodsBlock"><div class="row-head"><h2>Podcasts cristãos</h2><button data-goview="pod">Ver todos</button></div>
-    <div class="chips-wrap row-wrap pods"><button class="chip-arrow l" data-rowscroll="-1" aria-label="Voltar"><svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg></button><div class="ch-row" id="rowPods"></div><button class="chip-arrow r" data-rowscroll="1" aria-label="Ver mais"><svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></svg></button></div></div>
+    <div id="rowPodsBlock"><div class="row-head"><h2>Podcasts em vídeo</h2><button data-goview="pod">Ver todos</button></div>
+    <div class="chips-wrap row-wrap vids"><button class="chip-arrow l" data-rowscroll="-1" aria-label="Voltar"><svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg></button><div class="ch-row" id="rowPods"></div><button class="chip-arrow r" data-rowscroll="1" aria-label="Ver mais"><svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></svg></button></div></div>
     <div id="homePlBlock">
       <h2>Suas playlists</h2>
       <div class="pl-row" id="homePl"></div>
@@ -557,7 +607,7 @@ a.pill{color:var(--txt);text-decoration:none}
     </div>
     <label class="field tv-find"><svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
       <input id="tvQ" type="search" placeholder="Procurar canal, pregador ou cantor" autocomplete="off" enterkeyhint="search"></label>
-    <div class="chips" id="tvCats" style="margin-top:8px"></div>
+    <div class="chips-wrap row-wrap cats" style="margin-top:8px"><button class="chip-arrow l" data-rowscroll="-1" aria-label="Voltar"><svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg></button><div class="chips" id="tvCats"></div><button class="chip-arrow r" data-rowscroll="1" aria-label="Ver mais"><svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></svg></button></div>
     <div class="chips tv-subs" id="tvSubs" hidden></div>
     <h2 id="tvListTitle">Canais</h2>
     <div id="tvGrid"></div>
@@ -571,8 +621,9 @@ a.pill{color:var(--txt);text-decoration:none}
       <label class="field"><svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
         <input id="podQ" type="search" placeholder="Procurar podcast ou assunto" autocomplete="off" enterkeyhint="search"></label>
       <div id="podFollowBlock" hidden><h2>Seguindo</h2><div class="pod-grid" id="podFollow"></div></div>
-      <div class="chips" id="podCats" style="margin-top:10px"></div>
-      <h2 id="podTitle">Cristão</h2>
+      <div class="chips-wrap row-wrap cats" style="margin-top:10px"><button class="chip-arrow l" data-rowscroll="-1" aria-label="Voltar"><svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg></button><div class="chips" id="podCats"></div><button class="chip-arrow r" data-rowscroll="1" aria-label="Ver mais"><svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></svg></button></div>
+      <div id="podVidBlock"><div id="podVid"></div></div>
+      <h2 id="podTitle">🎧 Só áudio: vários assuntos</h2>
       <div class="pod-grid" id="podGrid"></div>
       <p class="tv-note">Podcasts do diretório público da Apple. O áudio toca aqui dentro, direto do site de cada podcast.</p>
     </div>
@@ -1485,11 +1536,53 @@ renderTv();
 
 /* ---------- Podcasts (diretório público da Apple, sem chave) ---------- */
 const POD_CATS = [
-  ['Cristão','pregação evangélica'], ['Estudos bíblicos','estudo bíblico'], ['Notícias','notícias'], ['Humor','humor'],
-  ['Entrevistas','entrevistas'], ['Esportes','futebol'], ['Histórias e mistério','histórias mistério'], ['Educação','educação'],
-  ['Saúde e bem-estar','saúde bem-estar'], ['Dinheiro e negócios','finanças investimentos'], ['Tecnologia','tecnologia'],
-  ['Infantil','histórias infantis'], ['Música','música']
+  ['Destaques',null],
+  ['Entrevistas','entrevistas'], ['Humor','humor'], ['Esportes','esportes'], ['Futebol','futebol'], ['Cristão','pregação evangélica'],
+  ['Católico','católico'], ['Dinheiro e investimentos','finanças investimentos'], ['Empreendedorismo','empreendedorismo'],
+  ['Saúde e bem-estar','saúde bem-estar'], ['Crimes reais','true crime'], ['Histórias e mistério','histórias mistério'],
+  ['Ciência','ciência'], ['Educação','educação'], ['História','história'], ['Tecnologia','tecnologia'], ['Games','games'],
+  ['Relacionamentos','relacionamentos'], ['Desenvolvimento pessoal','desenvolvimento pessoal'], ['Carreira','carreira'],
+  ['Notícias','notícias'], ['Música','música'], ['Cinema e séries','cinema séries'], ['Idiomas','aprender inglês'],
+  ['Concursos','concursos'], ['Culinária','culinária'], ['Viagem','viagem'], ['Agro','agronegócio'], ['Política','política'],
+  ['Livros','livros literatura'], ['Infantil','histórias infantis'], ['Estudos bíblicos','estudo bíblico']
 ];
+// "Destaques": um pouco de cada assunto
+const POD_MIX = ['notícias','humor','esportes','música','educação','histórias mistério','tecnologia','desenvolvimento pessoal','pregação evangélica','finanças investimentos'];
+const POD_VIDEO_MAP = {'Esportes':'Esportes','Futebol':'Esportes','Humor':'Humor','Entrevistas':'Entrevistas','Ciência':'Ciência e educação',
+  'Educação':'Ciência e educação','História':'Ciência e educação','Games':'Ciência e educação','Tecnologia':'Ciência e educação',
+  'Dinheiro e investimentos':'Dinheiro e negócios','Empreendedorismo':'Dinheiro e negócios','Carreira':'Dinheiro e negócios',
+  'Saúde e bem-estar':'Saúde','Crimes reais':'Crimes e mistério','Histórias e mistério':'Crimes e mistério',
+  'Relacionamentos':'Comportamento','Desenvolvimento pessoal':'Comportamento',
+  'Cristão':'Cristão','Estudos bíblicos':'Cristão','Católico':'Católico'};
+const POD_VIDEO_ORDER = ['Entrevistas','Humor','Esportes','Cristão','Dinheiro e negócios','Saúde','Crimes e mistério','Ciência e educação','Comportamento','Católico'];
+function renderPodVideos(){
+  const all = TV_CHANNELS.filter(c=>c.cat==='Podcasts');
+  const q = tvNorm($('#podQ').value.trim()), sub = POD_VIDEO_MAP[podCat];
+  const box = $('#podVid');
+  if(q){
+    const l = all.filter(c=>tvNorm(`${c.name} ${c.desc} ${tvSubsOf(c).join(' ')}`).includes(q));
+    box.innerHTML = l.length ? `<div class="vsec"><h3>📺 Em vídeo</h3><small>${l.length}</small></div><div class="vgrid">${l.map(vcCard).join('')}</div>` : '';
+  } else if(podCat==='Destaques'){
+    // todos os podcasts em vídeo, separados por assunto (cada um aparece uma vez)
+    const shown = new Set(), subs = [...POD_VIDEO_ORDER, ...new Set(all.flatMap(tvSubsOf))].filter((v,i,a)=>a.indexOf(v)===i);
+    box.innerHTML = `<div class="vsec"><h3>📺 Podcasts em vídeo</h3><small>${all.length} canais</small></div>` + subs.map(sb_=>{
+      const l = all.filter(c=>tvSubsOf(c).includes(sb_) && !shown.has(c)); l.forEach(c=>shown.add(c));
+      return l.length ? `<div class="tv-sub-h">${esc(sb_)}</div><div class="vgrid">${l.map(vcCard).join('')}</div>` : '';
+    }).join('');
+  } else {
+    const l = sub ? all.filter(c=>tvSubsOf(c).includes(sub)) : [];
+    box.innerHTML = l.length ? `<div class="vsec"><h3>📺 ${esc(podCat)} em vídeo</h3><small>${l.length}</small></div><div class="vgrid">${l.map(vcCard).join('')}</div>` : '';
+  }
+  $('#podVidBlock').hidden = !box.innerHTML;
+}
+async function podMix(per=3){
+  const lists = await Promise.allSettled(POD_MIX.map(t=>podSearch(t)));
+  const rows = lists.map(r=>r.status==='fulfilled' ? r.value.slice(0,per) : []);
+  const out=[], seen=new Set();
+  for(let i=0;i<per;i++) rows.forEach(r=>{ const p=r[i]; if(p && !seen.has(p.id)){ seen.add(p.id); out.push(p); } });
+  if(!out.length) throw new Error('vazio');
+  return out;
+}
 let podCat = POD_CATS[0][0], podCurrentShow = null, podRate = store.get('tp_podrate', 1), podResumeAt = 0, podLastSave = 0;
 const podCache = {};
 function jsonp(url){
@@ -1534,15 +1627,18 @@ function renderPodCats(){
   $('#podCats').innerHTML = POD_CATS.map(([n])=>`<button class="chip ${n===podCat&&!$('#podQ').value.trim()?'on':''}" data-podcat="${esc(n)}">${esc(n)}</button>`).join('');
   const f = podFollows(); rememberPods(f);
   $('#podFollowBlock').hidden = !f.length; $('#podFollow').innerHTML = f.map(podCard).join('');
+  requestAnimationFrame(()=>rowArrows($('#podCats').closest('.row-wrap')));
 }
 async function loadPods(){
   const q = $('#podQ').value.trim();
   const term = q || POD_CATS.find(c=>c[0]===podCat)[1];
-  $('#podTitle').textContent = q ? `Resultados para "${q}"` : podCat;
+  $('#podTitle').textContent = '🎧 Só áudio' + (q ? `: "${q}"` : (term ? ': '+podCat : ': vários assuntos'));
+  renderPodVideos();
   const g = $('#podGrid'); g.innerHTML = skeleton(4);
+  const now = ()=> $('#podQ').value.trim() || POD_CATS.find(c=>c[0]===podCat)[1];
   try{
-    const list = rememberPods(await podSearch(term));
-    if(term !== ($('#podQ').value.trim() || POD_CATS.find(c=>c[0]===podCat)[1])) return;
+    const list = rememberPods(term ? await podSearch(term) : await podMix(4));
+    if(term !== now()) return;
     g.innerHTML = list.length ? list.map(podCard).join('') : emptyBox('Nenhum podcast encontrado','Tente outra palavra.');
   }catch{ g.innerHTML = emptyBox('Não deu para carregar','Confira a internet e tente de novo.'); }
 }
@@ -1619,10 +1715,13 @@ $('#podBack15').onclick = ()=>{ audio.currentTime = Math.max(0, audio.currentTim
 $('#podFwd30').onclick = ()=>{ audio.currentTime = Math.min((audio.duration||1e9)-1, audio.currentTime+30); };
 $('#podSpeed').onclick = ()=>{ const r=[1,1.25,1.5,2], i=(r.indexOf(audio.playbackRate)+1)%r.length; podRate=r[i]; audio.playbackRate=podRate; store.set('tp_podrate',podRate); podUpdateCtl(); };
 // fileira de podcasts na página inicial
-async function renderHomePods(){
-  try{ const list = rememberPods(await podSearch(POD_CATS[0][1])).slice(0,14);
-    $('#rowPods').innerHTML = list.map(podCard).join(''); rowArrows($('#rowPods').closest('.row-wrap'));
-  }catch{ $('#rowPodsBlock').hidden = true; }
+function vcCard(c){ const av=avatarUrl(c);
+  return `<button class="vc" data-chome="${TV_CHANNELS.indexOf(c)}"><div class="th" style="background:${esc(c.color)}"><i style="background:${esc(c.color)}">${esc(c.short)}${av?`<img src="${esc(av)}" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="this.remove()">`:''}</i><em>▶ VÍDEO</em></div><b>${esc(c.name)}</b><small>${esc(tvSubsOf(c).join(' · '))}</small></button>`; }
+function renderHomePods(){
+  const list = TV_CHANNELS.filter(c=>c.cat==='Podcasts');
+  $('#rowPodsBlock').hidden = !list.length;
+  $('#rowPods').innerHTML = list.map(vcCard).join('');
+  requestAnimationFrame(()=>rowArrows($('#rowPods').closest('.row-wrap')));
 }
 let podsLoaded=false;
 function enterPods(){ if(!podsLoaded){ podsLoaded=true; renderPodCats(); loadPods(); } else renderPodCats(); if(podCurrentShow) renderEps(); }
@@ -1726,13 +1825,13 @@ function renderRows(){
 }
 // Setas ‹ › das fileiras: aparecem só quando há mais para ver daquele lado
 function rowArrows(w){
-  const r=w.querySelector('.ch-row'); if(!r) return;
+  const r=w.querySelector('.ch-row, .chips'); if(!r) return;
   const start = r.scrollLeft <= 4, end = r.scrollLeft + r.clientWidth >= r.scrollWidth - 4;
   w.querySelector('[data-rowscroll="-1"]').disabled = start; w.querySelector('[data-rowscroll="1"]').disabled = end;
   w.classList.toggle('at-start', start); w.classList.toggle('at-end', end);
 }
 document.querySelectorAll('.row-wrap').forEach(w=>{
-  const r=w.querySelector('.ch-row');
+  const r=w.querySelector('.ch-row, .chips');
   r.addEventListener('scroll', ()=>rowArrows(w), {passive:true});
   w.querySelectorAll('[data-rowscroll]').forEach(b=>b.onclick=()=>{ r.scrollLeft += (+b.dataset.rowscroll) * r.clientWidth * 0.8; });
 });
@@ -1756,6 +1855,7 @@ function go(view, push=true){
   if(view==='search') setTimeout(()=>$('#q').focus(),50);
   if(view==='home') renderFeat(); else featStopVideo();
   if(view==='pod') enterPods();
+  requestAnimationFrame(()=>document.querySelectorAll('.view.active .row-wrap').forEach(rowArrows));
 }
 document.querySelectorAll('nav button').forEach(b=>b.onclick=()=>go(b.dataset.view));
 $('#avatarBtn').onclick = ()=>go('account');
@@ -1794,7 +1894,7 @@ history.replaceState({view:'home'},'');
 let installEvt=null;
 window.addEventListener('beforeinstallprompt', e=>{ e.preventDefault(); installEvt=e; });
 window.addEventListener('appinstalled', ()=>{ installEvt=null; $('#installBtn').hidden=true; $('#appBanner').hidden=true; logInstall(); renderAccount(); toast('App instalado! Procure o ícone TocaPlay 🎉'); });
-if(isStandalone()){ $('#installBtn').hidden = true; $('#appBanner').hidden = true; }
+if(isStandalone()){ $('#installBtn').hidden = true; $('#appBanner').hidden = true; $('#srInstall').hidden = true; }
 function deviceId(){
   let dev = store.get('tp_dev', null);
   if(!dev){ dev = (crypto.randomUUID ? crypto.randomUUID() : String(Math.random()).slice(2)+Date.now()); store.set('tp_dev', dev); }
@@ -1866,6 +1966,7 @@ if(CONFIG.ADSENSE_CLIENT && CONFIG.ADSENSE_SLOT){
 /* ---------- Início do app ---------- */
 renderChips(); renderFavs(); renderAccount(); renderPlaylists(); loadHome(); updatePlayer(); checkImport();
 renderFeat(); renderRows(); renderHomePods();
+$('#srTv').textContent = `📺 ${Math.floor(TV_CHANNELS.length/10)*10}+`;
 (function openStateFromLink(){
   const m = location.hash.match(/^#uf=(.+)$/); if(!m) return;
   const uf = decodeURIComponent(m[1]); if(!STATES.includes(uf)) return;
