@@ -19,7 +19,7 @@ const CONFIG = {
   TV_CAT_ORDER: ['Cristão','TV Ao Vivo','Internacionais','Músicas para Dormir','Infantil','Esportes','Filmes','Sertanejo','Pagode','Funk e Urbana'],
 
   TV_CHANNELS: [
-    {"name": "Rev. Hernandes Dias Lopes", "short": "HD", "cat": "Cristão", "sub": "Pregações", "desc": "Pregações expositivas", "url": "https://www.youtube.com/@hernandesdiaslopes", "channelId": "UCqwGU_XKpbfebvK18SfYgjQ", "live": true, "color": "linear-gradient(135deg,#b38bff,#3a1d8f)"},
+    {"name": "Rev. Hernandes Dias Lopes", "short": "HD", "cat": "Cristão", "sub": "Pregações", "desc": "Pregações expositivas", "url": "https://www.youtube.com/@HernandesDiasLopesOficial", "channelId": "UCT8yKUrnFmq5COl15dasxog", "live": true, "color": "linear-gradient(135deg,#b38bff,#3a1d8f)"},
     {"name": "Augustus Nicodemus", "short": "AN", "cat": "Cristão", "sub": "Pregações", "desc": "Pregações e teologia", "url": "https://www.youtube.com/@augustusnicodemus", "channelId": "UCjo1duewku1EhP50BllP8yg", "live": true, "color": "linear-gradient(135deg,#b38bff,#3a1d8f)"},
     {"name": "Luciano Subirá", "short": "LS", "cat": "Cristão", "sub": "Pregações", "desc": "Pregações e ensino", "url": "https://www.youtube.com/@lucianosubira", "channelId": "UC8XGh6aU2yZf7AbnfPzMczA", "live": true, "color": "linear-gradient(135deg,#b38bff,#3a1d8f)"},
     {"name": "Helena Tannure", "short": "HT", "cat": "Cristão", "sub": "Pregações", "desc": "Mensagens e família", "url": "https://www.youtube.com/@helenatannure", "channelId": "UCjy56REvtTIQ5dxSYhYWj5A", "live": true, "color": "linear-gradient(135deg,#b38bff,#3a1d8f)"},
@@ -107,6 +107,9 @@ const CONFIG = {
   // Google AdSense
   ADSENSE_CLIENT: 'ca-pub-9758861492456093',
   ADSENSE_SLOT: '',     // opcional: ID de um bloco fixo; os Anúncios automáticos funcionam sem isso
+
+  // E-mail do dono: ao entrar com ele na aba Perfil, aparece o botão "Abrir meu painel"
+  OWNER_EMAIL: 'sandropqd55464@gmail.com',
 
   // E-mail de contato mostrado nas páginas Sobre e Privacidade (deixe '' para não mostrar)
   CONTACT_EMAIL: 'sandropqd55464@gmail.com',

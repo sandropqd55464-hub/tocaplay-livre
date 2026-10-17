@@ -107,3 +107,11 @@ Abra o site no Chrome do Android → menu ⋮ → **Instalar app** (ou **Adicion
 - **Painel:** mostra inscritos (1 toque × e-mail) e instalações por aparelho. Rode o `supabase.sql` de novo para criar a tabela `installs`.
 - **Aba TV:** categorias com subcategorias (Cristão, TV Ao Vivo, Internacionais, Músicas para Dormir, Infantil, Esportes, Filmes…) e busca de canal.
   Os canais ficam em `config.js` → `TV_CHANNELS`. Use `sub` para a subcategoria.
+
+## Versão 12 (17/10/2026)
+- **Página inicial nova:** destaque grande que troca sozinho. No computador e no Wi‑Fi roda o vídeo do canal sem som; no 4G mostra a imagem com movimento lento (economiza internet).
+  - Para trocar os destaques: `config.js` → `HOME_FEATURED: ['Nome do canal', ...]` (nomes iguais aos da lista de canais).
+  - Para desligar o vídeo: `HOME_VIDEO: false`.
+- **TV:** se um vídeo do canal estiver bloqueado, o player pula sozinho para o próximo; se o canal não liberar nenhum, aparece o botão "Abrir no YouTube".
+- **Aba Perfil:** antes de inscrever aparece como "Inscrever"; para o dono, mostra o botão "Abrir meu painel" (e-mail em `OWNER_EMAIL` no config.js).
+- **Fileiras** "Ao vivo agora" e "Pregadores" com foto, que abrem direto na aba TV.

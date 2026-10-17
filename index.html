@@ -84,6 +84,57 @@ h2{font-size:18px;font-weight:700;margin:20px 0 10px}
 .hero p{color:var(--muted);font-size:14px;margin-top:6px}
 .hero .continue{margin-top:14px;display:flex;align-items:center;gap:12px;background:rgba(0,0,0,.25);border-radius:14px;padding:10px;width:100%;text-align:left}
 
+/* Destaque da página inicial */
+.feat{position:relative;aspect-ratio:16/9;max-height:min(62vh,400px);width:100%;border-radius:22px;overflow:hidden;margin-top:4px;
+  background:#06120c;border:1px solid var(--line);isolation:isolate}
+@media(max-width:480px){.feat{aspect-ratio:4/3.4}}
+.feat-media{position:absolute;inset:0;z-index:0}
+.feat-media .bg{position:absolute;inset:-12%;background-size:cover;background-position:center;filter:blur(26px) saturate(1.5) brightness(.75);
+  transform:scale(1.05);animation:kenburns 14s ease-in-out infinite alternate}
+.feat-media .ph{position:absolute;inset:0;display:grid;place-items:center}
+.feat-media .ph i{width:38%;max-width:200px;aspect-ratio:1;border-radius:50%;display:grid;place-items:center;font-style:normal;font-weight:800;
+  font-size:clamp(28px,7vw,54px);color:#fff;overflow:hidden;position:relative;box-shadow:0 18px 60px rgba(0,0,0,.55),0 0 0 4px rgba(255,255,255,.12);
+  animation:floaty 7s ease-in-out infinite alternate;transform:translateY(-8%)}
+.feat-media .ph i img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.feat-media iframe{position:absolute;top:50%;left:50%;width:100%;height:100%;border:0;transform:translate(-50%,-50%) scale(1.38);pointer-events:none;
+  opacity:0;transition:opacity 1.2s ease}
+.feat-media iframe.on{opacity:1}
+@media(max-width:480px){.feat-media iframe{width:150%;}}
+.feat-media.fade{animation:featIn .7s ease}
+@keyframes featIn{from{opacity:.2}to{opacity:1}}
+@keyframes kenburns{from{transform:scale(1.05) translate(0,0)}to{transform:scale(1.25) translate(-3%,2%)}}
+@keyframes floaty{from{transform:translateY(-8%) scale(1)}to{transform:translateY(-12%) scale(1.06)}}
+.feat-shade{position:absolute;inset:0;z-index:1;pointer-events:none;
+  background:linear-gradient(180deg,rgba(6,18,12,0) 35%,rgba(6,18,12,.55) 62%,rgba(6,18,12,.95) 100%)}
+.feat-hit{position:absolute;inset:0;z-index:2;background:none}
+.feat-info{position:absolute;left:0;right:0;bottom:0;z-index:3;padding:16px 18px 30px;pointer-events:none}
+.feat-tag{display:inline-block;font-size:12px;font-weight:700;padding:4px 10px;border-radius:999px;background:rgba(0,0,0,.45);color:var(--yellow);
+  border:1px solid rgba(255,210,63,.35);backdrop-filter:blur(6px)}
+.feat-tag.live{color:#fff;background:#e62117;border-color:#e62117}
+.feat-name{font-size:clamp(24px,5.4vw,38px);font-weight:800;letter-spacing:-.6px;line-height:1.05;margin-top:8px;text-wrap:balance}
+.feat-desc{color:#cfe0d6;font-size:14.5px;margin-top:4px}
+.feat-cta{display:inline-flex;margin-top:12px;padding:10px 18px;border-radius:999px;background:var(--green);color:#06120c;font-weight:800;font-size:14.5px}
+.feat-dots{position:absolute;z-index:3;right:16px;bottom:16px;display:flex;gap:6px}
+.feat-dots button{width:8px;height:8px;border-radius:999px;background:rgba(255,255,255,.35);transition:width .3s,background .3s}
+.feat-dots button.on{width:22px;background:var(--yellow)}
+@media (prefers-reduced-motion:reduce){.feat-media .bg,.feat-media .ph i{animation:none}}
+.intro{margin-top:14px}
+.intro h1{font-size:19px;line-height:1.25;font-weight:700;letter-spacing:-.2px;color:var(--txt)}
+@media(min-width:700px){.intro h1{font-size:22px}}
+.intro .continue{margin-top:12px;display:flex;align-items:center;gap:12px;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:10px;width:100%;text-align:left}
+/* Fileiras de canais (estilo artistas) */
+.row-head{display:flex;align-items:baseline;justify-content:space-between;gap:10px}
+.row-head button{font-size:13.5px;font-weight:600;color:var(--green)}
+.ch-row{display:flex;align-items:flex-start;gap:14px;overflow-x:auto;scrollbar-width:none;margin:0 -16px;padding:2px 16px 6px}
+.ch-row::-webkit-scrollbar{display:none}
+.ch{flex:none;width:84px;text-align:center;font-size:12.5px;font-weight:600;line-height:1.25;color:var(--txt)}
+.ch .av{width:76px;height:76px;margin:0 auto 7px;border-radius:50%;display:grid;place-items:center;font-weight:800;font-size:20px;color:#fff;
+  position:relative;overflow:hidden;box-shadow:0 0 0 2px var(--bg),0 0 0 4px var(--line)}
+.ch.is-live .av{box-shadow:0 0 0 2px var(--bg),0 0 0 4px #e62117}
+.ch .av img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.ch span{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.ch small{display:block;color:#ff5b52;font-size:11px;font-weight:700;margin-top:2px}
+
 /* Chips */
 .chips{display:flex;gap:8px;overflow-x:auto;padding:4px 0 6px;scrollbar-width:none;margin:0 -16px;padding-left:16px;padding-right:16px}
 .chips::-webkit-scrollbar{display:none}
@@ -131,6 +182,8 @@ h2{font-size:18px;font-weight:700;margin:20px 0 10px}
 .field select option{background:var(--bg2)}
 
 /* Conta */
+.card.owner{background:linear-gradient(135deg,#1c4a33,#16251d);border-color:#2f6b4a}
+.card .btn{text-decoration:none;text-align:center}
 .card{background:var(--card);border:1px solid var(--line);border-radius:20px;padding:18px;margin-top:10px}
 .card p{color:var(--muted);font-size:14px;line-height:1.45}
 .form{display:flex;flex-direction:column;gap:10px;margin-top:14px}
@@ -232,6 +285,11 @@ nav button.on::after{content:'';position:absolute;bottom:-2px;width:26px;height:
 .tabs2 button.on{background:var(--card2);color:var(--txt)}
 .tv-player{position:relative;width:100%;aspect-ratio:16/9;border-radius:16px;overflow:hidden;background:#000;margin-top:6px}
 .tv-player iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
+.tv-loading{position:absolute;inset:0;display:grid;place-items:center;color:var(--muted);font-size:14px;pointer-events:none}
+.tv-fail{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;padding:18px;text-align:center;
+  background:radial-gradient(circle at 50% 30%,#1d3026,#06120c)}
+.tv-fail b{font-size:16px}.tv-fail span{color:var(--muted);font-size:14px}.tv-fail .btn{margin-top:6px;text-decoration:none}
+a.pill{color:var(--txt);text-decoration:none}
 .tv-bar{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap}
 .tv-bar .pill:not(.wa){background:var(--card)}
 .tv-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
@@ -346,15 +404,31 @@ nav button.on::after{content:'';position:absolute;bottom:-2px;width:26px;height:
 <main>
   <!-- INÍCIO -->
   <section class="view active" id="v-home">
-    <div class="hero">
-      <h1>Rádio boa, <span class="gold gold-big">de graça</span>,<br><span class="gold">do Oiapoque ao Chuí.</span></h1>
-      <p>Milhares de rádios brasileiras ao vivo. Sem cadastro obrigatório.</p>
+    <!-- Destaque: vídeo sem som (Wi-Fi/computador) ou imagem animada (dados móveis) -->
+    <div class="feat" id="feat" aria-roledescription="carrossel">
+      <div class="feat-media" id="featMedia"></div>
+      <div class="feat-shade"></div>
+      <button class="feat-hit" id="featHit" aria-label="Assistir destaque"></button>
+      <div class="feat-info">
+        <span class="feat-tag" id="featTag"></span>
+        <div class="feat-name" id="featName"></div>
+        <div class="feat-desc" id="featDesc"></div>
+        <span class="feat-cta">▶ Assistir</span>
+      </div>
+      <div class="feat-dots" id="featDots"></div>
+    </div>
+    <div class="intro">
+      <h1>Rádio boa, <span class="gold">de graça</span>, do Oiapoque ao Chuí.</h1>
       <button class="continue" id="continueBtn" hidden></button>
     </div>
     <div class="sub-card" id="homeSub" hidden>
       <div class="tx"><b>Inscreva-se no TocaPlay</b><small>Grátis, com 1 toque. Suas favoritas e playlists ficam guardadas.</small></div>
       <button class="sub-btn" data-subscribe>Inscrever-se</button>
     </div>
+    <div class="row-head"><h2>Ao vivo agora</h2><button data-gotv="TV Ao Vivo">Ver tudo</button></div>
+    <div class="ch-row" id="rowLive"></div>
+    <div class="row-head"><h2>Pregadores</h2><button data-gotv="Cristão" data-gosub="Pregações">Ver tudo</button></div>
+    <div class="ch-row" id="rowPreg"></div>
     <div id="homePlBlock">
       <h2>Suas playlists</h2>
       <div class="pl-row" id="homePl"></div>
@@ -398,6 +472,7 @@ nav button.on::after{content:'';position:absolute;bottom:-2px;width:26px;height:
         <button class="pill" id="tvModeVid">▶ Vídeos do canal</button>
         <button class="pill" id="tvModeLive">🔴 Ao vivo</button>
         <button class="pill wa" id="tvWa">WhatsApp</button>
+        <a class="pill" id="tvYtLink" href="#" target="_blank" rel="noopener">Abrir no YouTube</a>
         <button class="pill" id="tvClose">Fechar vídeo</button>
       </div>
     </div>
@@ -433,7 +508,7 @@ nav button.on::after{content:'';position:absolute;bottom:-2px;width:26px;height:
   </section>
 
   <section class="view" id="v-account">
-    <h2>Minha conta</h2>
+    <h2 id="accountTitle">Inscreva-se</h2>
     <div id="accountBox"></div>
     <div class="card">
       <div class="row">Versão <span>1.0.0</span></div>
@@ -460,7 +535,7 @@ nav button.on::after{content:'';position:absolute;bottom:-2px;width:26px;height:
   <button data-view="search"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg><span>Buscar</span></button>
   <button data-view="tv"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="6" width="18" height="13" rx="2"/><path d="m8 2 4 4 4-4"/></svg><span>TV</span></button>
   <button data-view="favs"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m12 3 2.8 5.7 6.2.9-4.5 4.4 1 6.2-5.5-2.9-5.5 2.9 1-6.2L3 9.6l6.2-.9z"/></svg><span>Favoritas</span></button>
-  <button data-view="account"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg><span>Conta</span></button>
+  <button data-view="account"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg><span id="navAccount">Inscrever</span></button>
 </nav>
 
 <!-- PLAYER COMPLETO -->
@@ -706,7 +781,9 @@ audio.addEventListener('playing',()=>{loading=false;updatePlayer();});
 
 /* Músicas do YouTube dentro das playlists (player oficial do YouTube) */
 let ytP=null, ytReady=false, ytPending=null, ytState=-1, ytErrors=0;
-window.onYouTubeIframeAPIReady = ()=>{ ytReady=true; if(ytPending){ const it=ytPending; ytPending=null; playSong(it); } };
+let ytQueue=[];
+window.onYouTubeIframeAPIReady = ()=>{ ytReady=true; if(ytPending){ const it=ytPending; ytPending=null; playSong(it); } const q=ytQueue; ytQueue=[]; q.forEach(f=>f()); };
+function whenYT(fn){ if(ytReady && window.YT && YT.Player) fn(); else { ytQueue.push(fn); loadYtApi(); } }
 function loadYtApi(){ if(document.getElementById('ytapi')) return; const sc=document.createElement('script'); sc.id='ytapi'; sc.src='https://www.youtube.com/iframe_api'; document.head.appendChild(sc); }
 const ytThumb = v => `https://i.ytimg.com/vi/${v}/mqdefault.jpg`;
 function playSong(it){
@@ -919,6 +996,11 @@ function renderAccount(){
   const nome = user?.user_metadata?.name || '';
   av.textContent = user ? (isAnon(user) ? '✓' : (nome||user.email||'?')[0].toUpperCase()) : '?';
   $('#homeSub').hidden = !sb || !!user;
+  $('#navAccount').textContent = user ? 'Perfil' : 'Inscrever';
+  $('#accountTitle').textContent = user ? 'Meu perfil' : 'Inscreva-se';
+  const owner = user && user.email && user.email.toLowerCase() === String(CONFIG.OWNER_EMAIL||'').toLowerCase();
+  const ownerCard = owner ? `<div class="card owner"><p><b style="color:var(--txt)">Área do dono</b><br>Inscritos, acessos, instalações e rádios mais ouvidas.</p>
+    <div class="form"><a class="btn" href="admin.html">📊 Abrir meu painel</a></div></div>` : '';
   if(!sb){
     box.innerHTML = `<div class="card"><p><b style="color:var(--txt)">Modo sem conta.</b> Suas favoritas ficam salvas neste aparelho. O cadastro aparece aqui assim que o Supabase for configurado.</p></div>` + inviteCard;
     return;
@@ -935,7 +1017,7 @@ function renderAccount(){
   if(user){
     box.innerHTML = `<div class="card"><p>Olá,</p><div style="font-weight:800;font-size:20px;margin:2px 0 4px">${esc(nome||'ouvinte')} 👋</div>
       <p style="word-break:break-all">${esc(user.email)}</p>
-      <p style="margin-top:10px">Suas favoritas estão sincronizadas em todos os aparelhos.</p><div class="form"><button class="btn ghost" id="logoutBtn">Sair da conta</button></div></div>` + installCard + inviteCard;
+      <p style="margin-top:10px">Suas favoritas estão sincronizadas em todos os aparelhos.</p><div class="form"><button class="btn ghost" id="logoutBtn">Sair da conta</button></div></div>` + ownerCard + installCard + inviteCard;
     $('#logoutBtn').onclick = async()=>{ await sb.auth.signOut(); toast('Você saiu da conta'); };
     return;
   }
@@ -1212,20 +1294,56 @@ function tvSrc(c, mode){
   // vídeos enviados pelo canal: a playlist "UU..." sempre existe e roda dentro do app
   return `https://www.youtube.com/embed/videoseries?list=${encodeURIComponent('UU'+c.channelId.slice(2))}&${base}`;
 }
+let tvYt=null, tvErr=0, tvTriedAll=false, tvToken=0;
+const uploadsList = (c, longOnly=true) => (longOnly?'UULF':'UU') + c.channelId.slice(2);
+function tvFail(c){
+  $('#tvPlayer').innerHTML = `<div class="tv-fail"><b>Este canal não libera os vídeos para outros sites.</b>
+    <span>Você pode assistir direto no YouTube.</span><a class="btn" href="${esc(c.url||('https://www.youtube.com/channel/'+c.channelId))}" target="_blank" rel="noopener">Abrir no YouTube</a></div>`;
+}
 function openTv(c, mode){
   tvCurrent = c; tvMode = mode || (c.live==='first' ? 'live' : 'videos');
   if(!audio.paused){ audio.pause(); toast('Rádio pausada para ver a TV'); }
   stopSong();
-  $('#tvPlayer').innerHTML = `<iframe src="${tvSrc(c,tvMode)}" title="${esc(c.name)}" allow="autoplay; encrypted-media; picture-in-picture; fullscreen" allowfullscreen referrerpolicy="strict-origin-when-cross-origin"></iframe>`;
+  const token = ++tvToken;
+  if(tvYt){ try{ tvYt.destroy(); }catch{} tvYt=null; }
+  const simple = tvMode==='live' || c.videoId || c.playlist || !c.channelId;
+  if(simple){
+    $('#tvPlayer').innerHTML = `<iframe src="${tvSrc(c,tvMode)}" title="${esc(c.name)}" allow="autoplay; encrypted-media; picture-in-picture; fullscreen" allowfullscreen referrerpolicy="strict-origin-when-cross-origin"></iframe>`;
+  }else{
+    // vídeos do canal pela API: se um vídeo estiver bloqueado, pula para o próximo sozinho
+    $('#tvPlayer').innerHTML = '<div id="tvYt"></div><div class="tv-loading">Carregando…</div>';
+    tvErr=0; tvTriedAll=false;
+    whenYT(()=>{
+      if(token!==tvToken) return;
+      tvYt = new YT.Player('tvYt', {width:'100%', height:'100%',
+        playerVars:{listType:'playlist', list:uploadsList(c), autoplay:1, playsinline:1, rel:0, modestbranding:1},
+        events:{
+          onReady:e=>{ $('.tv-loading')?.remove(); try{ e.target.playVideo(); }catch{} },
+          onStateChange:e=>{ if(e.data===1) tvErr=0; },
+          onError:()=>{
+            if(token!==tvToken) return;
+            const pl = (tvYt.getPlaylist && tvYt.getPlaylist()) || [];
+            if(!pl.length){ // lista de vídeos longos vazia: tenta a lista completa do canal
+              if(!tvTriedAll){ tvTriedAll=true; tvYt.loadPlaylist({listType:'playlist', list:uploadsList(c,false)}); return; }
+              return tvFail(c);
+            }
+            if(++tvErr > Math.min(10, pl.length)) return tvFail(c);
+            setTimeout(()=>{ try{ tvYt.nextVideo(); }catch{} }, 250);
+          }
+        }});
+    });
+  }
   $('#tvPlayerBox').hidden = false;
   $('#tvNow').innerHTML = `<b style="color:var(--txt)">${esc(c.name)}</b> · ${tvMode==='live'?'🔴 ao vivo (só funciona quando o canal está transmitindo)':'últimos vídeos do canal'}`;
   $('#tvModeLive').hidden = !c.live || !c.channelId; $('#tvModeVid').hidden = !c.live || !c.channelId;
   $('#tvModeLive').classList.toggle('on', tvMode==='live'); $('#tvModeVid').classList.toggle('on', tvMode!=='live');
+  $('#tvYtLink').href = c.url || ('https://www.youtube.com/channel/'+c.channelId);
   renderTv(); scrollTo({top:0,behavior:'smooth'});
   if(sb) sb.from('plays').insert({station_id:'tv:'+(c.channelId||c.videoId||c.playlist), station_name:'📺 '+c.name}).then(()=>{});
 }
 function stopTv(){
   if(!tvCurrent) return;
+  tvToken++; if(tvYt){ try{ tvYt.destroy(); }catch{} tvYt=null; }
   tvCurrent=null; $('#tvPlayer').innerHTML=''; $('#tvPlayerBox').hidden=true; renderTv();
 }
 $('#tvGrid').addEventListener('click', e=>{
@@ -1241,6 +1359,74 @@ $('#tvModeVid').onclick = ()=>tvCurrent && openTv(tvCurrent,'videos');
 $('#tvWa').onclick = ()=>tvCurrent && openWhatsApp(`Estou assistindo *${tvCurrent.name}* no *TocaPlay Livre*! ${SITE}`);
 renderTv();
 
+/* ---------- Página inicial: destaque e fileiras ---------- */
+const FEATURED = ((typeof CONFIG!=='undefined' && CONFIG.HOME_FEATURED) || ['Lofi Girl','CazéTV','Rev. Hernandes Dias Lopes','Elevation Worship','Galinha Pintadinha','Graça Filmes'])
+  .map(n=>TV_CHANNELS.find(c=>c.name===n)).filter(Boolean);
+let featI = 0, featT = null, featYt = null, featToken = 0;
+function featStopVideo(){ featToken++; if(featYt){ try{ featYt.destroy(); }catch{} featYt=null; } const h=document.getElementById('featYt'); if(h) h.remove(); }
+function avatarUrl(c){ const m=(c.url||'').match(/youtube\.com\/@([\w.-]+)/); return c.avatar || (m ? `https://unavatar.io/youtube/${m[1]}?fallback=false` : ''); }
+// Vídeo só no computador ou no Wi-Fi; nos dados móveis, imagem animada (economiza internet)
+function featVideoOk(){
+  if(typeof CONFIG!=='undefined' && CONFIG.HOME_VIDEO===false) return false;
+  const cn = navigator.connection;
+  if(cn && cn.saveData) return false;
+  if(cn && cn.type) return cn.type==='wifi' || cn.type==='ethernet';
+  return matchMedia('(min-width:900px)').matches;
+}
+function renderFeat(){
+  if(!FEATURED.length){ $('#feat').hidden=true; return; }
+  const c = FEATURED[featI], av = avatarUrl(c), m = $('#featMedia');
+  m.classList.remove('fade'); void m.offsetWidth; m.classList.add('fade');
+  m.innerHTML = `<div class="bg" style="background-image:${av?`url('${esc(av)}'),`:''}${esc(c.color||'')}"></div>
+    <div class="ph"><i style="background:${esc(c.color||'var(--card2)')}">${esc(c.short||initials(c.name))}${av?`<img src="${esc(av)}" alt="" referrerpolicy="no-referrer" onerror="this.remove()">`:''}</i></div>`;
+  featStopVideo();
+  if(featVideoOk() && curView==='home' && !document.hidden && c.channelId){
+    const token=++featToken, holder=document.createElement('div'); holder.id='featYt'; m.appendChild(holder);
+    whenYT(()=>{
+      if(token!==featToken || !document.getElementById('featYt')) return;
+      let errs=0;
+      const vars={autoplay:1, mute:1, controls:0, playsinline:1, rel:0, modestbranding:1, iv_load_policy:3, disablekb:1, loop:1};
+      if(c.live==='first'){ vars.channel=undefined; }
+      featYt = new YT.Player('featYt', {width:'100%', height:'100%',
+        ...(c.live==='first' ? {videoId:'live_stream', playerVars:{...vars, channel:c.channelId}} : {playerVars:{...vars, listType:'playlist', list:uploadsList(c)}}),
+        events:{
+          onReady:e=>{ try{ e.target.mute(); e.target.playVideo(); }catch{} },
+          onStateChange:e=>{ if(e.data===1){ const f=featYt && featYt.getIframe && featYt.getIframe(); if(f){ f.tabIndex=-1; f.classList.add('on'); } } },
+          onError:()=>{ if(++errs>5) return featStopVideo(); try{ featYt.nextVideo(); }catch{ featStopVideo(); } }
+        }});
+    });
+  }
+  const live = c.live==='first';
+  $('#featTag').textContent = live ? '● Ao vivo' : (tvSubsOf(c)[0] || c.cat);
+  $('#featTag').classList.toggle('live', live);
+  $('#featName').textContent = c.name;
+  $('#featDesc').textContent = c.desc || '';
+  $('#featHit').setAttribute('aria-label', 'Assistir '+c.name);
+  $('#featDots').innerHTML = FEATURED.map((_,i)=>`<button class="${i===featI?'on':''}" data-feat="${i}" aria-label="Destaque ${i+1}"></button>`).join('');
+}
+function featNext(step=1){ featI=(featI+step+FEATURED.length)%FEATURED.length; renderFeat(); featTimer(); }
+function featTimer(){ clearTimeout(featT); featT=setTimeout(()=>{ if(curView==='home' && !document.hidden) featNext(); else featTimer(); }, featVideoOk()?16000:9000); }
+$('#featHit').onclick = ()=>{ const c=FEATURED[featI]; go('tv'); openTv(c); };
+$('#featDots').addEventListener('click', e=>{ const b=e.target.closest('[data-feat]'); if(b){ featI=+b.dataset.feat; renderFeat(); featTimer(); } });
+(function(){ let x0=null; const f=$('#feat');
+  f.addEventListener('touchstart',e=>{ x0=e.touches[0].clientX; },{passive:true});
+  f.addEventListener('touchend',e=>{ if(x0==null) return; const dx=e.changedTouches[0].clientX-x0; x0=null; if(Math.abs(dx)>45){ e.preventDefault(); featNext(dx<0?1:-1); } });
+})();
+document.addEventListener('visibilitychange',()=>{ if(!document.hidden && curView==='home') renderFeat(); });
+
+function chItem(c){
+  const av=avatarUrl(c), live=c.live==='first';
+  return `<button class="ch ${live?'is-live':''}" data-chome="${TV_CHANNELS.indexOf(c)}"><div class="av" style="background:${esc(c.color||'var(--card2)')}">${esc(c.short||initials(c.name))}${av?`<img src="${esc(av)}" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="this.remove()">`:''}</div><span>${esc(c.name)}</span>${live?'<small>AO VIVO</small>':''}</button>`;
+}
+function renderRows(){
+  $('#rowLive').innerHTML = TV_CHANNELS.filter(c=>c.cat==='TV Ao Vivo' || c.name==='Lofi Girl').map(chItem).join('');
+  $('#rowPreg').innerHTML = TV_CHANNELS.filter(c=>tvSubsOf(c).includes('Pregações')).map(chItem).join('');
+}
+document.addEventListener('click', e=>{
+  const ch=e.target.closest('[data-chome]'); if(ch){ go('tv'); openTv(TV_CHANNELS[+ch.dataset.chome]); return; }
+  const g=e.target.closest('[data-gotv]'); if(g){ tvCat=g.dataset.gotv; tvSub=g.dataset.gosub||''; tvQ=''; $('#tvQ').value=''; renderTv(); go('tv'); }
+});
+
 /* ---------- Navegação ---------- */
 let curView='home';
 function go(view, push=true){
@@ -1252,6 +1438,7 @@ function go(view, push=true){
   document.querySelectorAll('nav button').forEach(b=>b.classList.toggle('on', b.dataset.view===view));
   scrollTo({top:0});
   if(view==='search') setTimeout(()=>$('#q').focus(),50);
+  if(view==='home') renderFeat(); else featStopVideo();
 }
 document.querySelectorAll('nav button').forEach(b=>b.onclick=()=>go(b.dataset.view));
 $('#avatarBtn').onclick = ()=>go('account');
@@ -1361,6 +1548,7 @@ if(CONFIG.ADSENSE_CLIENT && CONFIG.ADSENSE_SLOT){
 
 /* ---------- Início do app ---------- */
 renderChips(); renderFavs(); renderAccount(); renderPlaylists(); loadHome(); updatePlayer(); checkImport();
+renderFeat(); featTimer(); renderRows();
 (function openStateFromLink(){
   const m = location.hash.match(/^#uf=(.+)$/); if(!m) return;
   const uf = decodeURIComponent(m[1]); if(!STATES.includes(uf)) return;
