@@ -30,6 +30,7 @@ button{font:inherit;cursor:pointer;border:0}
 .tile{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:14px}
 .tile .n{font-size:30px;font-weight:800;margin-top:4px}
 .tile .l{font-size:13px;color:var(--muted);font-weight:600}
+.tile .s{font-size:12px;color:var(--muted);margin-top:2px}
 .tile.hl{background:linear-gradient(135deg,#1c4a33,#16251d)}
 .tile.hl .n{color:var(--yellow)}
 .box{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:16px;margin-top:12px}
@@ -102,8 +103,9 @@ function render(d){
   const max=Math.max(1,...days.map(x=>x.n));
   app.innerHTML = head(true) + `
   <div class="tiles">
-    <div class="tile hl"><div class="l">Usuários cadastrados</div><div class="n">${fmt(d.usuarios_total)}</div></div>
-    <div class="tile"><div class="l">Novos (7 dias)</div><div class="n">${fmt(d.usuarios_7d)}</div></div>
+    <div class="tile hl"><div class="l">Inscritos</div><div class="n">${fmt(d.usuarios_total)}</div><div class="s">${fmt(d.inscritos_rapidos)} com 1 toque · ${fmt(d.com_email)} com e-mail</div></div>
+    <div class="tile"><div class="l">Novos inscritos (7 dias)</div><div class="n">${fmt(d.usuarios_7d)}</div></div>
+    <div class="tile hl"><div class="l">Instalaram o app</div><div class="n">${fmt(d.instalacoes_total)}</div><div class="s">${fmt(d.instalacoes_7d)} nos últimos 7 dias</div></div>
     <div class="tile hl"><div class="l">Média de acessos/dia</div><div class="n">${fmt(d.media_diaria_30d)}</div></div>
     <div class="tile"><div class="l">Acessos hoje</div><div class="n">${fmt(d.acessos_hoje)}</div></div>
     <div class="tile"><div class="l">Pessoas no mês</div><div class="n">${fmt(d.aparelhos_30d)}</div></div>
@@ -115,12 +117,14 @@ function render(d){
     <p class="muted" style="margin-top:8px">Cada pessoa (aparelho) conta 1 vez por dia, com ou sem cadastro.</p></div>
   <div class="grid2">
     <div class="box"><h2>🔥 Rádios mais ouvidas (7 dias)</h2>${list(d.top_radios,'nome','plays')}</div>
-    <div class="box"><h2>📍 Cadastrados por estado</h2>${list(d.por_estado,'estado','total')}</div>
+    <div class="box"><h2>📍 Inscritos por estado</h2>${list(d.por_estado,'estado','total')}</div>
   </div>
-  <div class="box"><h2>👥 Últimos cadastros</h2>
-    ${(d.ultimos||[]).length?`<div class="scroll"><table><tr><th>Nome</th><th>E-mail</th><th>Estado</th><th>Data</th></tr>
-    ${d.ultimos.map(u=>`<tr><td>${esc(u.nome||'—')}</td><td>${esc(u.email)}</td><td>${esc(u.estado||'—')}</td><td>${new Date(u.quando).toLocaleDateString('pt-BR')}</td></tr>`).join('')}</table></div>`
-    :'<div class="empty">Ninguém se cadastrou ainda.</div>'}
+  <div class="box"><h2>📲 Instalações por aparelho</h2>${list(d.instalacoes_por_tipo,'tipo','total')}
+    <p class="muted" style="margin-top:8px">Conta cada aparelho uma vez, quando o app é instalado ou aberto pelo ícone.</p></div>
+  <div class="box"><h2>👥 Últimos inscritos</h2>
+    ${(d.ultimos||[]).length?`<div class="scroll"><table><tr><th>Nome</th><th>E-mail</th><th>Tipo</th><th>Estado</th><th>Data</th></tr>
+    ${d.ultimos.map(u=>`<tr><td>${esc(u.nome||'—')}</td><td>${esc(u.email||'—')}</td><td>${esc(u.tipo||'E-mail')}</td><td>${esc(u.estado||'—')}</td><td>${new Date(u.quando).toLocaleDateString('pt-BR')}</td></tr>`).join('')}</table></div>`
+    :'<div class="empty">Ninguém se inscreveu ainda.</div>'}
   </div>
   <p class="muted" style="margin:14px 0 30px;text-align:center">Atualizado em ${new Date().toLocaleString('pt-BR')}</p>`;
   bind();

@@ -100,6 +100,22 @@ create policy "qualquer um registra acesso" on public.visits
   for insert to anon, authenticated with check (true);
 
 -- =====================================================================
+-- INSTALAÇÕES DO APP (1 registro por aparelho que instalou)
+-- =====================================================================
+create table if not exists public.installs (
+  id          bigint generated always as identity primary key,
+  device_id   text not null,
+  platform    text,
+  created_at  timestamptz not null default now()
+);
+create index if not exists installs_created_idx on public.installs (created_at);
+alter table public.installs enable row level security;
+
+drop policy if exists "qualquer um registra instalacao" on public.installs;
+create policy "qualquer um registra instalacao" on public.installs
+  for insert to anon, authenticated with check (true);
+
+-- =====================================================================
 -- PAINEL DO DONO — só o e-mail abaixo consegue ver os números
 -- =====================================================================
 create or replace function public.admin_stats()
@@ -114,6 +130,13 @@ begin
     'usuarios_total',     (select count(*) from auth.users),
     'usuarios_7d',        (select count(*) from auth.users where created_at > now() - interval '7 days'),
     'usuarios_hoje',      (select count(*) from auth.users where created_at::date = current_date),
+    'inscritos_rapidos',  (select count(*) from auth.users where coalesce(is_anonymous,false)),
+    'com_email',          (select count(*) from auth.users where not coalesce(is_anonymous,false)),
+    'instalacoes_total',  (select count(distinct device_id) from installs),
+    'instalacoes_7d',     (select count(distinct device_id) from installs where created_at > now() - interval '7 days'),
+    'instalacoes_por_tipo', (select coalesce(json_agg(x),'[]') from (
+                  select coalesce(platform,'Outro') as tipo, count(distinct device_id) as total
+                  from installs group by 1 order by total desc) x),
     'acessos_hoje',       (select count(distinct device_id) from visits where created_at::date = current_date),
     'media_diaria_30d',   (select round(coalesce(avg(n),0)) from (
                               select count(distinct device_id) n from visits
@@ -133,7 +156,8 @@ begin
                   select coalesce(state,'Não informado') as estado, count(*) as total
                   from profiles group by 1 order by total desc) x),
     'ultimos', (select coalesce(json_agg(x),'[]') from (
-                  select p.name as nome, u.email, p.state as estado, u.created_at as quando
+                  select p.name as nome, u.email, p.state as estado, u.created_at as quando,
+                         case when coalesce(u.is_anonymous,false) then 'Inscrição rápida' else 'E-mail' end as tipo
                   from auth.users u left join profiles p on p.id = u.id
                   order by u.created_at desc limit 50) x)
   ) into result;

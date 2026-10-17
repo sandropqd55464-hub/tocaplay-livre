@@ -98,3 +98,12 @@ Abra o site no Chrome do Android → menu ⋮ → **Instalar app** (ou **Adicion
 - **Tela bloqueada:** no Android a rádio continua tocando com controles na notificação. No iPhone, ela também toca com a tela bloqueada se o app foi aberto pela tela inicial.
 - **Mais tocadas no seu app:** rode no SQL Editor a consulta comentada no final do `supabase.sql`.
 - **Atualizou o `index.html` e o celular mostra a versão velha?** No `sw.js`, aumente o número em `tocaplay-v11` (ex.: `tocaplay-v12`).
+
+## Versão 11 (17/10/2026)
+- **Inscrever-se com 1 toque:** botão vermelho na página inicial e na aba Conta. Cria uma inscrição sem digitar nada.
+  - Precisa estar ligado no Supabase: **Authentication → Sign In / Providers → Allow anonymous sign-ins**.
+- **Convite para baixar o app** logo depois de inscrever (Android e computador instalam com 1 toque; no iPhone mostra os passos).
+- **Acesso ADM:** link discreto no rodapé da página inicial (leva ao `admin.html`).
+- **Painel:** mostra inscritos (1 toque × e-mail) e instalações por aparelho. Rode o `supabase.sql` de novo para criar a tabela `installs`.
+- **Aba TV:** categorias com subcategorias (Cristão, TV Ao Vivo, Internacionais, Músicas para Dormir, Infantil, Esportes, Filmes…) e busca de canal.
+  Os canais ficam em `config.js` → `TV_CHANNELS`. Use `sub` para a subcategoria.
