@@ -136,6 +136,9 @@ h2{font-size:18px;font-weight:700;margin:20px 0 10px}
 .row-head button{font-size:13.5px;font-weight:600;color:var(--green)}
 .ch-row{display:flex;align-items:flex-start;gap:14px;overflow-x:auto;scrollbar-width:none;margin:0 -16px;padding:2px 16px 6px}
 .ch-row::-webkit-scrollbar{display:none}
+.ch-row{scroll-behavior:smooth}
+.row-wrap .chip-arrow{top:40px}
+.row-wrap::before,.row-wrap::after{bottom:0}
 .ch{flex:none;width:84px;text-align:center;font-size:12.5px;font-weight:600;line-height:1.25;color:var(--txt)}
 .ch .av{width:76px;height:76px;margin:0 auto 7px;border-radius:50%;display:grid;place-items:center;font-weight:800;font-size:20px;color:#fff;
   position:relative;overflow:hidden;box-shadow:0 0 0 2px var(--bg),0 0 0 4px var(--line)}
@@ -458,9 +461,9 @@ a.pill{color:var(--txt);text-decoration:none}
       <button class="sub-btn" id="homeSubBtn" data-subscribe>Inscrever-se</button>
     </div>
     <div class="row-head"><h2>Ao vivo agora</h2><button data-gotv="TV Ao Vivo">Ver tudo</button></div>
-    <div class="ch-row" id="rowLive"></div>
+    <div class="chips-wrap row-wrap"><button class="chip-arrow l" data-rowscroll="-1" aria-label="Voltar"><svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg></button><div class="ch-row" id="rowLive"></div><button class="chip-arrow r" data-rowscroll="1" aria-label="Ver mais"><svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></svg></button></div>
     <div class="row-head"><h2>Pregadores</h2><button data-gotv="Cristão" data-gosub="Pregações">Ver tudo</button></div>
-    <div class="ch-row" id="rowPreg"></div>
+    <div class="chips-wrap row-wrap"><button class="chip-arrow l" data-rowscroll="-1" aria-label="Voltar"><svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg></button><div class="ch-row" id="rowPreg"></div><button class="chip-arrow r" data-rowscroll="1" aria-label="Ver mais"><svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></svg></button></div>
     <div id="homePlBlock">
       <h2>Suas playlists</h2>
       <div class="pl-row" id="homePl"></div>
@@ -1493,7 +1496,21 @@ function chItem(c){
 function renderRows(){
   $('#rowLive').innerHTML = TV_CHANNELS.filter(c=>c.cat==='TV Ao Vivo' || c.name==='Lofi Girl').map(chItem).join('');
   $('#rowPreg').innerHTML = TV_CHANNELS.filter(c=>tvSubsOf(c).includes('Pregações')).map(chItem).join('');
+  document.querySelectorAll('.row-wrap').forEach(rowArrows);
 }
+// Setas ‹ › das fileiras: aparecem só quando há mais para ver daquele lado
+function rowArrows(w){
+  const r=w.querySelector('.ch-row'); if(!r) return;
+  const start = r.scrollLeft <= 4, end = r.scrollLeft + r.clientWidth >= r.scrollWidth - 4;
+  w.querySelector('[data-rowscroll="-1"]').disabled = start; w.querySelector('[data-rowscroll="1"]').disabled = end;
+  w.classList.toggle('at-start', start); w.classList.toggle('at-end', end);
+}
+document.querySelectorAll('.row-wrap').forEach(w=>{
+  const r=w.querySelector('.ch-row');
+  r.addEventListener('scroll', ()=>rowArrows(w), {passive:true});
+  w.querySelectorAll('[data-rowscroll]').forEach(b=>b.onclick=()=>{ r.scrollLeft += (+b.dataset.rowscroll) * r.clientWidth * 0.8; });
+});
+addEventListener('resize', ()=>document.querySelectorAll('.row-wrap').forEach(rowArrows));
 document.addEventListener('click', e=>{
   const ch=e.target.closest('[data-chome]'); if(ch){ go('tv'); openTv(TV_CHANNELS[+ch.dataset.chome]); return; }
   const g=e.target.closest('[data-gotv]'); if(g){ tvCat=g.dataset.gotv; tvSub=g.dataset.gosub||''; tvQ=''; $('#tvQ').value=''; renderTv(); go('tv'); }

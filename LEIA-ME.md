@@ -128,3 +128,6 @@ Abra o site no Chrome do Android → menu ⋮ → **Instalar app** (ou **Adicion
 - **Destaque vira apresentação do app:** puxa sozinho 2 canais de cada categoria (sorteados a cada visita) e mostra cada um por 10 segundos, com barra de progresso e contador (ex.: 3 / 19) com setas ‹ ›.
   - Ajuste em `config.js`: `HOME_PER_CATEGORY` (canais por categoria) e `HOME_SECONDS` (segundos de cada um).
   - Os vídeos começam a partir dos 25 segundos, para pular aberturas.
+
+## Versão 15 (17/10/2026)
+- Setas ‹ › nas fileiras "Ao vivo agora" e "Pregadores" (aparecem só quando há mais canais daquele lado).
