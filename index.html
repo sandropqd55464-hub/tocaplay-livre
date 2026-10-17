@@ -148,9 +148,11 @@ h2{font-size:18px;font-weight:700;margin:20px 0 10px}
 .vsec{display:flex;align-items:baseline;justify-content:space-between;margin:20px 0 10px}
 .vsec h3{font-size:17px;font-weight:800}
 .vsec small{color:var(--muted);font-size:12.5px}
-.vc .th{position:relative;aspect-ratio:16/9;border-radius:14px;overflow:hidden;display:grid;place-items:center;box-shadow:0 8px 22px rgba(0,0,0,.35)}
-.vc .th i{width:46%;aspect-ratio:1;border-radius:50%;overflow:hidden;position:relative;display:grid;place-items:center;font-style:normal;font-weight:800;font-size:20px;color:#fff;
-  box-shadow:0 0 0 3px rgba(255,255,255,.2)}
+.vc .th{position:relative;aspect-ratio:16/9;border-radius:14px;overflow:hidden;display:grid;place-items:center;box-shadow:0 8px 22px rgba(0,0,0,.35);isolation:isolate}
+.vc .th .bl{position:absolute;inset:-20%;z-index:-1;background-size:cover;background-position:center;filter:blur(18px) saturate(1.6) brightness(.8);transform:scale(1.1)}
+.vc .th i{width:58%;aspect-ratio:1;border-radius:50%;overflow:hidden;position:relative;display:grid;place-items:center;font-style:normal;font-weight:800;font-size:20px;color:#fff;
+  box-shadow:0 8px 26px rgba(0,0,0,.45),0 0 0 3px rgba(255,255,255,.22);transition:transform .25s}
+.vc:hover .th i{transform:scale(1.06)}
 .vc .th i img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
 .vc .th em{position:absolute;right:8px;bottom:8px;font-style:normal;font-size:11px;font-weight:800;padding:3px 7px;border-radius:6px;background:rgba(0,0,0,.6)}
 .vc b{display:block;font-size:14px;margin-top:8px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
@@ -217,7 +219,8 @@ h2{font-size:18px;font-weight:700;margin:20px 0 10px}
 .chips-wrap::before{left:-16px;background:linear-gradient(90deg,var(--bg) 40%,transparent)}
 .chips-wrap::after{right:-16px;background:linear-gradient(270deg,var(--bg) 40%,transparent)}
 .chips-wrap.at-start::before,.chips-wrap.at-end::after{display:none}
-.chip{flex:none;padding:8px 14px;border-radius:999px;background:var(--card);border:1px solid var(--line);font-size:14px;font-weight:500;color:var(--muted)}
+.chip{flex:none;padding:8px 14px;border-radius:999px;background:var(--card);border:1px solid #2f4d3c;font-size:14px;font-weight:600;color:var(--txt)}
+.chip:hover{border-color:var(--green)}
 .chip.on{background:var(--green);border-color:var(--green);color:#06120c;font-weight:700}
 
 /* Lista de rádios */
@@ -375,13 +378,14 @@ a.pill{color:var(--txt);text-decoration:none}
 .tv-bar .pill.on{background:var(--green)!important;color:#06120c}
 .tv-find{margin-top:4px}
 .tv-subs{margin-top:2px}
-.tv-subs .chip{padding:6px 12px;font-size:13px;background:transparent}
+.tv-subs .chip{padding:6px 12px;font-size:13.5px;background:transparent;color:var(--txt)}
 .tv-subs .chip.on{background:var(--card2);border-color:var(--green);color:var(--green)}
 .tv-sec{display:flex;align-items:baseline;justify-content:space-between;gap:10px;margin:22px 0 10px}
 .tv-sec h3{font-size:16.5px;font-weight:700}
 .tv-sec button{font-size:13px;font-weight:600;color:var(--green);flex:none}
 .tv-sec:first-child{margin-top:4px}
-.tv-sub-h{font-size:13px;font-weight:600;color:var(--muted);letter-spacing:.3px;text-transform:uppercase;margin:16px 0 8px}
+.tv-sub-h{display:flex;align-items:center;gap:9px;font-size:18px;font-weight:800;color:var(--txt);letter-spacing:-.2px;margin:24px 0 12px}
+.tv-sub-h::before{content:'';width:5px;height:20px;border-radius:3px;background:linear-gradient(var(--yellow),var(--green))}
 @media(min-width:620px){.tv-grid{grid-template-columns:repeat(3,1fr)}}
 .tv-note{color:var(--muted);font-size:13px;line-height:1.45;margin-top:14px}
 .form select{background:var(--bg2);border:1px solid var(--line);border-radius:12px;padding:13px 14px;font-size:16px;outline:0}
@@ -1716,7 +1720,7 @@ $('#podFwd30').onclick = ()=>{ audio.currentTime = Math.min((audio.duration||1e9
 $('#podSpeed').onclick = ()=>{ const r=[1,1.25,1.5,2], i=(r.indexOf(audio.playbackRate)+1)%r.length; podRate=r[i]; audio.playbackRate=podRate; store.set('tp_podrate',podRate); podUpdateCtl(); };
 // fileira de podcasts na página inicial
 function vcCard(c){ const av=avatarUrl(c);
-  return `<button class="vc" data-chome="${TV_CHANNELS.indexOf(c)}"><div class="th" style="background:${esc(c.color)}"><i style="background:${esc(c.color)}">${esc(c.short)}${av?`<img src="${esc(av)}" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="this.remove()">`:''}</i><em>▶ VÍDEO</em></div><b>${esc(c.name)}</b><small>${esc(tvSubsOf(c).join(' · '))}</small></button>`; }
+  return `<button class="vc" data-chome="${TV_CHANNELS.indexOf(c)}"><div class="th" style="background:${esc(c.color)}">${av?`<span class="bl" style="background-image:url('${esc(av)}')"></span>`:''}<i style="background:${esc(c.color)}">${esc(c.short)}${av?`<img src="${esc(av)}" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="this.remove()">`:''}</i><em>▶ VÍDEO</em></div><b>${esc(c.name)}</b><small>${esc(tvSubsOf(c).join(' · '))}</small></button>`; }
 function renderHomePods(){
   const list = TV_CHANNELS.filter(c=>c.cat==='Podcasts');
   $('#rowPodsBlock').hidden = !list.length;

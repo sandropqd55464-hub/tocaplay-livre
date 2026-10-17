@@ -156,3 +156,7 @@ Abra o site no Chrome do Android → menu ⋮ → **Instalar app** (ou **Adicion
 
 ## Versão 18 (17/10/2026)
 - **Painel na lateral direita (computador):** "Rádio boa, de graça, do Oiapoque ao Chuí." com selo "100% grátis", números do app e botões "Baixar o app" e "Indicar no WhatsApp". Aparece em telas a partir de 1340px de largura.
+
+## Versão 19 (17/10/2026)
+- Nomes dos assuntos (Entrevistas, Humor, Saúde…) em branco forte, maiores e com marca amarela; botões de categoria mais claros. Vale para Podcasts e TV.
+- Capas dos podcasts em vídeo com a imagem oficial do canal em destaque e fundo desfocado nas cores dele.
