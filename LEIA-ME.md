@@ -160,3 +160,10 @@ Abra o site no Chrome do Android → menu ⋮ → **Instalar app** (ou **Adicion
 ## Versão 19 (17/10/2026)
 - Nomes dos assuntos (Entrevistas, Humor, Saúde…) em branco forte, maiores e com marca amarela; botões de categoria mais claros. Vale para Podcasts e TV.
 - Capas dos podcasts em vídeo com a imagem oficial do canal em destaque e fundo desfocado nas cores dele.
+
+## Versão 20 (18/10/2026)
+- **💪 Malhação:** nova categoria na TV e fileira na página inicial.
+  - Música: Power Music Workout, Workout Music Source, NCS Eletrônica, FitDance.
+  - Aulas: Carol Borba, Chloe Ting, Pamela Reif, Fitness Blender, Yoga With Adriene, Pri Leite Yoga, Leandro Twin.
+  - Subcategorias: Aquecimento, Treino Pesado, Cardio/HIIT, Funcional, Aulas em casa, Alongamento e Yoga, Dicas de treino.
+- **🏋️ Modo Academia:** tela cheia, relógio grande, toca sem parar (repete a lista do canal), tela não apaga, botões "Próxima música", "Trocar de canal" e "Sair". Aviso do ECAD no rodapé.
