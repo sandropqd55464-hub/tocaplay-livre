@@ -167,3 +167,33 @@ Abra o site no Chrome do Android → menu ⋮ → **Instalar app** (ou **Adicion
   - Aulas: Carol Borba, Chloe Ting, Pamela Reif, Fitness Blender, Yoga With Adriene, Pri Leite Yoga, Leandro Twin.
   - Subcategorias: Aquecimento, Treino Pesado, Cardio/HIIT, Funcional, Aulas em casa, Alongamento e Yoga, Dicas de treino.
 - **🏋️ Modo Academia:** tela cheia, relógio grande, toca sem parar (repete a lista do canal), tela não apaga, botões "Próxima música", "Trocar de canal" e "Sair". Aviso do ECAD no rodapé.
+
+## Versão 21 (18/10/2026)
+- **Painel do dono:**
+  - **Visitantes reais** (30 dias, 7 dias e desde o início), sem contar robôs e buscadores.
+  - **Acesso por área:** Início, Rádios, TV, cada categoria da TV, Pregações, Podcasts, Malhação, Modo Academia… e gráfico por dia de cada área.
+  - **De onde são:** mapa do Brasil por estado, ranking de estados e cidades (aproximado; só cidade e estado são guardados, por causa da LGPD).
+  - **Mais vistos:** TV mais assistida e podcasts mais ouvidos, além das rádios.
+- Arquivo novo: `netlify/edge-functions/geo.js` (informa cidade e estado ao app; grátis no Netlify).
+- **Rode o `supabase.sql` de novo** no SQL Editor (cria a tabela de áreas e as colunas de cidade e estado).
+
+## Versão 22 (18/10/2026)
+- **🚗 Carro e fone Bluetooth:** o visor mostra o nome da rádio com "TocaPlay"; os botões ⏭ ⏮ do volante trocam de rádio sempre (usa as favoritas ou a lista de onde a rádio veio). Nos podcasts, ⏭ avança 30s e ⏮ volta 15s.
+- **📺 Modo TV automático** (LG webOS, Samsung Tizen, Android TV e outras):
+  - Corrige a altura do vídeo em navegadores antigos de TV (o vídeo da TV e o destaque da página inicial voltam a aparecer).
+  - Navegação pelas setas do controle remoto, com o item selecionado em amarelo; botão Voltar do controle LG funciona.
+  - Rádio tenta reconectar sozinha se travar; "Abrir no YouTube" escondido; letras um pouco maiores.
+
+## Versão 23 (18/10/2026)
+- **⛪ Novos pregadores:** Pr. André Valadão, Pr. André Fernandes, Pr. Teo Hayashi e Pra. Júnia Hayashi.
+- **Cultos e Missas ao vivo** (nova categoria na TV):
+  - Evangélicas: Lagoinha Global, Bola de Neve, Videira, Dunamis.
+  - Católicas: Canção Nova, Santuário de Aparecida, TV Pai Eterno, Rede Século 21.
+  - Abre direto na transmissão ao vivo; se a igreja não estiver transmitindo, toca sozinho o último culto/missa gravado. Vale também para a TV Ao Vivo.
+- **🎬 Filmes grátis:** além de NetMovies e Graça Filmes (tocam no app), botões para Pluto TV, Libreflix, Plex, Tela Brasil, Spcine Play e Mercado Play (abrem fora do app).
+
+## Versão 24 (18/10/2026)
+- **🎤 Galeria Gospel:** subcategorias "Gospel Nacional" (49 artistas) e "Gospel Internacional" na aba Cristão, com foto redonda grande de cada artista; fileira "Galeria Gospel" na página inicial.
+- **🔎 Busca:** a lupa agora acha artistas, pregadores e canais pelo nome (ex.: "Anderson Freire"), além das rádios.
+- **📻 Rádios Gospel:** fileira na página inicial; continuam tocando com a tela desligada ou em outro app, com controles na tela de bloqueio.
+- **💡 Dica no player de vídeo:** avisa que vídeos do YouTube param fora do app e oferece "Ouvir rádio gospel".

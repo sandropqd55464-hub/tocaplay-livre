@@ -26,7 +26,7 @@ button{font:inherit;cursor:pointer;border:0}
 .login input{width:100%;background:#111d17;border:1px solid var(--line);color:var(--txt);border-radius:12px;padding:13px;font-size:16px;margin-bottom:10px;font-family:inherit}
 .login .btn{width:100%}
 .err{color:#ff7b7b;font-size:14px;margin-top:10px;min-height:20px}
-.tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px}
+.tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:10px}
 .tile{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:14px}
 .tile .n{font-size:30px;font-weight:800;margin-top:4px}
 .tile .l{font-size:13px;color:var(--muted);font-weight:600}
@@ -52,6 +52,17 @@ td{padding:9px 6px;border-bottom:1px solid var(--line);word-break:break-all}
 .scroll{overflow-x:auto}
 .muted{color:var(--muted);font-size:13px}
 .empty{color:var(--muted);font-size:14px;padding:10px 0}
+.hbar{display:grid;grid-template-columns:minmax(110px,40%) 1fr auto;align-items:center;gap:10px;padding:6px 0;font-size:14px}
+.hbar .t{height:10px;border-radius:6px;background:#0f1d16;overflow:hidden}
+.hbar .t i{display:block;height:100%;border-radius:6px;background:linear-gradient(90deg,var(--green),var(--yellow))}
+.hbar b{color:var(--yellow);font-variant-numeric:tabular-nums}
+.hbar span{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.sel{background:#111d17;color:var(--txt);border:1px solid var(--line);border-radius:10px;padding:8px 10px;font:inherit;font-size:14px;margin-bottom:10px}
+.br{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;max-width:420px}
+.br div{aspect-ratio:1;border-radius:8px;display:grid;place-items:center;font-size:12px;font-weight:800;color:#06120c;position:relative}
+.br div small{position:absolute;bottom:2px;font-size:9.5px;font-weight:700;opacity:.8}
+.legend{display:flex;align-items:center;gap:8px;color:var(--muted);font-size:12px;margin-top:8px}
+.legend i{display:inline-block;width:60px;height:8px;border-radius:4px;background:linear-gradient(90deg,#1d3026,var(--green),var(--yellow))}
 </style>
 </head>
 <body>
@@ -103,18 +114,37 @@ function render(d){
   const max=Math.max(1,...days.map(x=>x.n));
   app.innerHTML = head(true) + `
   <div class="tiles">
+    <div class="tile hl"><div class="l">Visitantes reais (30 dias)</div><div class="n">${fmt(d.aparelhos_30d)}</div><div class="s">${fmt(d.visitantes_7d)} nos últimos 7 dias · ${fmt(d.visitantes_total)} desde o início</div></div>
     <div class="tile hl"><div class="l">Inscritos</div><div class="n">${fmt(d.usuarios_total)}</div><div class="s">${fmt(d.inscritos_rapidos)} com 1 toque · ${fmt(d.com_email)} com e-mail</div></div>
     <div class="tile"><div class="l">Novos inscritos (7 dias)</div><div class="n">${fmt(d.usuarios_7d)}</div></div>
     <div class="tile hl"><div class="l">Instalaram o app</div><div class="n">${fmt(d.instalacoes_total)}</div><div class="s">${fmt(d.instalacoes_7d)} nos últimos 7 dias</div></div>
     <div class="tile hl"><div class="l">Média de acessos/dia</div><div class="n">${fmt(d.media_diaria_30d)}</div></div>
     <div class="tile"><div class="l">Acessos hoje</div><div class="n">${fmt(d.acessos_hoje)}</div></div>
-    <div class="tile"><div class="l">Pessoas no mês</div><div class="n">${fmt(d.aparelhos_30d)}</div></div>
     <div class="tile"><div class="l">Rádios tocadas (7 dias)</div><div class="n">${fmt(d.plays_7d)}</div></div>
   </div>
   <div class="box"><h2>Acessos por dia (últimos 30 dias)</h2>
     <div class="chart">${days.map(x=>`<div class="bar" style="height:${(x.n/max*100).toFixed(1)}%"><span>${x.label}: ${x.n}</span></div>`).join('')}</div>
     <div class="axis"><span>${days[0].label}</span><span>hoje</span></div>
-    <p class="muted" style="margin-top:8px">Cada pessoa (aparelho) conta 1 vez por dia, com ou sem cadastro.</p></div>
+    <p class="muted" style="margin-top:8px">Cada pessoa (aparelho) conta 1 vez por dia, com ou sem cadastro. Robôs e buscadores não entram na conta.</p></div>
+  <div class="grid2">
+    <div class="box"><h2>🧭 Acesso por área (30 dias)</h2>${bars(d.por_area,'area','pessoas','pessoas')}
+      <p class="muted" style="margin-top:6px">Pessoas diferentes que abriram cada área.</p></div>
+    <div class="box"><h2>📈 Área por dia</h2>
+      <select class="sel" id="areaSel">${[...new Set((d.area_dia||[]).map(x=>x.area))].sort().map(a=>`<option>${esc(a)}</option>`).join('')||'<option>Sem dados ainda</option>'}</select>
+      <div id="areaChart"></div></div>
+  </div>
+  <div class="grid2">
+    <div class="box"><h2>📍 De onde são (30 dias)</h2>${brMap(d.visit_estado)}
+      <div class="legend">menos <i></i> mais</div>
+      ${d.visit_exterior?`<p class="muted" style="margin-top:8px">+ ${fmt(d.visit_exterior)} de fora do Brasil</p>`:''}</div>
+    <div class="box"><h2>🏙️ Estados e cidades</h2>${bars((d.visit_estado||[]).slice(0,8),'estado','pessoas','pessoas')}
+      <h2 style="margin-top:14px">Cidades</h2>${bars(d.visit_cidade,'cidade','pessoas','pessoas',x=>x.uf?` (${x.uf})`:'')}
+      <p class="muted" style="margin-top:6px">Localização aproximada pela internet da pessoa. Guardamos só cidade e estado (LGPD).</p></div>
+  </div>
+  <div class="grid2">
+    <div class="box"><h2>📺 TV mais assistida (30 dias)</h2>${list(d.top_tv,'nome','plays')}</div>
+    <div class="box"><h2>🎙️ Podcasts mais ouvidos (30 dias)</h2>${list(d.top_pod,'nome','plays')}</div>
+  </div>
   <div class="grid2">
     <div class="box"><h2>🔥 Rádios mais ouvidas (7 dias)</h2>${list(d.top_radios,'nome','plays')}</div>
     <div class="box"><h2>📍 Inscritos por estado</h2>${list(d.por_estado,'estado','total')}</div>
@@ -128,6 +158,35 @@ function render(d){
   </div>
   <p class="muted" style="margin:14px 0 30px;text-align:center">Atualizado em ${new Date().toLocaleString('pt-BR')}</p>`;
   bind();
+  if($('#areaSel')){ $('#areaSel').onchange=()=>areaChart(d); areaChart(d); }
+}
+function bars(arr,k,v,unit,extra){
+  if(!arr||!arr.length) return '<div class="empty">Sem dados ainda.</div>';
+  const max=Math.max(1,...arr.map(x=>+x[v]||0));
+  return arr.map(x=>`<div class="hbar"><span title="${esc(x[k])}">${esc(x[k])}${extra?esc(extra(x)):''}</span><div class="t"><i style="width:${((+x[v]||0)/max*100).toFixed(1)}%"></i></div><b>${fmt(x[v])}</b></div>`).join('');
+}
+// Mapa do Brasil em quadradinhos (cada estado na sua região)
+const BR_POS={RR:[1,0],AP:[3,0],AC:[0,1],AM:[1,1],PA:[2,1],MA:[3,1],CE:[4,1],RN:[5,1],RO:[1,2],MT:[2,2],TO:[3,2],PI:[4,2],PB:[5,2],
+  MS:[2,3],GO:[3,3],BA:[4,3],PE:[5,3],AL:[6,3],SP:[2,4],DF:[3,4],MG:[4,4],SE:[5,4],PR:[2,5],RJ:[4,5],ES:[5,5],SC:[2,6],RS:[2,7]};
+const BR_NAME={AC:'Acre',AL:'Alagoas',AP:'Amapá',AM:'Amazonas',BA:'Bahia',CE:'Ceará',DF:'Distrito Federal',ES:'Espírito Santo',GO:'Goiás',MA:'Maranhão',MT:'Mato Grosso',MS:'Mato Grosso do Sul',MG:'Minas Gerais',PA:'Pará',PB:'Paraíba',PR:'Paraná',PE:'Pernambuco',PI:'Piauí',RJ:'Rio de Janeiro',RN:'Rio Grande do Norte',RS:'Rio Grande do Sul',RO:'Rondônia',RR:'Roraima',SC:'Santa Catarina',SP:'São Paulo',SE:'Sergipe',TO:'Tocantins'};
+function brMap(rows){
+  const n={}; (rows||[]).forEach(r=>{ const uf=(r.uf||'').toUpperCase() || Object.keys(BR_NAME).find(k=>BR_NAME[k]===r.estado); if(uf) n[uf]=(n[uf]||0)+(+r.pessoas||0); });
+  const max=Math.max(1,...Object.values(n));
+  const col=v=>{ if(!v) return '#1d3026'; const t=v/max; return t>.66?'#ffd23f':t>.33?'#7ee0a8':'#19c37d'; };
+  let cells='';
+  for(let r=0;r<8;r++) for(let c=0;c<7;c++){
+    const uf=Object.keys(BR_POS).find(k=>BR_POS[k][0]===c&&BR_POS[k][1]===r);
+    cells += uf ? `<div style="background:${col(n[uf])};${n[uf]?'':'color:#8fa89a'}" title="${BR_NAME[uf]}: ${n[uf]||0}">${uf}${n[uf]?`<small>${n[uf]}</small>`:''}</div>` : '<span></span>';
+  }
+  return `<div class="br">${cells}</div>`;
+}
+function areaChart(d){
+  const el=$('#areaChart'); if(!el) return;
+  const a=$('#areaSel').value, map={};
+  (d.area_dia||[]).filter(x=>x.area===a).forEach(x=>map[x.dia]=x.n);
+  const days=[]; for(let i=29;i>=0;i--){ const dt=new Date(Date.now()-i*864e5); const k=dt.toISOString().slice(0,10); days.push({n:map[k]||0,label:dt.toLocaleDateString('pt-BR',{day:'2-digit',month:'2-digit'})}); }
+  const max=Math.max(1,...days.map(x=>x.n));
+  el.innerHTML=`<div class="chart">${days.map(x=>`<div class="bar" style="height:${(x.n/max*100).toFixed(1)}%"><span>${x.label}: ${x.n}</span></div>`).join('')}</div><div class="axis"><span>${days[0].label}</span><span>hoje</span></div>`;
 }
 function list(arr,k,v){
   if(!arr||!arr.length) return '<div class="empty">Sem dados ainda.</div>';

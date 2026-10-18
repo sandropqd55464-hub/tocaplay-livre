@@ -99,6 +99,28 @@ drop policy if exists "qualquer um registra acesso" on public.visits;
 create policy "qualquer um registra acesso" on public.visits
   for insert to anon, authenticated with check (true);
 
+-- Cidade e estado aproximados de cada acesso (só isso; o endereço de internet não é guardado)
+alter table public.visits add column if not exists city text;
+alter table public.visits add column if not exists region text;
+alter table public.visits add column if not exists region_code text;
+alter table public.visits add column if not exists country text;
+
+-- =====================================================================
+-- ACESSO POR ÁREA (1 registro por aparelho, por área, por dia)
+-- =====================================================================
+create table if not exists public.area_visits (
+  id          bigint generated always as identity primary key,
+  device_id   text not null,
+  area        text not null,
+  created_at  timestamptz not null default now()
+);
+create index if not exists area_visits_created_idx on public.area_visits (created_at);
+alter table public.area_visits enable row level security;
+
+drop policy if exists "qualquer um registra area" on public.area_visits;
+create policy "qualquer um registra area" on public.area_visits
+  for insert to anon, authenticated with check (true);
+
 -- =====================================================================
 -- INSTALAÇÕES DO APP (1 registro por aparelho que instalou)
 -- =====================================================================
@@ -144,6 +166,30 @@ begin
                               group by created_at::date) d),
     'aparelhos_30d',      (select count(distinct device_id) from visits where created_at > now() - interval '30 days'),
     'plays_7d',           (select count(*) from plays where created_at > now() - interval '7 days'),
+    'visitantes_total',   (select count(distinct device_id) from visits),
+    'visitantes_7d',      (select count(distinct device_id) from visits where created_at > now() - interval '7 days'),
+    'por_area', (select coalesce(json_agg(x order by pessoas desc),'[]') from (
+                  select area, count(distinct device_id) as pessoas from area_visits
+                  where created_at > now() - interval '30 days' group by area) x),
+    'area_dia', (select coalesce(json_agg(x),'[]') from (
+                  select created_at::date as dia, area, count(distinct device_id) as n from area_visits
+                  where created_at > now() - interval '30 days' group by 1,2) x),
+    'top_tv', (select coalesce(json_agg(x),'[]') from (
+                  select station_name as nome, count(*) as plays from plays
+                  where created_at > now() - interval '30 days' and station_id like 'tv:%'
+                  group by station_name order by plays desc limit 10) x),
+    'top_pod', (select coalesce(json_agg(x),'[]') from (
+                  select station_name as nome, count(*) as plays from plays
+                  where created_at > now() - interval '30 days' and station_id like 'pod:%'
+                  group by station_name order by plays desc limit 10) x),
+    'visit_estado', (select coalesce(json_agg(x order by pessoas desc),'[]') from (
+                  select coalesce(region,'Não identificado') as estado, max(region_code) as uf, count(distinct device_id) as pessoas
+                  from visits where created_at > now() - interval '30 days' and coalesce(country,'BR')='BR' group by 1) x),
+    'visit_cidade', (select coalesce(json_agg(x),'[]') from (
+                  select city as cidade, max(region_code) as uf, count(distinct device_id) as pessoas from visits
+                  where created_at > now() - interval '30 days' and city is not null group by city order by pessoas desc limit 15) x),
+    'visit_exterior', (select count(distinct device_id) from visits
+                  where created_at > now() - interval '30 days' and country is not null and country <> 'BR'),
     'por_dia', (select coalesce(json_agg(x order by dia),'[]') from (
                   select created_at::date as dia, count(distinct device_id) as acessos
                   from visits where created_at > now() - interval '30 days'
@@ -151,6 +197,7 @@ begin
     'top_radios', (select coalesce(json_agg(x),'[]') from (
                   select station_name as nome, count(*) as plays from plays
                   where created_at > now() - interval '7 days'
+                    and station_id not like 'tv:%' and station_id not like 'pod:%' and station_id not like 'area:%'
                   group by station_name order by plays desc limit 10) x),
     'por_estado', (select coalesce(json_agg(x),'[]') from (
                   select coalesce(state,'Não informado') as estado, count(*) as total
