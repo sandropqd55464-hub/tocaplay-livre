@@ -408,3 +408,129 @@ begin
   values (left(p_vid,64), left(p_dev,64), left(p_ch,80), left(trim(p_name),40), left(trim(p_body),500), v_status, v_motivo);
   return json_build_object('status', v_status);
 end $$;
+
+
+-- ===== Navegação TocaPlay, Etapa 2: Criadores (versão 29) =====
+-- Canal do usuário e posts por link (YouTube, TikTok, Instagram). Aprovação automática com filtro.
+create table if not exists creators (user_id uuid primary key references auth.users on delete cascade, name text, avatar text, created_at timestamptz default now());
+create table if not exists creator_posts (id bigserial primary key, user_id uuid not null references auth.users on delete cascade,
+  platform text not null check (platform in ('youtube','tiktok','instagram')), ref text not null, url text not null,
+  title text not null check (char_length(title) between 2 and 120), cat text,
+  status text not null default 'ok' check (status in ('ok','fila','removido')), motivo text,
+  terms_at timestamptz not null default now(), created_at timestamptz default now(), unique (platform, ref));
+create index if not exists creator_posts_user on creator_posts(user_id, created_at desc);
+create index if not exists creator_posts_status on creator_posts(status, created_at desc);
+alter table creators enable row level security;
+alter table creator_posts enable row level security;
+
+-- Publicar por link. Só conta de verdade (Google ou e-mail), com os termos aceitos.
+create or replace function public.creator_post(p_url text, p_title text, p_cat text, p_terms boolean) returns json
+language plpgsql security definer set search_path = public as $$
+declare v_uid uuid := auth.uid(); v_meta jsonb; v_platform text; v_ref text; v_status text := 'ok'; v_motivo text; v_id bigint; v_m text[];
+begin
+  if v_uid is null or coalesce((auth.jwt()->>'is_anonymous')::boolean, false) then return json_build_object('status','login'); end if;
+  if not coalesce(p_terms,false) then return json_build_object('status','termos'); end if;
+  if (select count(*) from creator_posts where user_id = v_uid and created_at > now() - interval '1 day') >= 10 then
+    return json_build_object('status','limite');
+  end if;
+  v_m := regexp_match(p_url, '(?:youtu\.be/|youtube\.com/(?:watch\?(?:.*&)?v=|shorts/|live/|embed/))([A-Za-z0-9_-]{11})');
+  if v_m is not null then v_platform := 'youtube'; v_ref := v_m[1]; end if;
+  if v_ref is null then v_m := regexp_match(p_url, 'tiktok\.com/@[A-Za-z0-9._-]+/video/([0-9]{8,25})');
+    if v_m is not null then v_platform := 'tiktok'; v_ref := v_m[1]; end if; end if;
+  if v_ref is null then v_m := regexp_match(p_url, 'instagram\.com/(?:reels?|p)/([A-Za-z0-9_-]{5,40})');
+    if v_m is not null then v_platform := 'instagram'; v_ref := v_m[1]; end if; end if;
+  if v_ref is null then return json_build_object('status','link'); end if;
+  if exists(select 1 from creator_posts where platform = v_platform and ref = v_ref) then return json_build_object('status','repetido'); end if;
+  if nav_proibido(p_title) then return json_build_object('status','bloqueado'); end if;
+  -- quem já teve post removido passa pela revisão
+  if exists(select 1 from creator_posts where user_id = v_uid and status = 'removido') then v_status := 'fila'; v_motivo := 'conta com remoção anterior'; end if;
+  v_meta := (auth.jwt()->'user_metadata');
+  insert into creators(user_id, name, avatar)
+    values (v_uid, left(coalesce(v_meta->>'name', v_meta->>'full_name', split_part(auth.jwt()->>'email','@',1), 'Criador'),60), left(coalesce(v_meta->>'avatar_url', v_meta->>'picture'),500))
+    on conflict (user_id) do update set name = excluded.name, avatar = coalesce(excluded.avatar, creators.avatar);
+  insert into creator_posts(user_id, platform, ref, url, title, cat, status, motivo)
+    values (v_uid, v_platform, v_ref, left(p_url,500), left(trim(p_title),120), left(p_cat,40), v_status, v_motivo) returning id into v_id;
+  return json_build_object('status', v_status, 'id', v_id);
+end $$;
+
+-- Posts públicos para a Navegação (os mais novos primeiro), sem os retirados por denúncia
+create or replace function public.creator_feed(p_limit int default 60) returns json
+language sql security definer set search_path = public as $$
+  select coalesce(json_agg(x),'[]') from (
+    select p.id, p.platform, p.ref, p.title, p.cat, p.created_at, c.name, c.avatar
+    from creator_posts p join creators c on c.user_id = p.user_id
+    where p.status = 'ok' and not exists(select 1 from nav_hidden h where h.target = 'v:p:'||p.id and h.status <> 'ok')
+    order by p.created_at desc limit least(coalesce(p_limit,60),200)) x;
+$$;
+
+create or replace function public.creator_get(p_id bigint) returns json
+language sql security definer set search_path = public as $$
+  select row_to_json(x) from (
+    select p.id, p.platform, p.ref, p.title, p.cat, p.created_at, c.name, c.avatar
+    from creator_posts p join creators c on c.user_id = p.user_id where p.id = p_id and p.status = 'ok') x;
+$$;
+
+-- Meu canal: meus posts com o desempenho de cada um
+create or replace function public.creator_my() returns json
+language plpgsql security definer set search_path = public as $$
+declare v_uid uuid := auth.uid();
+begin
+  if v_uid is null then return null; end if;
+  return json_build_object(
+    'creator', (select row_to_json(c) from creators c where c.user_id = v_uid),
+    'posts', (select coalesce(json_agg(x order by x.created_at desc),'[]') from (
+      select p.id, p.platform, p.ref, p.title, p.cat, p.status, p.created_at,
+        (select count(*) from nav_events e where e.vid = 'p:'||p.id and e.kind = 'view') as views,
+        (select count(*) from nav_likes l where l.vid = 'p:'||p.id) as likes,
+        (select count(*) from nav_events e where e.vid = 'p:'||p.id and e.kind = 'share') as shares,
+        (select count(*) from nav_comments m where m.vid = 'p:'||p.id and m.status = 'ok') as comments
+      from creator_posts p where p.user_id = v_uid and p.status <> 'removido') x));
+end $$;
+
+create or replace function public.creator_delete(p_id bigint) returns void
+language sql security definer set search_path = public as $$
+  delete from creator_posts where id = p_id and user_id = auth.uid();
+$$;
+
+-- Painel ADM: a fila agora inclui posts de criadores
+create or replace function public.admin_nav_fila() returns json
+language plpgsql security definer set search_path = public as $$
+begin
+  if coalesce(auth.jwt()->>'email','') <> 'sandropqd55464@gmail.com' then raise exception 'acesso negado'; end if;
+  return json_build_object(
+    'comentarios', (select coalesce(json_agg(x),'[]') from (
+        select id, vid, ch, name, body, motivo, created_at from nav_comments where status = 'fila' order by created_at desc limit 100) x),
+    'videos', (select coalesce(json_agg(x),'[]') from (
+        select h.target, h.created_at, (select count(*) from nav_reports r where r.target = h.target) as denuncias
+        from nav_hidden h where h.status = 'fila' order by h.created_at desc limit 100) x),
+    'posts', (select coalesce(json_agg(x),'[]') from (
+        select p.id, p.platform, p.url, p.title, p.motivo, p.created_at, c.name from creator_posts p join creators c on c.user_id = p.user_id
+        where p.status = 'fila' order by p.created_at desc limit 100) x),
+    'totais', json_build_object(
+        'curtidas_7d',    (select count(*) from nav_likes where created_at > now() - interval '7 days'),
+        'views_7d',       (select count(*) from nav_events where kind = 'view' and created_at > now() - interval '7 days'),
+        'shares_7d',      (select count(*) from nav_events where kind = 'share' and created_at > now() - interval '7 days'),
+        'comentarios_7d', (select count(*) from nav_comments where created_at > now() - interval '7 days'),
+        'criadores',      (select count(*) from creators),
+        'posts_7d',       (select count(*) from creator_posts where created_at > now() - interval '7 days')));
+end $$;
+
+create or replace function public.admin_nav_decidir(p_tipo text, p_id text, p_aprovar boolean) returns void
+language plpgsql security definer set search_path = public as $$
+begin
+  if coalesce(auth.jwt()->>'email','') <> 'sandropqd55464@gmail.com' then raise exception 'acesso negado'; end if;
+  if p_tipo = 'comentario' then
+    update nav_comments set status = case when p_aprovar then 'ok' else 'removido' end where id = p_id::bigint;
+    if p_aprovar then delete from nav_reports where target = 'c:'||p_id; end if;
+  elsif p_tipo = 'post' then
+    update creator_posts set status = case when p_aprovar then 'ok' else 'removido' end where id = p_id::bigint;
+  else
+    update nav_hidden set status = case when p_aprovar then 'ok' else 'removido' end where target = p_id;
+    if p_aprovar then delete from nav_reports where target = p_id; end if;
+  end if;
+end $$;
+
+revoke all on function public.creator_post(text,text,text,boolean), public.creator_my(), public.creator_delete(bigint) from public, anon;
+grant execute on function public.creator_post(text,text,text,boolean), public.creator_my(), public.creator_delete(bigint) to authenticated;
+revoke all on function public.creator_feed(int), public.creator_get(bigint) from public;
+grant execute on function public.creator_feed(int), public.creator_get(bigint) to anon, authenticated;

@@ -222,3 +222,12 @@ Abra o site no Chrome do Android → menu ⋮ → **Instalar app** (ou **Adicion
 - Navegação em tela inteira no computador (vídeo grande + corredor de vídeos à direita), botão NAVEGAÇÃO vermelho, clicar no vídeo do destaque abre a Navegação.
 - Comentários fechados atrás do ícone 💬; quem tem conta comenta com o nome da conta, sem aviso.
 - Filtro forte: palavrão, ofensa, sexual/obsceno, pornografia, ameaça e ódio são bloqueados na hora (também com truques como p0rr4 ou porrraaa). Link vai para a revisão. SQL: parte "filtro forte (versão 28)" no fim do supabase.sql.
+
+## Versão 29 (19/10/2026) — Navegação, Etapa 2: Criadores
+- Entrar com o Google (Inscrever-se, Perfil, + Criar e Meu canal).
+- "+ Criar" e foto da conta no topo da Navegação. Postar por link: YouTube (e Shorts), TikTok e Instagram Reels, com título, categoria e aceite dos Termos.
+- Aprovação automática com filtro forte no título; quem já teve post removido passa pela revisão; limite de 10 posts por dia.
+- Vídeos de criadores entram na Navegação (1 a cada 4 no "Para você" e primeiro no "Geral"), com curtir, comentar e compartilhar.
+- "Meu canal": desempenho (visualizações, curtidas, comentários, compartilhamentos), compartilhar e apagar.
+- Página termos.html. Painel ADM: criadores, posts e posts na fila de revisão.
+- SQL: parte "Etapa 2: Criadores (versão 29)" no fim do supabase.sql.

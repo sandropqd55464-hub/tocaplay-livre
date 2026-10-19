@@ -611,6 +611,40 @@ body.in-nav main{max-width:none;padding:0 24px}
 .nv div small{display:block;color:var(--muted);font-size:12.5px;margin-top:3px}
 .nav-side .ad-slot{margin:8px 0}
 .nav-more{width:100%;padding:12px;border-radius:12px;border:1px dashed var(--line);color:var(--muted);font-weight:700;margin-top:6px}
+
+/* ---------- Criadores (Etapa 2) ---------- */
+.nav-me{display:flex;align-items:center;gap:8px}
+.nav-create{display:flex;align-items:center;gap:6px;padding:8px 14px;border-radius:999px;background:#e5191b;color:#fff;font-weight:900;font-size:14px;border:2px solid #fff}
+.nav-create b{font-size:18px;line-height:1}
+.nav-avatar{width:38px;height:38px;border-radius:50%;overflow:hidden;background:var(--card2);display:grid;place-items:center;font-weight:800;position:relative;border:2px solid var(--yellow)}
+.nav-avatar img{position:absolute;top:0;left:0;width:100%;height:100%;object-fit:cover}
+.nav-embed{position:absolute;top:0;left:0;width:100%;height:100%;border:0;background:#000}
+.btn.google{display:flex;align-items:center;justify-content:center;gap:10px;background:#fff;color:#1f1f1f;font-weight:800}
+.btn.google svg{width:20px;height:20px}
+#criarModal .modal-box{max-height:92vh;overflow:auto}
+#criarModal label.lbl{display:block;font-size:13px;color:var(--muted);margin:2px 0 6px;font-weight:700}
+#criarModal select{width:100%;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:13px 14px;font-size:16px;color:var(--txt);margin-bottom:10px}
+.crt-plat{display:flex;gap:8px;margin:-2px 0 12px;font-size:12.5px;color:var(--muted);flex-wrap:wrap}
+.crt-plat span{padding:4px 10px;border-radius:999px;background:var(--card)}
+.crt-terms{display:flex;gap:10px;align-items:flex-start;font-size:13.5px;color:var(--muted);margin:4px 0 14px;line-height:1.4}
+.crt-terms input{width:20px;height:20px;flex:none;margin:1px 0 0;accent-color:var(--green)}
+.crt-terms a{color:var(--yellow)}
+.canal-head{display:flex;align-items:center;gap:14px;margin:6px 0 14px}
+.canal-head .nav-avatar{width:72px;height:72px;font-size:26px}
+.canal-head h1{font-size:22px;line-height:1.15}.canal-head small{color:var(--muted)}
+.canal-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:14px}
+.canal-stats div{background:var(--card);border-radius:14px;padding:10px;text-align:center}
+.canal-stats b{display:block;font-size:20px;color:var(--yellow)}.canal-stats small{color:var(--muted);font-size:12px}
+.cp{display:flex;gap:12px;padding:10px;border-radius:14px;background:var(--card);margin-bottom:8px;align-items:center}
+.cp .th{width:120px;flex:none;aspect-ratio:16/9;border-radius:10px;overflow:hidden;position:relative;background:var(--card2);display:grid;place-items:center;font-weight:800}
+@supports not (aspect-ratio:1/1){ .cp .th{height:68px} }
+.cp .th img{position:absolute;top:0;left:0;width:100%;height:100%;object-fit:cover}
+.cp .tx{flex:1;min-width:0}.cp .tx b{display:block;font-size:14.5px;line-height:1.25;word-break:break-word}
+.cp .tx small{display:block;color:var(--muted);font-size:12.5px;margin-top:3px}
+.cp .acts{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}
+.cp .acts button{padding:6px 11px;border-radius:999px;border:1.5px solid var(--yellow);color:var(--yellow);font-weight:700;font-size:12.5px}
+.cp .acts button.del{border-color:var(--line);color:var(--muted)}
+.cp .st{font-size:11px;font-weight:800;padding:2px 7px;border-radius:6px;background:var(--card2);color:var(--muted);margin-left:6px}
 </style>
 </head>
 <body>
@@ -714,7 +748,7 @@ body.in-nav main{max-width:none;padding:0 24px}
     <div class="list" id="homeList"></div>
     <button class="more" id="homeMore" hidden>Carregar mais rádios</button>
     <div class="ad-slot" data-ad="fim"></div>
-    <div class="site-links"><a href="sobre.html">Sobre o TocaPlay</a><a href="como-usar.html">Como usar</a><a href="radios-por-estado.html">Rádios por estado</a><a href="radios-gospel.html">Rádios gospel</a><a href="artistas-gospel.html">Artistas gospel</a><a href="radios-romanticas.html">Rádios românticas</a><a href="privacidade.html">Privacidade</a><a href="admin.html" class="adm" rel="nofollow">Acesso ADM</a></div>
+    <div class="site-links"><a href="sobre.html">Sobre o TocaPlay</a><a href="como-usar.html">Como usar</a><a href="radios-por-estado.html">Rádios por estado</a><a href="radios-gospel.html">Rádios gospel</a><a href="artistas-gospel.html">Artistas gospel</a><a href="radios-romanticas.html">Rádios românticas</a><a href="privacidade.html">Privacidade</a><a href="termos.html">Termos de uso</a><a href="admin.html" class="adm" rel="nofollow">Acesso ADM</a></div>
   </section>
 
   <!-- NAVEGAÇÃO: feed de vídeos com curtir, comentar e compartilhar (contagem do próprio TocaPlay) -->
@@ -722,6 +756,7 @@ body.in-nav main{max-width:none;padding:0 24px}
     <div class="nav-top">
       <div class="brand"><img src="icon.svg" alt="">Navegação</div>
       <div class="nav-tabs" role="tablist"><button class="on" data-navtab="foryou">Para você</button><button data-navtab="geral">Geral</button></div>
+      <div class="nav-me"><button class="nav-create" id="navCreate" aria-label="Criar post"><b>+</b> Criar</button><button class="nav-avatar" id="navMeBtn" aria-label="Meu canal">?</button></div>
     </div>
     <div class="nav-grid">
       <div class="nav-main">
@@ -749,6 +784,14 @@ body.in-nav main{max-width:none;padding:0 24px}
       <aside class="nav-side" id="navSide"><h3>A SEGUIR</h3><div id="navList"></div><button class="nav-more" id="navMore">Carregar mais vídeos</button></aside>
     </div>
     <div id="navHarvest" aria-hidden="true" style="position:absolute;left:-9999px;top:0;width:200px;height:120px;overflow:hidden"></div>
+  </section>
+
+  <!-- MEU CANAL (criadores) -->
+  <section class="view" id="v-canal">
+    <div class="canal-head"><div class="nav-avatar" id="canalAv">?</div><div style="flex:1;min-width:0"><h1 id="canalName">Meu canal</h1><small id="canalSub">Seus vídeos no TocaPlay</small></div>
+      <button class="nav-create" id="canalCreate"><b>+</b> Criar</button></div>
+    <div class="canal-stats" id="canalStats"></div>
+    <div id="canalList"></div>
   </section>
 
   <!-- BUSCAR -->
@@ -992,6 +1035,13 @@ body.in-nav main{max-width:none;padding:0 24px}
 </div>
 
 <!-- COMPARTILHAR O APP -->
+<div class="modal" id="criarModal">
+  <div class="modal-box">
+    <h3 style="margin-bottom:6px">+ Criar post</h3>
+    <div id="criarBody"></div>
+  </div>
+</div>
+
 <div class="modal" id="shareModal">
   <div class="modal-box">
     <h3>Compartilhar o TocaPlay</h3>
@@ -1406,23 +1456,33 @@ function renderAccount(){
     box.innerHTML = `<div class="card"><span class="sub-done">✓ Inscrito</span>
       <div style="font-weight:800;font-size:20px;margin:10px 0 4px">Você faz parte do TocaPlay 🎉</div>
       <p>Suas favoritas e sua inscrição ficam guardadas neste aparelho.</p>
+      <p style="margin-top:10px">Quer ter o seu canal e postar vídeos? Entre com a sua conta:</p>
+      <div class="form">${GOOGLE_BTN}</div>
       <details class="more-login" id="moreLogin"><summary>Já tem conta com e-mail? Entrar</summary>${emailForm(false)}</details></div>` + installCard + inviteCard;
     bindEmailForm(false); return;
   }
   if(user){
     box.innerHTML = `<div class="card"><p>Olá,</p><div style="font-weight:800;font-size:20px;margin:2px 0 4px">${esc(nome||'ouvinte')} 👋</div>
       <p style="word-break:break-all">${esc(user.email)}</p>
-      <p style="margin-top:10px">Suas favoritas estão sincronizadas em todos os aparelhos.</p><div class="form"><button class="btn ghost" id="logoutBtn">Sair da conta</button></div></div>` + ownerCard + installCard + inviteCard;
+      <p style="margin-top:10px">Suas favoritas estão sincronizadas em todos os aparelhos.</p><div class="form"><button class="btn" data-go-canal>🎬 Meu canal</button><button class="btn ghost" id="logoutBtn">Sair da conta</button></div></div>` + ownerCard + installCard + inviteCard;
     $('#logoutBtn').onclick = async()=>{ await sb.auth.signOut(); toast('Você saiu da conta'); };
     return;
   }
   const isUp = authMode==='signup';
   box.innerHTML = `<div class="card"><div style="font-weight:800;font-size:20px;margin-bottom:4px">Inscreva-se no TocaPlay</div>
     <p>Grátis e com 1 toque, sem digitar nada. Suas favoritas e playlists ficam guardadas.</p>
-    <div class="form"><button class="sub-btn big" data-subscribe>Inscrever-se</button></div>
+    <div class="form"><button class="sub-btn big" data-subscribe>Inscrever-se</button>${GOOGLE_BTN}</div>
     <details class="more-login" id="moreLogin" ${authOpen?'open':''}><summary>Prefere usar e-mail e senha?</summary>${emailForm(isUp)}</details></div>` + installCard + inviteCard;
   bindEmailForm(isUp);
 }
+const GOOGLE_BTN = `<button class="btn google" data-google><svg viewBox="0 0 48 48"><path fill="#FFC107" d="M43.6 20.5H42V20H24v8h11.3C33.7 32.7 29.2 36 24 36c-6.6 0-12-5.4-12-12s5.4-12 12-12c3.1 0 5.8 1.2 7.9 3.1l5.7-5.7C34 6.1 29.3 4 24 4 12.9 4 4 12.9 4 24s8.9 20 20 20 20-8.9 20-20c0-1.3-.1-2.4-.4-3.5z"/><path fill="#FF3D00" d="m6.3 14.7 6.6 4.8C14.7 15.1 19 12 24 12c3.1 0 5.8 1.2 7.9 3.1l5.7-5.7C34 6.1 29.3 4 24 4 16.3 4 9.7 8.3 6.3 14.7z"/><path fill="#4CAF50" d="M24 44c5.2 0 9.9-2 13.4-5.2l-6.2-5.2C29.2 35.1 26.7 36 24 36c-5.2 0-9.6-3.3-11.3-7.9l-6.5 5C9.5 39.6 16.2 44 24 44z"/><path fill="#1976D2" d="M43.6 20.5H42V20H24v8h11.3c-.8 2.2-2.2 4.2-4.1 5.6l6.2 5.2C37 39.2 44 34 44 24c0-1.3-.1-2.4-.4-3.5z"/></svg>Entrar com o Google</button>`;
+async function googleLogin(){
+  if(!sb) return toast('Login indisponível no momento');
+  store.set('tp_after_login', curView==='nav' || curView==='canal' ? curView : '');
+  const {error} = await sb.auth.signInWithOAuth({provider:'google', options:{redirectTo: location.origin + '/'}});
+  if(error) toast(/not enabled|provider/i.test(error.message) ? 'O login com o Google ainda está sendo ligado. Tente mais tarde.' : 'Não deu para entrar agora: '+error.message);
+}
+document.addEventListener('click', e=>{ if(e.target.closest('[data-google]')) googleLogin(); });
 let authOpen=false;
 function bindEmailForm(isUp){
   const box=$('#accountBox');
@@ -1473,8 +1533,9 @@ document.addEventListener('click', e=>{
 if(sb){
   sb.auth.onAuthStateChange((_ev, session)=>{
     const was = user?.id; user = session?.user || null;
-    renderAccount();
+    renderAccount(); navMeRefresh();
     if(user && user.id!==was) syncFavs();
+    if(user && !isAnon(user)){ const after=store.get('tp_after_login',''); if(after){ store.set('tp_after_login',''); setTimeout(()=>go(after),300); } }
   });
 }
 
@@ -2249,9 +2310,10 @@ function go(view, push=true){
   if(view==='home') renderFeat(); else featStopVideo();
   document.body.classList.toggle('in-nav', view==='nav');
   if(view==='nav') enterNav(); else navPause();
+  if(view==='canal') renderCanal();
   setTimeout(fillAds, 300);
   if(view==='pod') enterPods();
-  logArea({home:'Início', search:'Busca de rádios', tv:'TV', nav:'Navegação', pod:'Podcasts', favs:'Favoritas', account:'Perfil', playlist:'Playlists'}[view]);
+  logArea({home:'Início', search:'Busca de rádios', tv:'TV', nav:'Navegação', canal:'Meu canal', pod:'Podcasts', favs:'Favoritas', account:'Perfil', playlist:'Playlists'}[view]);
   requestAnimationFrame(()=>document.querySelectorAll('.view.active .row-wrap').forEach(rowArrows));
 }
 document.querySelectorAll('nav button').forEach(b=>b.onclick=()=>go(b.dataset.view));
@@ -2331,7 +2393,7 @@ $('#installClose').onclick = ()=>$('#installModal').classList.remove('open');
 $('#installModal').addEventListener('click', e=>{ if(e.target.id==='installModal') $('#installModal').classList.remove('open'); });
 window.addEventListener('popstate', e=>{
   if($('#sheet').classList.contains('open')){ closeSheet(); return; }
-  ['shareModal','addModal','nameModal','sleepModal','songModal','importModal','installModal','welcomeModal'].forEach(id=>$('#'+id).classList.remove('open'));
+  ['shareModal','addModal','nameModal','sleepModal','songModal','importModal','installModal','welcomeModal','criarModal'].forEach(id=>$('#'+id).classList.remove('open'));
   go(e.state?.view || 'home', false);
 });
 $('#backBtn').onclick = ()=>history.back();
@@ -2450,6 +2512,7 @@ async function navExtend(nCh=4){
   const tab=navTab;
   try{
     if(tab==='geral' && navOi===0){
+      for(let k=0;k<6;k++){ const pi=navNextPost(); if(pi) navFeed.push(pi); }
       navTrend.slice(0,12).forEach(t=>{ const c=TV_CHANNELS.find(x=>x.name===t.ch); if(c && t.vid && !navSeen(t.vid)) navFeed.push({c, vid:t.vid}); });
       navRenderList(); if(!navCur && navFeed.length) navPlay(0);
     }
@@ -2461,12 +2524,14 @@ async function navExtend(nCh=4){
       if(tab!==navTab) return;
       if(ids.length) navShuffle(ids.slice(0,12).filter(v=>!navSeen(v))).slice(0,2).forEach(vid=>navFeed.push({c, vid}));
       else navFeed.push({c, vid:null, idx:Math.floor(Math.random()*4)});
+      if(navFeed.length%4===0){ const pi=navNextPost(); if(pi) navFeed.push(pi); }   // vídeos de criadores no meio
       navRenderList();
       if(!navCur && navFeed.length) navPlay(0);
     }
   } finally { navExtending=false; }
 }
 function navThumb(it){
+  if(it.post){ const th=postThumb(it.post); return `<i>${it.post.platform==='tiktok'?'TikTok':it.post.platform==='instagram'?'Reels':esc(it.c.short)}</i>${th?`<img src="${esc(th)}" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="this.remove()">`:''}`; }
   if(it.vid) return `<img src="https://i.ytimg.com/vi/${esc(it.vid)}/mqdefault.jpg" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="this.remove()">`;
   const av=avatarUrl(it.c); return `<i>${esc(it.c.short||initials(it.c.name))}</i>${av?`<img src="${esc(av)}" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="this.remove()">`:''}`;
 }
@@ -2500,19 +2565,24 @@ function navPlay(i){
   $('#navCh').innerHTML = `<div class="av" style="background:${esc(it.c.color||'var(--card2)')}">${esc(it.c.short||initials(it.c.name))}${av?`<img src="${esc(av)}" alt="" referrerpolicy="no-referrer" onerror="this.remove()">`:''}</div><div><b>${esc(it.c.name)}</b><small>${esc([it.c.cat, ...tvSubsOf(it.c)].join(' · '))}</small></div>`;
   navShowInfo(null);
   const tok=++navToken;
+  const emb = it.post ? postEmbed(it.post) : '';
+  navEmbed(emb);
+  if(it.post){ it.infoFor=it.vid; navLoadInfo(it); clearTimeout(navViewT); navViewT=setTimeout(()=>{ if(navCur===it) navRpc('nav_event',{p_vid:it.vid, p_dev:deviceId(), p_kind:'view', p_ch:it.c.name}); },5000); }
+  if(emb){ navRenderList(); if(navI+4 >= navFeed.length) navExtend(); logArea('Navegação · Criadores'); return; }
+  const ytId = it.post ? it.post.ref : it.vid;
   whenYT(()=>{
     if(tok!==navToken) return;
-    const pl = {listType:'playlist', list:uploadsList(it.c), index:it.idx||0};
+    const pl = it.c.channelId ? {listType:'playlist', list:uploadsList(it.c), index:it.idx||0} : null;
     if(!navP){
-      navP = new YT.Player('navYt', {width:'100%', height:'100%', ...(it.vid ? {videoId:it.vid} : {}),
-        playerVars:{autoplay:1, playsinline:1, rel:0, modestbranding:1, ...(it.vid ? {} : pl)},
+      navP = new YT.Player('navYt', {width:'100%', height:'100%', ...(ytId ? {videoId:ytId} : {}),
+        playerVars:{autoplay:1, playsinline:1, rel:0, modestbranding:1, ...(ytId ? {} : pl)},
         events:{
           onReady:e=>{ try{ e.target.playVideo(); }catch{} },
           onStateChange:navOnState,
           onError:()=>{ toast('Este vídeo não abre fora do YouTube. Indo para o próximo…'); setTimeout(()=>navGo(1),1200); }
         }});
-    } else if(it.vid) navP.loadVideoById(it.vid);
-    else navP.loadPlaylist(pl);
+    } else if(ytId) navP.loadVideoById(ytId);
+    else if(pl) navP.loadPlaylist(pl);
   });
   navRenderList();
   const cur=$('#navList').querySelector('.nv.cur'); if(cur && innerWidth>=900) cur.scrollIntoView({block:'nearest', behavior:'smooth'});
@@ -2523,8 +2593,8 @@ function navOnState(e){
   navState=e.data; featApplySound();
   if(e.data===1 && navCur){
     let d={}; try{ d=navP.getVideoData()||{}; }catch{}
-    if(d.video_id && navCur.vid!==d.video_id){ navCur.vid=d.video_id; }
-    if(d.title){ navCur.title=d.title; $('#navTitle').textContent=d.title; const t=document.querySelector(`[data-nvt="${navI}"]`); if(t) t.textContent=d.title; }
+    if(d.video_id && navCur.vid!==d.video_id && !navCur.post){ navCur.vid=d.video_id; }
+    if(d.title && !navCur.post){ navCur.title=d.title; $('#navTitle').textContent=d.title; const t=document.querySelector(`[data-nvt="${navI}"]`); if(t) t.textContent=d.title; }
     if(navCur.vid && navCur.infoFor!==navCur.vid){ navCur.infoFor=navCur.vid; navLoadInfo(navCur);
       const it=navCur; clearTimeout(navViewT); navViewT=setTimeout(()=>{ if(navCur===it) navRpc('nav_event',{p_vid:it.vid, p_dev:deviceId(), p_kind:'view', p_ch:it.c.name}); },5000); }
   }
@@ -2558,7 +2628,7 @@ $('#navLike').onclick = async()=>{
 };
 $('#navShare').onclick = async()=>{
   if(!navCur) return;
-  const url = location.origin + '/#v=' + encodeURIComponent(navCur.vid||'') + '&c=' + encodeURIComponent(navCur.c.name);
+  const url = navCur.post ? location.origin + '/#p=' + navCur.post.id : location.origin + '/#v=' + encodeURIComponent(navCur.vid||'') + '&c=' + encodeURIComponent(navCur.c.name);
   const text = `Olha esse vídeo de ${navCur.c.name} no TocaPlay Livre, de graça:`;
   try{ if(navigator.share) await navigator.share({title:'TocaPlay Livre', text, url}); else openWhatsApp(`${text} ${url}`); }catch{ return; }
   navLearn(navCur.c, 4);
@@ -2625,15 +2695,140 @@ async function enterNav(){
   document.body.classList.add('in-nav');
   if(navSeeded){ if(navP && navCur) try{ navP.playVideo(); }catch{} return; }
   navSeeded=true;
+  navMeRefresh();
+  await navLoadPosts();
   const tr = await navRpc('nav_trending', {});
   navTrend = Array.isArray(tr) ? tr : [];
   navTrend.forEach(t=>{ navHot[t.ch]=(navHot[t.ch]||0)+Math.min(3, (t.score||0)/10); });
+  if(navDeep && navDeep.postId){ const p = navPosts.find(x=>String(x.id)===String(navDeep.postId)) || await navRpc('creator_get', {p_id:+navDeep.postId}); if(p && p.id) navDeep={post:p}; }
+  if(navDeep && navDeep.post){ navFeed.push(postItem(navDeep.post)); navDeep=null; }
   if(navDeep){ const c=TV_CHANNELS.find(x=>x.name===navDeep.c); if(c) navFeed.push({c, vid:navDeep.vid||null, idx:0}); navDeep=null; }
   navBuildOrder();
   if(navFeed.length){ navRenderList(); navPlay(0); }
   navExtend();
 }
 $('#featNav').onclick = e=>{ e.stopPropagation(); logArea('banner:navegacao'); go('nav'); };
+
+/* ---------- Criadores (Etapa 2): canal do usuário, + Criar por link e desempenho ---------- */
+let navPosts=[], navPostI=0;
+const CRT_CATS = ['Louvor','Pregação','Música','Humor','Receitas','Esportes','Notícias','Dicas','Família','Outros'];
+const realUser = () => user && !isAnon(user);
+function postItem(p){
+  return {post:p, vid:'p:'+p.id, title:p.title,
+    c:{name:p.name||'Criador', short:initials(p.name||'Criador'), cat:'Criadores', sub:p.cat||'Criadores', color:'linear-gradient(135deg,#e5191b,#7a0b0c)', avatar:p.avatar||''}};
+}
+function postThumb(p){ return p.platform==='youtube' ? `https://i.ytimg.com/vi/${encodeURIComponent(p.ref)}/mqdefault.jpg` : ''; }
+function postEmbed(p){
+  if(p.platform==='tiktok') return `https://www.tiktok.com/embed/v2/${encodeURIComponent(p.ref)}`;
+  if(p.platform==='instagram') return `https://www.instagram.com/reel/${encodeURIComponent(p.ref)}/embed`;
+  return '';
+}
+function navEmbed(url){
+  const box=$('#navPlayer'); box.querySelectorAll('.nav-embed').forEach(f=>f.remove());
+  const yt=document.getElementById('navYt'); if(yt) yt.style.visibility = url ? 'hidden' : '';
+  if(!url) return;
+  navPause();
+  box.insertAdjacentHTML('beforeend', `<iframe class="nav-embed" src="${esc(url)}" allow="autoplay; encrypted-media; fullscreen; picture-in-picture" allowfullscreen referrerpolicy="strict-origin-when-cross-origin"></iframe>`);
+}
+async function navLoadPosts(){ const d=await navRpc('creator_feed', {p_limit:80}); navPosts = Array.isArray(d) ? d : []; navPostI=0; }
+function navNextPost(){ while(navPostI < navPosts.length){ const p=navPosts[navPostI++]; if(!navSeen('p:'+p.id)) return postItem(p); } return null; }
+function navMeRefresh(){
+  const b=$('#navMeBtn'); if(!b) return;
+  const m=user?.user_metadata||{}, pic=m.avatar_url||m.picture||'', n=navUserName();
+  b.innerHTML = realUser() ? `${esc((n||'?')[0].toUpperCase())}${pic?`<img src="${esc(pic)}" alt="" referrerpolicy="no-referrer" onerror="this.remove()">`:''}` : '👤';
+}
+$('#navMeBtn').onclick = ()=>go('canal');
+$('#navCreate').onclick = $('#canalCreate').onclick = ()=>openCriar();
+document.addEventListener('click', e=>{ if(e.target.closest('[data-go-canal]')) go('canal'); });
+$('#criarModal').addEventListener('click', e=>{ if(e.target.id==='criarModal') $('#criarModal').classList.remove('open'); });
+
+function openCriar(){
+  const body=$('#criarBody');
+  if(!realUser()){
+    body.innerHTML = `<p class="lead" style="text-align:left">Para ter o seu canal e postar vídeos, entre com a sua conta. É grátis e leva 1 toque.</p>
+      <div class="form">${GOOGLE_BTN}<button class="btn ghost" data-crt-email style="width:100%">Entrar com e-mail e senha</button></div>`;
+    body.querySelector('[data-crt-email]').onclick = ()=>{ $('#criarModal').classList.remove('open'); authOpen=true; go('account'); };
+  } else {
+    body.innerHTML = `<form id="crtForm">
+      <label class="lbl" for="crtUrl">Link do vídeo</label>
+      <input id="crtUrl" inputmode="url" placeholder="Cole aqui o link do vídeo" required>
+      <div class="crt-plat"><span>YouTube e Shorts</span><span>TikTok</span><span>Instagram Reels</span></div>
+      <label class="lbl" for="crtTitle">Título</label>
+      <input id="crtTitle" maxlength="120" placeholder="Sobre o que é o vídeo?" required>
+      <label class="lbl" for="crtCat">Categoria</label>
+      <select id="crtCat">${CRT_CATS.map(c=>`<option>${c}</option>`).join('')}</select>
+      <label class="crt-terms"><input type="checkbox" id="crtTerms" required><span>Declaro que o vídeo é meu ou que tenho autorização para divulgar, que ele não tem conteúdo impróprio e que aceito os <a href="termos.html" target="_blank" rel="noopener">Termos de uso</a>.</span></label>
+      <button class="btn" id="crtBtn" style="width:100%">Publicar no TocaPlay</button>
+    </form>`;
+    $('#crtForm').onsubmit = criarSubmit;
+  }
+  $('#criarModal').classList.add('open'); history.pushState({view:curView, modal:1},'');
+}
+// Link curto do TikTok (vm.tiktok.com): descobre o link completo pelo próprio TikTok
+async function crtResolve(url){
+  if(!/(vm|vt)\.tiktok\.com\//i.test(url)) return url;
+  try{ const r=await fetch('https://www.tiktok.com/oembed?url='+encodeURIComponent(url)); const j=await r.json();
+    if(j.embed_product_id) return `https://www.tiktok.com/@${j.author_unique_id||'video'}/video/${j.embed_product_id}`; }catch{}
+  return url;
+}
+async function criarSubmit(e){
+  e.preventDefault();
+  const b=$('#crtBtn'), title=$('#crtTitle').value.trim();
+  if(navProibido(title)) return toast('🚫 Título não permitido: palavrão, ofensa ou conteúdo impróprio.');
+  b.disabled=true; b.textContent='Publicando…';
+  const url = await crtResolve($('#crtUrl').value.trim());
+  const d = await navRpc('creator_post', {p_url:url, p_title:title, p_cat:$('#crtCat').value, p_terms:$('#crtTerms').checked});
+  b.disabled=false; b.textContent='Publicar no TocaPlay';
+  const msg = {login:'Entre com a sua conta para postar.', termos:'Marque a caixa dos Termos de uso.', limite:'Limite de 10 posts por dia. Volte amanhã!',
+    link:'Esse link não foi reconhecido. Use o link de um vídeo do YouTube, TikTok ou Instagram Reels.', repetido:'Esse vídeo já foi postado no TocaPlay.',
+    bloqueado:'🚫 Título não permitido: palavrão, ofensa ou conteúdo impróprio.'};
+  if(!d) return toast('Não deu para publicar agora. Tente de novo.');
+  if(msg[d.status]) return toast(msg[d.status]);
+  $('#criarModal').classList.remove('open');
+  toast(d.status==='fila' ? 'Recebido! Seu vídeo aparece depois de uma revisão.' : 'Publicado! 🎉 Seu vídeo já está na Navegação.');
+  logArea('Criadores · post');
+  navPosts=[]; navLoadPosts();
+  go('canal');
+}
+async function renderCanal(){
+  const n=navUserName(), m=user?.user_metadata||{}, pic=m.avatar_url||m.picture||'';
+  $('#canalAv').innerHTML = `${esc((n||'?')[0].toUpperCase())}${pic?`<img src="${esc(pic)}" alt="" referrerpolicy="no-referrer" onerror="this.remove()">`:''}`;
+  if(!realUser()){
+    $('#canalName').textContent='Meu canal'; $('#canalSub').textContent='Entre com a sua conta para ter o seu canal';
+    $('#canalStats').innerHTML=''; $('#canalList').innerHTML = `<div class="card"><p>Com a sua conta, você posta vídeos, vê quantas pessoas assistiram, curtiram e comentaram, e compartilha com os amigos.</p><div class="form">${GOOGLE_BTN}</div></div>`;
+    return;
+  }
+  $('#canalName').textContent = n || 'Meu canal'; $('#canalSub').textContent = 'Seus vídeos no TocaPlay';
+  $('#canalList').innerHTML = '<p style="color:var(--muted)">Carregando…</p>';
+  const d = await navRpc('creator_my', {});
+  const posts = (d && d.posts) || [];
+  const sum = k => posts.reduce((a,p)=>a+(+p[k]||0),0);
+  $('#canalStats').innerHTML = [['views','Visualizações'],['likes','Curtidas'],['comments','Comentários'],['shares','Compartilh.']].map(([k,l])=>`<div><b>${fmtN(sum(k))}</b><small>${l}</small></div>`).join('');
+  $('#canalList').innerHTML = posts.length ? posts.map(p=>{ const th=postThumb(p);
+    return `<div class="cp"><div class="th" style="background:linear-gradient(135deg,#e5191b,#7a0b0c)">${p.platform==='tiktok'?'TikTok':p.platform==='instagram'?'Reels':''}${th?`<img src="${esc(th)}" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="this.remove()">`:''}</div>
+      <div class="tx"><b>${esc(p.title)}${p.status==='fila'?'<span class="st">em revisão</span>':''}</b>
+      <small>👁 ${fmtN(p.views)} · 👍 ${fmtN(p.likes)} · 💬 ${fmtN(p.comments)} · ↗ ${fmtN(p.shares)} · ${esc(p.cat||'')}</small>
+      <div class="acts"><button data-cp-play="${p.id}">▶ Ver</button><button data-cp-share="${p.id}">↗ Compartilhar</button><button class="del" data-cp-del="${p.id}">Apagar</button></div></div></div>`; }).join('')
+    : `<div class="card"><p><b style="color:var(--txt)">Seu canal está pronto!</b><br>Toque em <b>+ Criar</b> e cole o link de um vídeo seu do YouTube, TikTok ou Instagram.</p></div>`;
+  $('#canalList').onclick = async e=>{
+    const pl=e.target.closest('[data-cp-play]'), sh=e.target.closest('[data-cp-share]'), del=e.target.closest('[data-cp-del]');
+    const p = posts.find(x=>String(x.id)===(pl||sh||del)?.dataset[pl?'cpPlay':sh?'cpShare':'cpDel']);
+    if(!p) return;
+    if(pl){ navOpenPost({...p, name:n, avatar:pic}); }
+    if(sh){ const url=location.origin+'/#p='+p.id, text=`Olha o meu vídeo no TocaPlay Livre: ${p.title}`;
+      try{ if(navigator.share) await navigator.share({title:'TocaPlay Livre', text, url}); else openWhatsApp(`${text} ${url}`); }catch{ return; }
+      navRpc('nav_event', {p_vid:'p:'+p.id, p_dev:deviceId(), p_kind:'share', p_ch:n}); }
+    if(del){ if(!confirm('Apagar este vídeo do seu canal?')) return; await navRpc('creator_delete', {p_id:p.id}); toast('Vídeo apagado'); navPosts=[]; renderCanal(); }
+  };
+}
+function navOpenPost(p){
+  const it=postItem(p);
+  if(!navSeeded){ navDeep={post:p}; go('nav'); return; }
+  go('nav');
+  navFeed.splice(navI+1, 0, it);
+  $('#navList').innerHTML=''; $('#navList').dataset.n=0;
+  navPlay(navI+1);
+}
 
 /* ---------- Início do app ---------- */
 renderChips(); renderFavs(); renderAccount(); renderPlaylists(); loadHome(); updatePlayer(); checkImport();
@@ -2643,7 +2838,9 @@ $('#srTv').textContent = `📺 ${Math.floor(TV_CHANNELS.length/10)*10}+`;
 // Links das páginas de conteúdo: /#radios=gospel, /#radios=romanticas, /#canal=Nome do canal
 (function openFromContentLink(){
   const h = decodeURIComponent(location.hash||'');
-  let m = h.match(/^#v=([\w-]*)&c=(.+)$/);
+  let m = h.match(/^#p=(\d+)$/);
+  if(m){ history.replaceState(history.state,'',location.pathname); navDeep={postId:m[1]}; go('nav'); return; }
+  m = h.match(/^#v=([\w-]*)&c=(.+)$/);
   if(m){ history.replaceState(history.state,'',location.pathname); navDeep={vid:m[1]||null, c:m[2]}; go('nav'); return; }
   m = h.match(/^#canal=(.+)$/);
   if(m){ const c = TV_CHANNELS.find(x=>x.name.toLowerCase()===m[1].toLowerCase()); history.replaceState(history.state,'',location.pathname);

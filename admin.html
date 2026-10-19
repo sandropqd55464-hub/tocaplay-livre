@@ -171,15 +171,18 @@ async function loadNavFila(){
   const el=$('#navFila'); if(!el) return;
   const {data,error}=await sb.rpc('admin_nav_fila');
   if(error){ el.innerHTML=`<div class="box"><h2>🧭 Navegação</h2><p class="muted">Rode o SQL da Navegação (versão 26) no Supabase para ver esta parte.</p></div>`; return; }
-  const t=data.totais||{}, cs=data.comentarios||[], vs=data.videos||[];
+  const t=data.totais||{}, cs=data.comentarios||[], vs=data.videos||[], ps=data.posts||[];
   el.innerHTML=`<div class="box"><h2>🧭 Navegação (7 dias)</h2>
     <div class="tiles"><div class="tile"><div class="l">Visualizações</div><div class="n">${fmt(t.views_7d)}</div></div>
     <div class="tile"><div class="l">Curtidas</div><div class="n">${fmt(t.curtidas_7d)}</div></div>
     <div class="tile"><div class="l">Compartilhamentos</div><div class="n">${fmt(t.shares_7d)}</div></div>
-    <div class="tile"><div class="l">Comentários</div><div class="n">${fmt(t.comentarios_7d)}</div></div></div>
-    <h2 style="margin-top:16px">🛡️ Fila de revisão ${cs.length+vs.length?`(${cs.length+vs.length})`:''}</h2>
+    <div class="tile"><div class="l">Comentários</div><div class="n">${fmt(t.comentarios_7d)}</div></div>
+    <div class="tile hl"><div class="l">Criadores</div><div class="n">${fmt(t.criadores)}</div><div class="s">${fmt(t.posts_7d)} posts em 7 dias</div></div></div>
+    <h2 style="margin-top:16px">🛡️ Fila de revisão ${cs.length+vs.length+ps.length?`(${cs.length+vs.length+ps.length})`:''}</h2>
     <p class="muted" style="margin-bottom:8px">A aprovação é automática. Aqui aparece só o que o filtro separou (palavrão, link) ou o que recebeu 3 denúncias.</p>
-    ${!cs.length && !vs.length ? '<div class="empty">Nada para revisar. 🙌</div>' : ''}
+    ${!cs.length && !vs.length && !ps.length ? '<div class="empty">Nada para revisar. 🙌</div>' : ''}
+    ${ps.map(p=>`<div class="fila"><div><b>Post de ${esc(p.name||'criador')}</b> <span class="muted">${esc(p.platform)} · ${esc(p.motivo||'')}</span><p>${esc(p.title)}<br><a href="${esc(p.url)}" target="_blank" rel="noopener" style="color:var(--yellow)">Abrir o vídeo</a></p></div>
+      <div class="fb"><button class="btn" data-dec="post|${p.id}|1">Aprovar</button><button class="btn ghost" data-dec="post|${p.id}|0">Remover</button></div></div>`).join('')}
     ${cs.map(c=>`<div class="fila"><div><b>${esc(c.name)}</b> <span class="muted">em ${esc(c.ch||'')} · ${esc(c.motivo||'')}</span><p>${esc(c.body)}</p></div>
       <div class="fb"><button class="btn" data-dec="comentario|${c.id}|1">Aprovar</button><button class="btn ghost" data-dec="comentario|${c.id}|0">Remover</button></div></div>`).join('')}
     ${vs.map(v=>`<div class="fila"><div><b>Vídeo denunciado</b> <span class="muted">${fmt(v.denuncias)} denúncias</span>
