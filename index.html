@@ -584,8 +584,11 @@ body.in-nav main{max-width:none;padding:0 24px}
 .nav-com form{display:flex;flex-direction:column;gap:8px;margin-bottom:12px}
 .nav-com input,.nav-com textarea{width:100%;background:var(--bg);border:1px solid var(--line);border-radius:12px;padding:11px 12px;font-size:15px;color:var(--txt);font-family:inherit;outline:0;resize:vertical}
 .nav-com textarea{min-height:44px}
-.nav-com form .btn{align-self:flex-end;padding:9px 18px}
-.nav-who{color:var(--muted);font-size:13px}.nav-who b{color:var(--txt)}.nav-who button{color:var(--yellow);font-weight:700;text-decoration:underline}
+.nav-com form .btn{padding:11px 18px;flex:none}
+.nav-com h3{display:flex;align-items:center;gap:8px}.nav-com h3 span{color:var(--muted);font-weight:600}
+.nav-com-x{margin-left:auto;width:32px;height:32px;border-radius:50%;background:var(--bg);color:var(--muted)}
+.nav-com-row{display:flex;gap:8px;align-items:flex-end}.nav-com-row textarea{flex:1}
+.nav-com[hidden]{display:none}
 .nav-c{padding:10px 0;border-top:1px solid var(--line)}
 .nav-c b{font-size:14px}.nav-c small{color:var(--muted);font-size:12px;margin-left:6px}
 .nav-c p{font-size:14.5px;margin-top:3px;white-space:pre-wrap;word-break:break-word}
@@ -730,13 +733,11 @@ body.in-nav main{max-width:none;padding:0 24px}
         </div>
         <div class="nav-views" id="navViews"></div>
         <div class="nav-brand"><span>Assistindo no <b>TocaPlay Livre</b> · curtidas e comentários contados aqui</span><span>tocaplaylivre.com.br</span></div>
-        <div class="nav-com" id="navCom">
-          <h3>Comentários</h3>
+        <div class="nav-com" id="navCom" hidden>
+          <h3>Comentários <span id="navComN2"></span><button type="button" class="nav-com-x" id="navComX" aria-label="Fechar comentários">✕</button></h3>
           <form id="navComForm">
-            <small class="nav-who" id="navComWho"></small>
-            <input id="navComName" maxlength="40" placeholder="Seu nome" autocomplete="name">
-            <textarea id="navComTxt" maxlength="500" placeholder="Escreva um comentário com respeito"></textarea>
-            <button class="btn" id="navComBtn">Comentar</button>
+            <input id="navComName" maxlength="40" placeholder="Seu nome" autocomplete="name" hidden>
+            <div class="nav-com-row"><textarea id="navComTxt" maxlength="500" rows="1" placeholder="Adicione um comentário…"></textarea><button class="btn" id="navComBtn" aria-label="Enviar comentário">Enviar</button></div>
           </form>
           <div id="navComList"></div>
         </div>
@@ -2526,7 +2527,7 @@ async function navRpc(fn, args){ if(!sb) return null; try{ const {data,error}=aw
 function navShowInfo(d){
   d = d || {likes:0, liked:false, shares:0, views:0, comments:[]};
   $('#navLikeN').textContent=fmtN(d.likes); $('#navLike').classList.toggle('on', !!d.liked);
-  $('#navShareN').textContent=fmtN(d.shares); $('#navComN').textContent=fmtN((d.comments||[]).length);
+  $('#navShareN').textContent=fmtN(d.shares); $('#navComN').textContent=fmtN((d.comments||[]).length); $('#navComN2').textContent=fmtN((d.comments||[]).length);
   $('#navViews').textContent = d.views ? `${fmtN(d.views)} visualizações no TocaPlay` : 'Seja o primeiro a assistir no TocaPlay';
   $('#navComList').innerHTML = (d.comments||[]).length ? d.comments.map(c=>`<div class="nav-c"><b>${esc(c.name||'Visitante')}</b><small>${new Date(c.created_at).toLocaleDateString('pt-BR')}</small><p>${esc(c.body)}</p><button data-navrepc="${c.id}">⚑ Denunciar</button></div>`).join('') : '<p class="muted" style="color:var(--muted);font-size:14px">Ainda sem comentários. Comece a conversa!</p>';
 }
@@ -2556,21 +2557,21 @@ $('#navShare').onclick = async()=>{
     $('#navShareN').textContent = fmtN((parseInt($('#navShareN').textContent)||0)+1); }
 };
 $('#navNext').onclick = ()=>navGo(1);
-$('#navComGo').onclick = ()=>$('#navCom').scrollIntoView({behavior:'smooth', block:'start'});
+$('#navComGo').onclick = ()=>{ const c=$('#navCom'); c.hidden=!c.hidden; navComIdentity(); if(!c.hidden){ c.scrollIntoView({behavior:'smooth', block:'nearest'}); setTimeout(()=>$('#navComTxt').focus(),300); } };
 $('#navReport').onclick = async()=>{
   if(!navCur || !navCur.vid) return;
   if(!confirm('Denunciar este vídeo como impróprio? Com 3 denúncias ele sai do TocaPlay até ser revisado.')) return;
   await navRpc('nav_report', {p_target:'v:'+navCur.vid, p_dev:deviceId(), p_reason:'video'});
   toast('Obrigado! A denúncia foi registrada.'); navGo(1);
 };
-$('#navComName').value = store.get('tp_name','');
 $('#navComForm').onsubmit = async e=>{
   e.preventDefault();
   if(!navCur || !navCur.vid) return toast('Espere o vídeo começar para comentar.');
-  const name=(navUserName() || $('#navComName').value.trim()).slice(0,40), body=$('#navComTxt').value.trim().slice(0,500);
-  if(!name) return toast('Escreva seu nome ou entre na sua conta.');
+  const name=(navUserName() || store.get('tp_name','') || $('#navComName').value.trim()).slice(0,40), body=$('#navComTxt').value.trim().slice(0,500);
+  if(!name){ $('#navComName').hidden=false; $('#navComName').focus(); return toast('Qual é o seu nome?'); }
   if(body.length<2) return toast('Escreva o comentário.');
-  store.set('tp_name', name);
+  if(!navUserName()) store.set('tp_name', name);
+  navComIdentity();
   $('#navComBtn').disabled=true;
   const d=await navRpc('nav_comment', {p_vid:navCur.vid, p_dev:deviceId(), p_name:name, p_body:body, p_ch:navCur.c.name});
   $('#navComBtn').disabled=false;
@@ -2588,7 +2589,7 @@ $('#navComList').addEventListener('click', async e=>{
 });
 $('#navList').addEventListener('click', e=>{ const b=e.target.closest('[data-nv]'); if(b){ navPlay(+b.dataset.nv); if(innerWidth<900) scrollTo({top:0, behavior:'smooth'}); } });
 $('#navMore').onclick = ()=>navExtend(6);
-$('#navComWho').addEventListener('click', e=>{ if(e.target.closest('[data-view-go]')) go('account'); });
+$('#navComX').onclick = ()=>{ $('#navCom').hidden=true; };
 document.querySelector('.nav-tabs').addEventListener('click', e=>{
   const b=e.target.closest('[data-navtab]'); if(!b || b.dataset.navtab===navTab) return;
   navTab=b.dataset.navtab;
@@ -2607,11 +2608,7 @@ function navOpenChannel(c){
 }
 // Comentário com a conta: quem entrou com e-mail (e, na Etapa 2, com o Google) comenta com o próprio nome
 function navUserName(){ return (user && !isAnon(user) && (user.user_metadata?.name || (user.email||'').split('@')[0])) || ''; }
-function navComIdentity(){
-  const n=navUserName();
-  $('#navComName').hidden = !!n;
-  $('#navComWho').innerHTML = n ? `Comentando como <b>${esc(n)}</b>` : 'Ou <button type="button" data-view-go="account">entre na sua conta</button> para comentar com o seu nome.';
-}
+function navComIdentity(){ if(navUserName() || store.get('tp_name','')) $('#navComName').hidden = true; }   // o nome só é pedido se a pessoa ainda não tiver conta
 async function enterNav(){
   navComIdentity();
   document.body.classList.add('in-nav');
