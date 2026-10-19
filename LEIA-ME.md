@@ -197,3 +197,13 @@ Abra o site no Chrome do Android → menu ⋮ → **Instalar app** (ou **Adicion
 - **🔎 Busca:** a lupa agora acha artistas, pregadores e canais pelo nome (ex.: "Anderson Freire"), além das rádios.
 - **📻 Rádios Gospel:** fileira na página inicial; continuam tocando com a tela desligada ou em outro app, com controles na tela de bloqueio.
 - **💡 Dica no player de vídeo:** avisa que vídeos do YouTube param fora do app e oferece "Ouvir rádio gospel".
+
+## Versão 25 (19/10/2026)
+- Hospedagem agora na Cloudflare Pages (grátis, sem limite de visitas). O GitHub publica sozinho a cada envio.
+- Propaganda organizada: espaços reservados (abaixo do destaque, no meio da página inicial, antes da lista de rádios, no fim, em Podcasts e em TV), com o rótulo "Publicidade". Só são preenchidos quando ADSENSE_SLOT estiver no config.js; até lá, valem os Anúncios automáticos do Google.
+- A faixa fixa do Google no rodapé não cobre mais o player nem a barra de baixo: os dois sobem sozinhos.
+- Banners do próprio TocaPlay girando no destaque, junto com os vídeos (app, Modo Academia, Galeria Gospel, Rádios Românticas, rádio gospel fora do app, Cultos e Missas, convite no WhatsApp).
+- Nova fileira "💕 Rádios Românticas" na página inicial.
+- Páginas de conteúdo novas: radios-gospel.html, artistas-gospel.html e radios-romanticas.html (ajudam no AdSense e no Google).
+- Painel: acessos de servidores de nuvem (robôs) não contam mais; o "Não identificado" saiu do ranking de estados e virou uma linha "sem localização".
+- Para fazer no AdSense: em Anúncios automáticos, marque como "área excluída" o destaque animado do topo e o player.

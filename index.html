@@ -38,7 +38,7 @@
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
 [hidden]{display:none!important}
 html,body{background:var(--bg);color:var(--txt);font-family:'Outfit',system-ui,sans-serif;min-height:100%}
-body{padding-bottom:calc(150px + var(--safe-b))}
+body{padding-bottom:calc(150px + var(--safe-b) + var(--adA,0px))}
 button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
 input,select{font:inherit;color:var(--txt)}
 img{display:block}
@@ -318,11 +318,18 @@ details.more-login summary::after{content:' ▾'}
 details.more-login[open] summary::after{content:' ▴'}
 .welcome-ic{font-size:44px;text-align:center;margin-bottom:6px}
 .modal-box p.lead{color:var(--muted);font-size:14.5px;line-height:1.5;margin-bottom:14px;text-align:center}
-.ad-slot{margin:18px 0;min-height:0}
+.ad-slot{margin:18px 0;min-height:0;clear:both}
+.ad-slot:not(:empty)::before{content:'Publicidade';display:block;font-size:10.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin-bottom:4px;text-align:center}
+.feat-media .promo{position:absolute;top:0;right:0;bottom:0;left:0;inset:0;display:grid;place-items:center;font-size:clamp(64px,16vw,120px);
+  background:var(--pg);background-size:200% 200%;animation:promoBg 9s ease-in-out infinite alternate}
+.feat-media .promo span{filter:drop-shadow(0 6px 18px rgba(0,0,0,.45));animation:promoPop 3s ease-in-out infinite alternate;margin-bottom:12%}
+@keyframes promoBg{from{background-position:0% 50%}to{background-position:100% 50%}}
+@keyframes promoPop{from{transform:scale(1) rotate(-3deg)}to{transform:scale(1.08) rotate(3deg)}}
+.feat-tag.promo-tag{background:rgba(255,215,0,.9);color:#1a1300}
 .ad-slot:empty{display:none}
 
 /* Mini player */
-.mini{position:fixed;left:8px;right:8px;bottom:calc(68px + var(--safe-b));z-index:30;max-width:744px;margin:0 auto;
+.mini{position:fixed;left:8px;right:8px;bottom:calc(68px + var(--safe-b) + var(--adA,0px));z-index:30;max-width:744px;margin:0 auto;
   display:none;align-items:center;gap:12px;padding:8px 8px 8px 8px;border-radius:16px;
   background:linear-gradient(135deg,#1c3a2a,#152a20);border:1px solid #2d4d3b;box-shadow:0 10px 30px rgba(0,0,0,.45)}
 .mini.show{display:flex}
@@ -338,7 +345,7 @@ details.more-login[open] summary::after{content:' ▴'}
 @keyframes spin{to{transform:rotate(360deg)}}
 
 /* Barra inferior */
-nav{position:fixed;left:0;right:0;bottom:0;z-index:25;display:flex;justify-content:space-around;
+nav{position:fixed;left:0;right:0;bottom:var(--adA,0px);z-index:25;display:flex;justify-content:space-around;
   background:rgba(11,20,16,.96);backdrop-filter:blur(10px);border-top:1px solid var(--line);padding:6px 0 calc(6px + var(--safe-b))}
 nav button{display:flex;flex-direction:column;align-items:center;gap:3px;font-size:11.5px;padding:4px 8px;font-weight:700;flex:1;
   color:#e6b422;letter-spacing:.2px}
@@ -607,8 +614,11 @@ a.pill{color:var(--txt);text-decoration:none}
       <div class="tx"><b id="homeSubTitle">Inscreva-se no TocaPlay</b><small id="homeSubText">Grátis, com 1 toque. Suas favoritas e playlists ficam guardadas.</small></div>
       <button class="sub-btn" id="homeSubBtn" data-subscribe>Inscrever-se</button>
     </div>
+    <div class="ad-slot" data-ad="topo"></div>
     <div class="row-head"><h2>Ao vivo agora</h2><button data-gotv="TV Ao Vivo">Ver tudo</button></div>
     <div class="chips-wrap row-wrap"><button class="chip-arrow l" data-rowscroll="-1" aria-label="Voltar"><svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg></button><div class="ch-row" id="rowLive"></div><button class="chip-arrow r" data-rowscroll="1" aria-label="Ver mais"><svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></svg></button></div>
+    <div id="rowRomBlock" hidden><div class="row-head"><h2>💕 Rádios Românticas</h2><button data-romplay="0">▶ Tocar</button></div><p class="row-note" style="margin:-6px 0 10px">Músicas para o coração, ao vivo e de graça.</p>
+    <div class="chips-wrap row-wrap"><button class="chip-arrow l" data-rowscroll="-1" aria-label="Voltar"><svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg></button><div class="ch-row" id="rowRom"></div><button class="chip-arrow r" data-rowscroll="1" aria-label="Ver mais"><svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></svg></button></div></div>
     <div class="row-head"><h2>Pregadores</h2><button data-gotv="Cristão" data-gosub="Pregações">Ver tudo</button></div>
     <div class="chips-wrap row-wrap"><button class="chip-arrow l" data-rowscroll="-1" aria-label="Voltar"><svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg></button><div class="ch-row" id="rowPreg"></div><button class="chip-arrow r" data-rowscroll="1" aria-label="Ver mais"><svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></svg></button></div>
     <div class="row-head"><h2>🎤 Galeria Gospel</h2><button data-gotv="Cristão" data-gosub="Gospel Nacional">Ver todos</button></div>
@@ -617,6 +627,7 @@ a.pill{color:var(--txt);text-decoration:none}
     <div class="chips-wrap row-wrap"><button class="chip-arrow l" data-rowscroll="-1" aria-label="Voltar"><svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg></button><div class="ch-row" id="rowGospelRadio"></div><button class="chip-arrow r" data-rowscroll="1" aria-label="Ver mais"><svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></svg></button></div></div>
     <div id="rowPodsBlock"><div class="row-head"><h2>Podcasts em vídeo</h2><button data-goview="pod">Ver todos</button></div>
     <div class="chips-wrap row-wrap vids"><button class="chip-arrow l" data-rowscroll="-1" aria-label="Voltar"><svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg></button><div class="ch-row" id="rowPods"></div><button class="chip-arrow r" data-rowscroll="1" aria-label="Ver mais"><svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></svg></button></div></div>
+    <div class="ad-slot" data-ad="meio"></div>
     <div class="row-head"><h2>💪 Malhação</h2><button data-gotv="Malhação">Ver tudo</button></div>
     <button class="gym-banner" id="gymBanner"><b>🏋️ Modo Academia</b><span>Música para treinar sem parar, em tela cheia, para a TV ou caixa de som</span></button>
     <div class="chips-wrap row-wrap vids"><button class="chip-arrow l" data-rowscroll="-1" aria-label="Voltar"><svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg></button><div class="ch-row" id="rowGym"></div><button class="chip-arrow r" data-rowscroll="1" aria-label="Ver mais"><svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></svg></button></div>
@@ -630,10 +641,11 @@ a.pill{color:var(--txt);text-decoration:none}
       <div class="chips" id="genreChips"></div>
       <button class="chip-arrow r" id="chipR" aria-label="Mais gêneros"><svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></svg></button>
     </div>
-    <div class="ad-slot" id="adHome"></div>
+    <div class="ad-slot" data-ad="lista"></div>
     <div class="list" id="homeList"></div>
     <button class="more" id="homeMore" hidden>Carregar mais rádios</button>
-    <nav class="site-links"><a href="sobre.html">Sobre o TocaPlay</a><a href="como-usar.html">Como usar</a><a href="radios-por-estado.html">Rádios por estado</a><a href="privacidade.html">Privacidade</a><a href="admin.html" class="adm" rel="nofollow">Acesso ADM</a></nav>
+    <div class="ad-slot" data-ad="fim"></div>
+    <nav class="site-links"><a href="sobre.html">Sobre o TocaPlay</a><a href="como-usar.html">Como usar</a><a href="radios-por-estado.html">Rádios por estado</a><a href="radios-gospel.html">Rádios gospel</a><a href="artistas-gospel.html">Artistas gospel</a><a href="radios-romanticas.html">Rádios românticas</a><a href="privacidade.html">Privacidade</a><a href="admin.html" class="adm" rel="nofollow">Acesso ADM</a></nav>
   </section>
 
   <!-- BUSCAR -->
@@ -688,6 +700,7 @@ a.pill{color:var(--txt);text-decoration:none}
     <div class="chips tv-subs" id="tvSubs" hidden></div>
     <h2 id="tvListTitle">Canais</h2>
     <div id="tvGrid"></div>
+    <div class="ad-slot" data-ad="tv"></div>
     <p class="tv-note">Tudo toca aqui dentro, pelo player oficial do YouTube. Se um vídeo aparecer como indisponível, é porque o dono do canal bloqueou para outros sites: toque em <b>⏭</b> no player para ir ao próximo vídeo.</p>
   </section>
 
@@ -700,6 +713,7 @@ a.pill{color:var(--txt);text-decoration:none}
       <div id="podFollowBlock" hidden><h2>Seguindo</h2><div class="pod-grid" id="podFollow"></div></div>
       <div class="chips-wrap row-wrap cats" style="margin-top:10px"><button class="chip-arrow l" data-rowscroll="-1" aria-label="Voltar"><svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg></button><div class="chips" id="podCats"></div><button class="chip-arrow r" data-rowscroll="1" aria-label="Ver mais"><svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></svg></button></div>
       <div id="podVidBlock"><div id="podVid"></div></div>
+      <div class="ad-slot" data-ad="podcasts"></div>
       <h2 id="podTitle">🎧 Só áudio: vários assuntos</h2>
       <div class="pod-grid" id="podGrid"></div>
       <p class="tv-note">Podcasts do diretório público da Apple. O áudio toca aqui dentro, direto do site de cada podcast.</p>
@@ -1900,6 +1914,29 @@ document.addEventListener('click', e=>{
   const b=e.target.closest('[data-gradio]'); if(b) return playGospelRadio(+b.dataset.gradio);
   if(e.target.closest('[data-gospelradio]')){ stopTv(); playGospelRadio(0); toast('Rádio gospel tocando: pode sair do app que ela continua 🎶'); }
 });
+// 💕 Rádios românticas: junta várias etiquetas da lista pública de rádios
+let romRadios = [];
+async function renderRomRadios(){
+  try{
+    const tags = ['romantic','romantica','romântica','love songs','flashback'];
+    const res = await Promise.allSettled(tags.map(tag=>API.search({tag, limit:20})));
+    const seen = new Set(), out = [];
+    const lists_ = res.map(r=>r.status==='fulfilled'?r.value:[]);
+    for(let k=0; k<20; k++) for(const L of lists_){ const r=L[k]; if(r && !seen.has(r.name.toLowerCase())){ seen.add(r.name.toLowerCase()); out.push(r); } }
+    romRadios = out.slice(0,24);
+    if(!romRadios.length) return;
+    lists.romRadios = romRadios;
+    $('#rowRom').innerHTML = romRadios.map((r,i)=>`<button class="ch radio" data-romplay="${i}"><div class="av">${artHTML(r)}</div><span>${esc(r.name)}</span></button>`).join('');
+    $('#rowRomBlock').hidden = false;
+    requestAnimationFrame(()=>rowArrows($('#rowRom').closest('.row-wrap')));
+  }catch{}
+}
+function playRomRadio(i=0){
+  const r = romRadios[i]; if(!r){ toast('Carregando as rádios românticas…'); return; }
+  queue = {id:null, name:'Rádios Românticas', list:romRadios.slice(), i};
+  play(r);
+}
+document.addEventListener('click', e=>{ const b=e.target.closest('[data-romplay]'); if(b) playRomRadio(+b.dataset.romplay); });
 function renderHomeGym(){
   $('#rowGym').innerHTML = GYM().map(vcCard).join('');
   requestAnimationFrame(()=>rowArrows($('#rowGym').closest('.row-wrap')));
@@ -1952,11 +1989,25 @@ if(IS_TV){
 /* ---------- Página inicial: destaque e fileiras ---------- */
 const FEAT_PER_CAT = (typeof CONFIG!=='undefined' && CONFIG.HOME_PER_CATEGORY) || 2;
 const FEAT_SECONDS = (typeof CONFIG!=='undefined' && CONFIG.HOME_SECONDS) || 10;
+const PROMOS = [
+  {promo:true, id:'app', emoji:'📲', name:'Baixe o app TocaPlay', desc:'Grátis. Fica com ícone no seu celular, computador ou TV.', cta:'📲 Baixar agora', bg:'linear-gradient(120deg,#0b3d2e,#14a37f,#0b3d2e)', act:()=>openInstall()},
+  {promo:true, id:'gym', emoji:'🏋️', name:'Modo Academia', desc:'Música para treinar sem parar, em tela cheia.', cta:'▶ Começar o treino', bg:'linear-gradient(120deg,#3a0d0d,#d1362f,#3a0d0d)', act:()=>$('#gymBanner').click()},
+  {promo:true, id:'gospel', emoji:'🎤', name:'Galeria Gospel', desc:'Os maiores artistas gospel do Brasil e do mundo, num lugar só.', cta:'▶ Ver artistas', bg:'linear-gradient(120deg,#2b1a00,#c99a1c,#2b1a00)', act:()=>{ tvCat='Cristão'; tvSub='Gospel Nacional'; tvQ=''; renderTv(); go('tv'); }},
+  {promo:true, id:'rom', emoji:'💕', name:'Rádios Românticas', desc:'Músicas para o coração, ao vivo e de graça.', cta:'▶ Ouvir agora', bg:'linear-gradient(120deg,#3d0a24,#e0457b,#3d0a24)', act:()=>playRomRadio(0)},
+  {promo:true, id:'grad', emoji:'📻', name:'Rádio gospel fora do app', desc:'Pode abrir o WhatsApp ou desligar a tela: a rádio continua tocando.', cta:'▶ Ouvir rádio gospel', bg:'linear-gradient(120deg,#0c1e3d,#2f6fd1,#0c1e3d)', act:()=>playGospelRadio(0)},
+  {promo:true, id:'culto', emoji:'⛪', name:'Cultos e Missas ao vivo', desc:'Igrejas e santuários transmitindo agora.', cta:'▶ Assistir', bg:'linear-gradient(120deg,#1e0f3d,#7b4fd1,#1e0f3d)', act:()=>{ tvCat='Cultos e Missas'; tvSub=''; tvQ=''; renderTv(); go('tv'); }},
+  {promo:true, id:'convite', emoji:'💬', name:'Convide quem você ama', desc:'Mande o TocaPlay no WhatsApp para a família e os amigos.', cta:'💬 Enviar no WhatsApp', bg:'linear-gradient(120deg,#063d1f,#25d366,#063d1f)', act:()=>openWhatsApp(`Conhece o *TocaPlay Livre*? Milhares de rádios do Brasil ao vivo, TV e pregações, *de graça*, direto no celular: ${location.origin}`)}
+];
 const FEATURED = (()=>{
   const fixed = typeof CONFIG!=='undefined' && CONFIG.HOME_FEATURED;
   if(fixed && fixed.length) return fixed.map(n=>TV_CHANNELS.find(c=>c.name===n)).filter(Boolean);
   const shuffle = a => a.map(v=>[Math.random(),v]).sort((x,y)=>x[0]-y[0]).map(x=>x[1]);
-  return TV_CATS.slice(1).flatMap(cat=>shuffle(TV_CHANNELS.filter(c=>c.cat===cat && c.channelId)).slice(0,FEAT_PER_CAT));
+  const chans = TV_CATS.slice(1).flatMap(cat=>shuffle(TV_CHANNELS.filter(c=>c.cat===cat && c.channelId)).slice(0,FEAT_PER_CAT));
+  // Banners do próprio TocaPlay, girando junto com os vídeos (1 a cada 4 destaques). Não são anúncios do Google.
+  const installed = matchMedia('(display-mode: standalone)').matches || navigator.standalone;
+  const promos = shuffle(PROMOS.filter(p=>!(p.id==='app' && installed)));
+  const out = []; chans.forEach((c,i)=>{ out.push(c); if(i%4===3 && promos.length) out.push(promos.shift()); });
+  return out.concat(promos.slice(0,1));
 })();
 let featI = 0, featT = null, featYt = null, featToken = 0;
 function featStopVideo(){ featToken++; if(featYt){ try{ featYt.destroy(); }catch{} featYt=null; } const h=document.getElementById('featYt'); if(h) h.remove(); }
@@ -1982,8 +2033,22 @@ function featFirstTouch(e){ if(featSound) return; if(e.target && e.target.closes
 ['pointerdown','keydown'].forEach(ev=>document.addEventListener(ev, featFirstTouch, {capture:true}));
 function renderFeat(){
   if(!FEATURED.length){ $('#feat').hidden=true; return; }
-  const c = FEATURED[featI], av = avatarUrl(c), m = $('#featMedia');
+  const c = FEATURED[featI], m = $('#featMedia');
   m.classList.remove('fade'); void m.offsetWidth; m.classList.add('fade');
+  if(c.promo){
+    featStopVideo();
+    m.innerHTML = `<div class="promo" style="--pg:${c.bg}"><span>${c.emoji}</span></div>`;
+    $('#featTag').textContent = 'TocaPlay'; $('#featTag').classList.remove('live'); $('#featTag').classList.add('promo-tag');
+    $('#featName').textContent = c.name; $('#featDesc').textContent = c.desc;
+    document.querySelector('#feat .feat-cta').textContent = c.cta;
+    $('#featHit').setAttribute('aria-label', c.name);
+    $('#featDots').innerHTML = `<button data-feat="-1" aria-label="Anterior">‹</button><span>${featI+1} / ${FEATURED.length}</span><button data-feat="1" aria-label="Próximo">›</button>`;
+    $('#featSound').hidden = true;
+    featTimer(7000); return;
+  }
+  $('#featSound').hidden = false;
+  const av = avatarUrl(c);
+  $('#featTag').classList.remove('promo-tag'); document.querySelector('#feat .feat-cta').textContent = '▶ Assistir';
   m.innerHTML = `<div class="bg" style="background-image:${av?`url('${esc(av)}'),`:''}${esc(c.color||'')}"></div>
     <div class="ph"><i style="background:${esc(c.color||'var(--card2)')}">${esc(c.short||initials(c.name))}${av?`<img src="${esc(av)}" alt="" referrerpolicy="no-referrer" onerror="this.remove()">`:''}</i></div>`;
   featStopVideo();
@@ -2029,7 +2094,7 @@ $('#featSound').onclick = e=>{ e.stopPropagation();
   else { featSound=true; featUserMuted=false;
     if(!audio.paused) audio.pause(); if(ytP && (ytState===1||ytState===3)) ytP.pauseVideo(); }
   featApplySound(); };
-$('#featHit').onclick = ()=>{ const c=FEATURED[featI]; go('tv'); openTv(c); };
+$('#featHit').onclick = ()=>{ const c=FEATURED[featI]; if(c.promo){ logArea('banner:'+c.id); return c.act(); } go('tv'); openTv(c); };
 $('#featDots').addEventListener('click', e=>{ const b=e.target.closest('[data-feat]'); if(b){ e.stopPropagation(); featNext(+b.dataset.feat); } });
 (function(){ let x0=null; const f=$('#feat');
   f.addEventListener('touchstart',e=>{ x0=e.touches[0].clientX; },{passive:true});
@@ -2078,6 +2143,7 @@ function go(view, push=true){
   scrollTo({top:0});
   if(view==='search') setTimeout(()=>$('#q').focus(),50);
   if(view==='home') renderFeat(); else featStopVideo();
+  setTimeout(fillAds, 300);
   if(view==='pod') enterPods();
   logArea({home:'Início', search:'Busca de rádios', tv:'TV', pod:'Podcasts', favs:'Favoritas', account:'Perfil', playlist:'Playlists'}[view]);
   requestAnimationFrame(()=>document.querySelectorAll('.view.active .row-wrap').forEach(rowArrows));
@@ -2181,18 +2247,49 @@ $('#shareBtn').onclick = async()=>{
   try{ if(navigator.share) await navigator.share({title:'TocaPlay Livre', text, url:location.origin}); else { await navigator.clipboard.writeText(`${text} ${location.origin}`); toast('Link copiado!'); } }catch{}
 };
 
-/* ---------- Anúncios (Google AdSense, opcional) ---------- */
-// O script do AdSense já está no <head>. Um bloco fixo na tela inicial aparece só se ADSENSE_SLOT estiver preenchido.
-if(CONFIG.ADSENSE_CLIENT && CONFIG.ADSENSE_SLOT){
-  $('#adHome').innerHTML = `<ins class="adsbygoogle" style="display:block" data-ad-client="${CONFIG.ADSENSE_CLIENT}" data-ad-slot="${CONFIG.ADSENSE_SLOT}" data-ad-format="auto" data-full-width-responsive="true"></ins>`;
-  (window.adsbygoogle=window.adsbygoogle||[]).push({});
+/* ---------- Anúncios (Google AdSense) ---------- */
+// Os Anúncios automáticos do Google funcionam sozinhos. Os espaços reservados ([data-ad]) só são preenchidos
+// quando ADSENSE_SLOT estiver no config.js, e só na tela que está aberta (tela escondida não recebe anúncio).
+// Nunca colocamos anúncio dentro do player, do destaque animado ou por cima do conteúdo.
+function fillAds(){
+  if(!CONFIG.ADSENSE_CLIENT || !CONFIG.ADSENSE_SLOT) return;
+  document.querySelectorAll('.view.active .ad-slot[data-ad]:empty').forEach(el=>{
+    if(!el.offsetWidth) return;
+    el.innerHTML = `<ins class="adsbygoogle" style="display:block" data-ad-client="${CONFIG.ADSENSE_CLIENT}" data-ad-slot="${CONFIG.ADSENSE_SLOT}" data-ad-format="auto" data-full-width-responsive="true"></ins>`;
+    try{ (window.adsbygoogle=window.adsbygoogle||[]).push({}); }catch{}
+  });
 }
+// Faixa fixa do Google no rodapé (âncora): sobe o player e a barra de baixo para nada ficar coberto
+(function(){
+  let raf=0;
+  const measure=()=>{ raf=0; let h=0;
+    document.querySelectorAll('ins.adsbygoogle[data-anchor-status], .adsbygoogle[data-anchor-shown="true"]').forEach(a=>{
+      const st=a.getAttribute('data-anchor-status'); if(st && st!=='displayed') return;
+      const r=a.getBoundingClientRect(); if(r.height>0 && r.height<200 && Math.abs(r.bottom-innerHeight)<4) h=Math.max(h, r.height); });
+    document.documentElement.style.setProperty('--adA', h+'px'); };
+  new MutationObserver(()=>{ if(!raf) raf=requestAnimationFrame(measure); })
+    .observe(document.body, {subtree:true, childList:true, attributes:true, attributeFilter:['data-anchor-status','data-anchor-shown','style']});
+  addEventListener('resize', ()=>{ if(!raf) raf=requestAnimationFrame(measure); });
+})();
 
 /* ---------- Início do app ---------- */
 renderChips(); renderFavs(); renderAccount(); renderPlaylists(); loadHome(); updatePlayer(); checkImport();
-renderFeat(); renderRows(); renderHomePods(); renderHomeGym(); renderGospelRadios();
+renderFeat(); renderRows(); renderHomePods(); renderHomeGym(); renderGospelRadios(); renderRomRadios(); setTimeout(fillAds, 800);
 $('#gymBanner').onclick = ()=>{ go('tv'); tvCat='Malhação'; tvSub=''; renderTv(); openTv(GYM()[0]); enterGym(); };
 $('#srTv').textContent = `📺 ${Math.floor(TV_CHANNELS.length/10)*10}+`;
+// Links das páginas de conteúdo: /#radios=gospel, /#radios=romanticas, /#canal=Nome do canal
+(function openFromContentLink(){
+  const h = decodeURIComponent(location.hash||'');
+  let m = h.match(/^#canal=(.+)$/);
+  if(m){ const c = TV_CHANNELS.find(x=>x.name.toLowerCase()===m[1].toLowerCase()); history.replaceState(history.state,'',location.pathname);
+    if(c){ go('tv'); openTv(c); } return; }
+  m = h.match(/^#radios=(gospel|romanticas)$/); if(!m) return;
+  history.replaceState(history.state,'',location.pathname);
+  const id = m[1]==='gospel' ? 'rowGospelRadioBlock' : 'rowRomBlock';
+  let n=0; (function wait(){ const el=document.getElementById(id);
+    if(el && !el.hidden){ el.scrollIntoView({behavior:'smooth', block:'center'}); toast(m[1]==='gospel'?'Escolha uma rádio gospel 📻':'Escolha uma rádio romântica 💕'); }
+    else if(++n<40) setTimeout(wait,300); })();
+})();
 (function openStateFromLink(){
   const m = location.hash.match(/^#uf=(.+)$/); if(!m) return;
   const uf = decodeURIComponent(m[1]); if(!STATES.includes(uf)) return;
@@ -2201,7 +2298,7 @@ $('#srTv').textContent = `📺 ${Math.floor(TV_CHANNELS.length/10)*10}+`;
 })();
 
 /* Contagem de acessos: 1 registro por aparelho por dia (anônimo), sem robôs */
-function isBot(){ return /bot|crawl|spider|slurp|lighthouse|headless|preview|facebookexternalhit|whatsapp|bingpreview|google-inspectiontool/i.test(navigator.userAgent) || navigator.webdriver === true; }
+function isBot(){ return store.get('tp_dc',0)===1 || /bot|crawl|spider|slurp|lighthouse|headless|preview|facebookexternalhit|whatsapp|bingpreview|google-inspectiontool/i.test(navigator.userAgent) || navigator.webdriver === true; }
 (async function logVisit(){
   if(!sb || isBot()) return;
   const dev = deviceId(), today = new Date().toISOString().slice(0,10);
@@ -2209,6 +2306,7 @@ function isBot(){ return /bot|crawl|spider|slurp|lighthouse|headless|preview|fac
   let geo = {};
   try{ const ctl=new AbortController(); setTimeout(()=>ctl.abort(),3000);
     const r = await fetch('/api/geo', {signal:ctl.signal}); if(r.ok) geo = await r.json(); }catch{}
+  if(geo.dc){ store.set('tp_dc', 1); return; }   // acesso vindo de servidor (robô de nuvem): não conta
   sb.from('visits').insert({device_id:dev, city:geo.city||null, region:geo.region||null, region_code:geo.regionCode||null, country:geo.country||null})
     .then(({error})=>{ if(!error) store.set('tp_visit_day', today); });
 })();

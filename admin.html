@@ -136,7 +136,9 @@ function render(d){
   <div class="grid2">
     <div class="box"><h2>📍 De onde são (30 dias)</h2>${brMap(d.visit_estado)}
       <div class="legend">menos <i></i> mais</div>
-      ${d.visit_exterior?`<p class="muted" style="margin-top:8px">+ ${fmt(d.visit_exterior)} de fora do Brasil</p>`:''}</div>
+      ${d.visit_exterior?`<p class="muted" style="margin-top:8px">+ ${fmt(d.visit_exterior)} de fora do Brasil</p>`:''}
+      ${d.visit_sem_local?`<p class="muted" style="margin-top:4px">+ ${fmt(d.visit_sem_local)} sem localização (visitas de antes do mapa)</p>`:''}
+      <p class="muted" style="margin-top:4px;font-size:12px">Robôs e servidores de nuvem não entram na contagem.</p></div>
     <div class="box"><h2>🏙️ Estados e cidades</h2>${bars((d.visit_estado||[]).slice(0,8),'estado','pessoas','pessoas')}
       <h2 style="margin-top:14px">Cidades</h2>${bars(d.visit_cidade,'cidade','pessoas','pessoas',x=>x.uf?` (${x.uf})`:'')}
       <p class="muted" style="margin-top:6px">Localização aproximada pela internet da pessoa. Guardamos só cidade e estado (LGPD).</p></div>
