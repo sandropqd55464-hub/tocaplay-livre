@@ -534,3 +534,108 @@ revoke all on function public.creator_post(text,text,text,boolean), public.creat
 grant execute on function public.creator_post(text,text,text,boolean), public.creator_my(), public.creator_delete(bigint) to authenticated;
 revoke all on function public.creator_feed(int), public.creator_get(bigint) from public;
 grant execute on function public.creator_feed(int), public.creator_get(bigint) to anon, authenticated;
+
+
+-- ===== Navegação TocaPlay, Etapa 3: enviar vídeo e foto do aparelho (versão 31) =====
+-- Arquivos ficam no Supabase Storage (pasta "posts"), no plano grátis (1 GB). Cada pessoa só mexe na própria pasta.
+insert into storage.buckets (id, name, public, file_size_limit, allowed_mime_types)
+values ('posts', 'posts', true, 20971520, array['video/mp4','video/webm','video/quicktime','image/jpeg','image/png','image/webp'])
+on conflict (id) do update set public = true, file_size_limit = excluded.file_size_limit, allowed_mime_types = excluded.allowed_mime_types;
+
+drop policy if exists "posts_insert_own" on storage.objects;
+create policy "posts_insert_own" on storage.objects for insert to authenticated
+  with check (bucket_id = 'posts' and (storage.foldername(name))[1] = auth.uid()::text
+              and coalesce((auth.jwt()->>'is_anonymous')::boolean, false) = false);
+drop policy if exists "posts_delete_own" on storage.objects;
+create policy "posts_delete_own" on storage.objects for delete to authenticated
+  using (bucket_id = 'posts' and (storage.foldername(name))[1] = auth.uid()::text);
+
+alter table creator_posts drop constraint if exists creator_posts_platform_check;
+alter table creator_posts add constraint creator_posts_platform_check check (platform in ('youtube','tiktok','instagram','upload'));
+alter table creator_posts add column if not exists kind text default 'video';
+alter table creator_posts add column if not exists thumb text;
+alter table creator_posts add column if not exists bytes bigint default 0;
+alter table creator_posts add column if not exists wm boolean default false;
+
+create or replace function public.creator_upload(p_path text, p_thumb text, p_kind text, p_title text, p_cat text, p_terms boolean, p_bytes bigint, p_wm boolean)
+returns json language plpgsql security definer set search_path = public, storage as $$
+declare v_uid uuid := auth.uid(); v_meta jsonb; v_status text := 'ok'; v_motivo text; v_id bigint;
+begin
+  if v_uid is null or coalesce((auth.jwt()->>'is_anonymous')::boolean, false) then return json_build_object('status','login'); end if;
+  if not coalesce(p_terms,false) then return json_build_object('status','termos'); end if;
+  if p_kind not in ('video','foto') then return json_build_object('status','arquivo'); end if;
+  if split_part(p_path,'/',1) <> v_uid::text or (p_thumb is not null and split_part(p_thumb,'/',1) <> v_uid::text) then return json_build_object('status','arquivo'); end if;
+  if not exists(select 1 from storage.objects where bucket_id = 'posts' and name = p_path) then return json_build_object('status','arquivo'); end if;
+  if (select count(*) from creator_posts where user_id = v_uid and platform = 'upload' and created_at > now() - interval '1 day') >= 5 then
+    return json_build_object('status','limite');
+  end if;
+  if (select coalesce(sum(bytes),0) from creator_posts where platform = 'upload') > 950000000 then return json_build_object('status','cheio'); end if;
+  if nav_proibido(p_title) then return json_build_object('status','bloqueado'); end if;
+  if exists(select 1 from creator_posts where user_id = v_uid and status = 'removido') then v_status := 'fila'; v_motivo := 'conta com remoção anterior'; end if;
+  v_meta := (auth.jwt()->'user_metadata');
+  insert into creators(user_id, name, avatar)
+    values (v_uid, left(coalesce(v_meta->>'name', v_meta->>'full_name', split_part(auth.jwt()->>'email','@',1), 'Criador'),60), left(coalesce(v_meta->>'avatar_url', v_meta->>'picture'),500))
+    on conflict (user_id) do update set name = excluded.name, avatar = coalesce(excluded.avatar, creators.avatar);
+  insert into creator_posts(user_id, platform, ref, url, title, cat, status, motivo, kind, thumb, bytes, wm)
+    values (v_uid, 'upload', p_path, p_path, left(trim(p_title),120), left(p_cat,40), v_status, v_motivo, p_kind, p_thumb, greatest(coalesce(p_bytes,0),0), coalesce(p_wm,false))
+    returning id into v_id;
+  return json_build_object('status', v_status, 'id', v_id);
+end $$;
+
+create or replace function public.creator_feed(p_limit int default 60) returns json
+language sql security definer set search_path = public as $$
+  select coalesce(json_agg(x),'[]') from (
+    select p.id, p.platform, p.ref, p.title, p.cat, p.created_at, p.kind, p.thumb, p.wm, c.name, c.avatar
+    from creator_posts p join creators c on c.user_id = p.user_id
+    where p.status = 'ok' and not exists(select 1 from nav_hidden h where h.target = 'v:p:'||p.id and h.status <> 'ok')
+    order by p.created_at desc limit least(coalesce(p_limit,60),200)) x;
+$$;
+
+create or replace function public.creator_get(p_id bigint) returns json
+language sql security definer set search_path = public as $$
+  select row_to_json(x) from (
+    select p.id, p.platform, p.ref, p.title, p.cat, p.created_at, p.kind, p.thumb, p.wm, c.name, c.avatar
+    from creator_posts p join creators c on c.user_id = p.user_id where p.id = p_id and p.status = 'ok') x;
+$$;
+
+create or replace function public.creator_my() returns json
+language plpgsql security definer set search_path = public as $$
+declare v_uid uuid := auth.uid();
+begin
+  if v_uid is null then return null; end if;
+  return json_build_object(
+    'creator', (select row_to_json(c) from creators c where c.user_id = v_uid),
+    'posts', (select coalesce(json_agg(x order by x.created_at desc),'[]') from (
+      select p.id, p.platform, p.ref, p.title, p.cat, p.status, p.created_at, p.kind, p.thumb, p.wm,
+        (select count(*) from nav_events e where e.vid = 'p:'||p.id and e.kind = 'view') as views,
+        (select count(*) from nav_likes l where l.vid = 'p:'||p.id) as likes,
+        (select count(*) from nav_events e where e.vid = 'p:'||p.id and e.kind = 'share') as shares,
+        (select count(*) from nav_comments m where m.vid = 'p:'||p.id and m.status = 'ok') as comments
+      from creator_posts p where p.user_id = v_uid and p.status <> 'removido') x));
+end $$;
+
+create or replace function public.admin_nav_fila() returns json
+language plpgsql security definer set search_path = public as $$
+begin
+  if coalesce(auth.jwt()->>'email','') <> 'sandropqd55464@gmail.com' then raise exception 'acesso negado'; end if;
+  return json_build_object(
+    'comentarios', (select coalesce(json_agg(x),'[]') from (
+        select id, vid, ch, name, body, motivo, created_at from nav_comments where status = 'fila' order by created_at desc limit 100) x),
+    'videos', (select coalesce(json_agg(x),'[]') from (
+        select h.target, h.created_at, (select count(*) from nav_reports r where r.target = h.target) as denuncias
+        from nav_hidden h where h.status = 'fila' order by h.created_at desc limit 100) x),
+    'posts', (select coalesce(json_agg(x),'[]') from (
+        select p.id, p.platform, p.url, p.title, p.motivo, p.created_at, p.kind, c.name from creator_posts p join creators c on c.user_id = p.user_id
+        where p.status = 'fila' order by p.created_at desc limit 100) x),
+    'totais', json_build_object(
+        'curtidas_7d',    (select count(*) from nav_likes where created_at > now() - interval '7 days'),
+        'views_7d',       (select count(*) from nav_events where kind = 'view' and created_at > now() - interval '7 days'),
+        'shares_7d',      (select count(*) from nav_events where kind = 'share' and created_at > now() - interval '7 days'),
+        'comentarios_7d', (select count(*) from nav_comments where created_at > now() - interval '7 days'),
+        'criadores',      (select count(*) from creators),
+        'posts_7d',       (select count(*) from creator_posts where created_at > now() - interval '7 days'),
+        'armazenamento_mb', (select round(coalesce(sum(bytes),0)/1000000.0) from creator_posts where platform = 'upload')));
+end $$;
+
+revoke all on function public.creator_upload(text,text,text,text,text,boolean,bigint,boolean) from public, anon;
+grant execute on function public.creator_upload(text,text,text,text,text,boolean,bigint,boolean) to authenticated;

@@ -231,3 +231,19 @@ Abra o site no Chrome do Android → menu ⋮ → **Instalar app** (ou **Adicion
 - "Meu canal": desempenho (visualizações, curtidas, comentários, compartilhamentos), compartilhar e apagar.
 - Página termos.html. Painel ADM: criadores, posts e posts na fila de revisão.
 - SQL: parte "Etapa 2: Criadores (versão 29)" no fim do supabase.sql.
+
+## Versão 30/31 (19/10/2026) — Etapa 3: enviar do aparelho
+- Perfil: quadro "Meu canal de criador" com "+ Criar conteúdo" e "Ver meu canal".
+- + Criar conteúdo com duas abas: "📁 Enviar do aparelho" (vídeo até 60 s ou foto) e "🔗 Colar link". Emojis rápidos no título.
+- O vídeo é comprimido no próprio aparelho e ganha a marca d'água "TocaPlay Livre"; a foto também. Envio com barra de progresso.
+- Guardado no Supabase Storage (pasta "posts", 1 GB grátis). Limite: 5 envios por dia por pessoa, 20 MB por arquivo; acima de 950 MB no total, novos envios param.
+- Botão "⬇ Baixar" na Navegação e no Meu canal para vídeos e fotos enviados.
+- Painel ADM: espaço usado. SQL: parte "Etapa 3 (versão 31)" no fim do supabase.sql.
+
+## Versão 32 (19/10/2026)
+- Navegação abre como a página inicial do YouTube: grade de vídeos grandes, 3 por linha no computador (2 no tablet, 1 no celular), com capa, título, canal e categoria; carrega mais sozinho ao rolar; propaganda a cada 2 linhas.
+- Tocou num vídeo: abre a tela de assistir (vídeo grande + "A seguir" ao lado). Botão "‹ Todos os vídeos" (e o voltar do celular) retorna à grade.
+- Títulos reais dos vídeos (oEmbed do YouTube, guardados no aparelho).
+
+## Versão 33 (19/10/2026)
+- Títulos das seções (Ao vivo agora, Pregadores, Galeria Gospel, Rádios Românticas, Podcasts, Malhação etc.) em dourado com brilho passando, igual à barra de baixo.

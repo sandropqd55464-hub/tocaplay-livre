@@ -652,6 +652,41 @@ body.in-nav main{max-width:none;padding:0 24px}
 .cc-btns button{flex:1;min-width:150px;padding:13px;border-radius:14px;font-weight:900;font-size:15px}
 .cc-create{background:#e5191b;color:#fff;border:2px solid #fff}.cc-create b{font-size:18px}
 .cc-see{border:1.5px solid var(--yellow);color:var(--yellow)}
+.crt-tabs{display:flex;gap:6px;margin:6px 0 14px}
+.crt-tabs button{flex:1;padding:11px;border-radius:12px;background:var(--card);font-weight:800;font-size:14px;color:var(--muted)}
+.crt-tabs button.on{background:#e5191b;color:#fff}
+.crt-drop{display:flex;flex-direction:column;align-items:center;gap:4px;padding:22px 14px;border:2px dashed var(--yellow);border-radius:16px;text-align:center;cursor:pointer;margin-bottom:10px;background:rgba(255,210,63,.06)}
+.crt-drop b{color:var(--yellow);font-size:16px}.crt-drop small{color:var(--muted);font-size:13px}
+.crt-prev{margin-bottom:10px}.crt-prev video,.crt-prev img{width:100%;max-height:260px;border-radius:12px;background:#000;object-fit:contain;display:block}
+.crt-prev small{display:block;color:var(--muted);font-size:13px;margin-top:4px}
+.crt-emo{display:flex;flex-wrap:wrap;gap:4px;margin:-4px 0 10px}.crt-emo button{font-size:20px;padding:4px 6px;border-radius:8px;background:var(--card)}
+.crt-prog{margin:4px 0 12px}.crt-prog span{display:block;font-size:13px;color:var(--muted);margin-bottom:6px}
+.crt-prog div{height:8px;border-radius:99px;background:var(--card);overflow:hidden}.crt-prog i{display:block;height:100%;width:0;background:linear-gradient(90deg,#ffd23f,#19c37d);transition:width .3s}
+/* Navegação: grade de vídeos (como a página inicial do YouTube) */
+.nav-cards{display:grid;grid-template-columns:1fr;gap:22px 16px}
+@media (min-width:640px){ .nav-cards{grid-template-columns:repeat(2,1fr)} }
+@media (min-width:1100px){ .nav-cards{grid-template-columns:repeat(3,1fr)} }
+.nc{display:block;width:100%;text-align:left;border-radius:14px}
+.nc .th{position:relative;width:100%;aspect-ratio:16/9;border-radius:14px;overflow:hidden;background:var(--card2);display:grid;place-items:center;font-weight:800;font-size:22px;transition:transform .15s}
+@supports not (aspect-ratio:1/1){ .nc .th{height:0;padding-top:56.25%} }
+.nc:hover .th,.nc:focus-visible .th{transform:scale(1.02)}
+.nc .th img{position:absolute;top:0;left:0;width:100%;height:100%;object-fit:cover}
+.nc .th em{position:absolute;right:8px;bottom:8px;font-style:normal;font-size:12px;font-weight:800;padding:3px 8px;border-radius:6px;background:rgba(0,0,0,.75)}
+.nc .meta{display:flex;gap:10px;margin-top:10px}
+.nc .meta .av{width:36px;height:36px;border-radius:50%;flex:none;overflow:hidden;position:relative;display:grid;place-items:center;font-weight:800;font-size:12px}
+.nc .meta .av img{position:absolute;top:0;left:0;width:100%;height:100%;object-fit:cover}
+.nc .meta b{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;font-size:15.5px;line-height:1.3}
+.nc .meta small{display:block;color:var(--muted);font-size:13px;margin-top:3px}
+.nav-cards .ad-slot{grid-column:1/-1;margin:0}
+.nav-backgrid{margin:0 0 10px;padding:8px 14px;border-radius:999px;border:1.5px solid var(--yellow);color:var(--yellow);font-weight:800;font-size:14px}
+#navMore2{margin-top:18px}
+/* Títulos das seções da página inicial em dourado brilhante */
+#v-home .row-head h2,#v-home > h2,#homePlBlock h2,#v-nav .nav-top .brand,#v-tv h2,#v-pod h2{
+  background:linear-gradient(100deg,#b8860b 0%,#ffd700 30%,#fff3b0 45%,#ffd700 60%,#b8860b 100%);background-size:250% 100%;
+  -webkit-background-clip:text;background-clip:text;color:transparent;animation:goldText 3.2s linear infinite;
+  filter:drop-shadow(0 0 4px rgba(255,200,40,.35))}
+#v-nav .nav-top .brand img{filter:none}
+@media (prefers-reduced-motion:reduce){ #v-home .row-head h2,#v-home > h2,#homePlBlock h2,#v-tv h2,#v-pod h2{animation:none} }
 </style>
 </head>
 <body>
@@ -765,7 +800,9 @@ body.in-nav main{max-width:none;padding:0 24px}
       <div class="nav-tabs" role="tablist"><button class="on" data-navtab="foryou">Para você</button><button data-navtab="geral">Geral</button></div>
       <div class="nav-me"><button class="nav-create" id="navCreate" aria-label="Criar post"><b>+</b> Criar</button><button class="nav-avatar" id="navMeBtn" aria-label="Meu canal">?</button></div>
     </div>
-    <div class="nav-grid">
+    <div id="navBrowse"><div class="nav-cards" id="navCards"></div><button class="nav-more" id="navMore2">Carregar mais vídeos</button></div>
+    <button class="nav-backgrid" id="navBackGrid" hidden>‹ Todos os vídeos</button>
+    <div class="nav-grid" id="navWatch" hidden>
       <div class="nav-main">
         <div class="nav-player" id="navPlayer"><div id="navYt"></div></div>
         <h1 class="nav-title" id="navTitle">Carregando…</h1>
@@ -775,6 +812,7 @@ body.in-nav main{max-width:none;padding:0 24px}
           <button id="navComGo" aria-label="Comentários">💬 <span id="navComN">0</span></button>
           <button id="navShare" aria-label="Compartilhar">↗ Compartilhar <span id="navShareN">0</span></button>
           <button id="navNext" aria-label="Próximo vídeo">Próximo ⏭</button>
+          <button id="navDown" aria-label="Baixar" hidden>⬇ Baixar</button>
           <button id="navReport" class="rep" aria-label="Denunciar vídeo">⚑ Denunciar</button>
         </div>
         <div class="nav-views" id="navViews"></div>
@@ -2403,6 +2441,8 @@ $('#installModal').addEventListener('click', e=>{ if(e.target.id==='installModal
 window.addEventListener('popstate', e=>{
   if($('#sheet').classList.contains('open')){ closeSheet(); return; }
   ['shareModal','addModal','nameModal','sleepModal','songModal','importModal','installModal','welcomeModal','criarModal'].forEach(id=>$('#'+id).classList.remove('open'));
+  if((e.state?.view)==='nav' && curView==='nav'){ navSetMode(e.state.watch ? 'watch' : 'grid'); return; }
+  if((e.state?.view)==='nav') navSetMode(e.state.watch ? 'watch' : 'grid');
   go(e.state?.view || 'home', false);
 });
 $('#backBtn').onclick = ()=>history.back();
@@ -2523,29 +2563,73 @@ async function navExtend(nCh=4){
     if(tab==='geral' && navOi===0){
       for(let k=0;k<6;k++){ const pi=navNextPost(); if(pi) navFeed.push(pi); }
       navTrend.slice(0,12).forEach(t=>{ const c=TV_CHANNELS.find(x=>x.name===t.ch); if(c && t.vid && !navSeen(t.vid)) navFeed.push({c, vid:t.vid}); });
-      navRenderList(); if(!navCur && navFeed.length) navPlay(0);
+      navRenderList(); if(navMode==='watch' && !navCur && navFeed.length) navPlay(0);
     }
     if(navOi>=navOrder.length) navBuildOrder();
     const chans=navOrder.slice(navOi, navOi+nCh); navOi+=chans.length;
-    for(const c of chans){
-      if(!navCur && !navFeed.length){ navFeed.push({c, vid:null, idx:0}); navRenderList(); navPlay(0); continue; }   // começa a tocar na hora
-      const ids=await navIds(c,'UULF');
+    // 1) mostra na hora um cartão por canal; 2) depois troca pela capa de um vídeo de verdade
+    const slots = chans.map(c=>{ const it={c, vid:null, idx:Math.floor(Math.random()*4)}; navFeed.push(it);
+      if(navFeed.length%4===0){ const pi=navNextPost(); if(pi) navFeed.push(pi); } return it; });
+    navRenderList();
+    if(navMode==='watch' && !navCur && navFeed.length) navPlay(0);
+    for(const it of slots){
+      const ids = await Promise.race([navIds(it.c,'UULF'), new Promise(r=>setTimeout(()=>r([]),7000))]);
       if(tab!==navTab) return;
-      if(ids.length) navShuffle(ids.slice(0,12).filter(v=>!navSeen(v))).slice(0,2).forEach(vid=>navFeed.push({c, vid}));
-      else navFeed.push({c, vid:null, idx:Math.floor(Math.random()*4)});
-      if(navFeed.length%4===0){ const pi=navNextPost(); if(pi) navFeed.push(pi); }   // vídeos de criadores no meio
-      navRenderList();
-      if(!navCur && navFeed.length) navPlay(0);
+      const pick = navShuffle(ids.slice(0,12).filter(v=>!navSeen(v))).slice(0,2);
+      if(pick.length && it!==navCur){ it.vid=pick[0]; delete it.idx; navUpdateItem(navFeed.indexOf(it)); }
+      if(pick[1]){ navFeed.push({c:it.c, vid:pick[1]}); navRenderList(); }
     }
   } finally { navExtending=false; }
 }
 function navThumb(it){
-  if(it.post){ const th=postThumb(it.post); return `<i>${it.post.platform==='tiktok'?'TikTok':it.post.platform==='instagram'?'Reels':esc(it.c.short)}</i>${th?`<img src="${esc(th)}" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="this.remove()">`:''}`; }
+  if(it.post){ const th=postThumb(it.post); return `<i>${it.post.platform==='tiktok'?'TikTok':it.post.platform==='instagram'?'Reels':it.post.kind==='foto'?'📷':esc(it.c.short)}</i>${th?`<img src="${esc(th)}" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="this.remove()">`:''}`; }
   if(it.vid) return `<img src="https://i.ytimg.com/vi/${esc(it.vid)}/mqdefault.jpg" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="this.remove()">`;
   const av=avatarUrl(it.c); return `<i>${esc(it.c.short||initials(it.c.name))}</i>${av?`<img src="${esc(av)}" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="this.remove()">`:''}`;
 }
 // A lista "A seguir" cresce para baixo; a cada 6 vídeos entra um espaço de propaganda (separado do conteúdo)
+function navCardHTML(it,n){ const av=it.c.avatar || avatarUrl(it.c), up=it.post;
+  return `<button class="nc" data-nc="${n}"><div class="th" style="background:${esc(it.c.color||'var(--card2)')}">${navThumb(it)}${up?`<em>${up.kind==='foto'?'FOTO':'CRIADOR'}</em>`:''}</div>
+    <div class="meta"><div class="av" style="background:${esc(it.c.color||'var(--card2)')}">${esc(it.c.short||initials(it.c.name))}${av?`<img src="${esc(av)}" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="this.remove()">`:''}</div>
+    <div><b data-nct="${n}">${esc(it.title||it.c.name)}</b><small>${esc(it.c.name)} · ${esc(tvSubsOf(it.c)[0]||it.c.cat)}</small></div></div></button>`; }
+function navUpdateItem(n){
+  const it=navFeed[n]; if(!it) return;
+  const card=document.querySelector(`[data-nc="${n}"]`); if(card) card.outerHTML=navCardHTML(it,n);
+  const li=document.querySelector(`#navList [data-nv="${n}"] .th`); if(li) li.innerHTML=navThumb(it)+'<em>▶</em>';
+  navFetchTitles();
+}
+function navRenderCards(){
+  const G=$('#navCards'); let n=+(G.dataset.n||0), html='';
+  for(; n<navFeed.length; n++){ html += navCardHTML(navFeed[n], n); if(n%6===5) html += `<div class="ad-slot" data-ad="navg-${n}"></div>`; }
+  if(html) G.insertAdjacentHTML('beforeend', html); G.dataset.n=n;
+  navFetchTitles();
+}
+// Títulos dos vídeos (pelo oEmbed do YouTube, grátis), guardados no aparelho
+const navTitleCache = store.get('tp_vtitles', {});
+let navTitleBusy=false;
+async function navFetchTitles(){
+  if(navTitleBusy) return; navTitleBusy=true;
+  try{
+    for(let n=0; n<navFeed.length; n++){
+      const it=navFeed[n]; if(it.title || !it.vid || it.post) continue;
+      let t=navTitleCache[it.vid];
+      if(!t){ try{ const r=await fetch('https://www.youtube.com/oembed?format=json&url='+encodeURIComponent('https://www.youtube.com/watch?v='+it.vid)); if(r.ok){ t=(await r.json()).title; } }catch{}
+        if(!t){ try{ const r=await fetch('https://noembed.com/embed?url='+encodeURIComponent('https://www.youtube.com/watch?v='+it.vid)); if(r.ok){ t=(await r.json()).title; } }catch{} }
+        if(t){ navTitleCache[it.vid]=t; store.set('tp_vtitles', navTitleCache); } }
+      if(t){ it.title=t; document.querySelectorAll(`[data-nct="${n}"],[data-nvt="${n}"]`).forEach(el=>el.textContent=t); }
+    }
+  } finally { navTitleBusy=false; }
+}
+let navMode='grid';
+function navSetMode(mode, push){
+  navMode=mode;
+  $('#navBrowse').hidden = mode!=='grid'; $('#navWatch').hidden = mode!=='watch'; $('#navBackGrid').hidden = mode!=='watch';
+  if(mode==='grid'){ navPause(); navEmbed(''); }
+  else if(push) history.pushState({view:'nav', watch:1},'');
+  scrollTo({top:0});
+  setTimeout(fillAds,300);
+}
 function navRenderList(){
+  navRenderCards();
   const L=$('#navList'); let n=+(L.dataset.n||0);
   let html='';
   for(; n<navFeed.length; n++){
@@ -2574,8 +2658,10 @@ function navPlay(i){
   $('#navCh').innerHTML = `<div class="av" style="background:${esc(it.c.color||'var(--card2)')}">${esc(it.c.short||initials(it.c.name))}${av?`<img src="${esc(av)}" alt="" referrerpolicy="no-referrer" onerror="this.remove()">`:''}</div><div><b>${esc(it.c.name)}</b><small>${esc([it.c.cat, ...tvSubsOf(it.c)].join(' · '))}</small></div>`;
   navShowInfo(null);
   const tok=++navToken;
-  const emb = it.post ? postEmbed(it.post) : '';
-  navEmbed(emb);
+  const up = it.post && it.post.platform==='upload';
+  const emb = up ? storageUrl(it.post.ref) : it.post ? postEmbed(it.post) : '';
+  navEmbed(emb, up ? (it.post.kind==='foto'?'foto':'video') : null);
+  $('#navDown').hidden = !up;
   if(it.post){ it.infoFor=it.vid; navLoadInfo(it); clearTimeout(navViewT); navViewT=setTimeout(()=>{ if(navCur===it) navRpc('nav_event',{p_vid:it.vid, p_dev:deviceId(), p_kind:'view', p_ch:it.c.name}); },5000); }
   if(emb){ navRenderList(); if(navI+4 >= navFeed.length) navExtend(); logArea('Navegação · Criadores'); return; }
   const ytId = it.post ? it.post.ref : it.vid;
@@ -2645,6 +2731,7 @@ $('#navShare').onclick = async()=>{
     $('#navShareN').textContent = fmtN((parseInt($('#navShareN').textContent)||0)+1); }
 };
 $('#navNext').onclick = ()=>navGo(1);
+$('#navDown').onclick = ()=>{ if(navCur && navCur.post) postDownload(navCur.post); };
 $('#navComGo').onclick = ()=>{ const c=$('#navCom'); c.hidden=!c.hidden; navComIdentity(); if(!c.hidden){ c.scrollIntoView({behavior:'smooth', block:'nearest'}); setTimeout(()=>$('#navComTxt').focus(),300); } };
 $('#navReport').onclick = async()=>{
   if(!navCur || !navCur.vid) return;
@@ -2684,16 +2771,17 @@ document.querySelector('.nav-tabs').addEventListener('click', e=>{
   const b=e.target.closest('[data-navtab]'); if(!b || b.dataset.navtab===navTab) return;
   navTab=b.dataset.navtab;
   document.querySelectorAll('[data-navtab]').forEach(x=>x.classList.toggle('on', x===b));
-  navSkipCheck(); navFeed=[]; navI=-1; navCur=null; $('#navList').innerHTML=''; $('#navList').dataset.n=0;
+  navSkipCheck(); navFeed=[]; navI=-1; navCur=null; $('#navList').innerHTML=''; $('#navList').dataset.n=0; $('#navCards').innerHTML=''; $('#navCards').dataset.n=0; if(navMode==='watch') navSetMode('grid');
   navBuildOrder(); navExtend();
   logArea(navTab==='geral' ? 'Navegação · Geral' : 'Navegação · Para você');
 });
 // Abre a Navegação já tocando um canal (ex.: o vídeo do destaque que a pessoa tocou)
 function navOpenChannel(c){
-  if(!navSeeded){ navDeep={c:c.name}; go('nav'); return; }
-  go('nav');
+  navSetMode('watch'); history.replaceState(history.state,'');
+  if(!navSeeded){ navDeep={c:c.name}; go('nav'); history.replaceState({view:'nav', watch:1},''); return; }
+  go('nav'); history.replaceState({view:'nav', watch:1},'');
   navFeed.splice(navI+1, 0, {c, vid:null, idx:0});
-  $('#navList').innerHTML=''; $('#navList').dataset.n=0;
+  $('#navList').innerHTML=''; $('#navList').dataset.n=0; $('#navCards').innerHTML=''; $('#navCards').dataset.n=0;
   navPlay(navI+1);
 }
 // Comentário com a conta: quem entrou com e-mail (e, na Etapa 2, com o Google) comenta com o próprio nome
@@ -2702,7 +2790,7 @@ function navComIdentity(){ if(navUserName() || store.get('tp_name','')) $('#navC
 async function enterNav(){
   navComIdentity();
   document.body.classList.add('in-nav');
-  if(navSeeded){ if(navP && navCur) try{ navP.playVideo(); }catch{} return; }
+  if(navSeeded){ if(navMode==='watch' && navP && navCur) try{ navP.playVideo(); }catch{} return; }
   navSeeded=true;
   navMeRefresh();
   await navLoadPosts();
@@ -2713,30 +2801,37 @@ async function enterNav(){
   if(navDeep && navDeep.post){ navFeed.push(postItem(navDeep.post)); navDeep=null; }
   if(navDeep){ const c=TV_CHANNELS.find(x=>x.name===navDeep.c); if(c) navFeed.push({c, vid:navDeep.vid||null, idx:0}); navDeep=null; }
   navBuildOrder();
-  if(navFeed.length){ navRenderList(); navPlay(0); }
-  navExtend();
+  if(navFeed.length){ navRenderList(); if(navMode==='watch') navPlay(0); }
+  navExtend(9);
 }
-$('#featNav').onclick = e=>{ e.stopPropagation(); logArea('banner:navegacao'); go('nav'); };
+$('#featNav').onclick = e=>{ e.stopPropagation(); logArea('banner:navegacao'); navSetMode('grid'); go('nav'); };
+$('#navCards').addEventListener('click', e=>{ const b=e.target.closest('[data-nc]'); if(!b) return; navSetMode('watch', true); navPlay(+b.dataset.nc); });
+$('#navBackGrid').onclick = ()=>history.state && history.state.watch ? history.back() : navSetMode('grid');
+$('#navMore2').onclick = ()=>navExtend(9);
+if('IntersectionObserver' in window) new IntersectionObserver(es=>{ if(es.some(x=>x.isIntersecting) && curView==='nav' && navMode==='grid') navExtend(9); },{rootMargin:'400px'}).observe($('#navMore2'));
 
 /* ---------- Criadores (Etapa 2): canal do usuário, + Criar por link e desempenho ---------- */
-let navPosts=[], navPostI=0;
+let navPosts=[], navPostI=0, navPhotoT=null;
 const CRT_CATS = ['Louvor','Pregação','Música','Humor','Receitas','Esportes','Notícias','Dicas','Família','Outros'];
 const realUser = () => user && !isAnon(user);
 function postItem(p){
   return {post:p, vid:'p:'+p.id, title:p.title,
     c:{name:p.name||'Criador', short:initials(p.name||'Criador'), cat:'Criadores', sub:p.cat||'Criadores', color:'linear-gradient(135deg,#e5191b,#7a0b0c)', avatar:p.avatar||''}};
 }
-function postThumb(p){ return p.platform==='youtube' ? `https://i.ytimg.com/vi/${encodeURIComponent(p.ref)}/mqdefault.jpg` : ''; }
+function postThumb(p){ return p.platform==='youtube' ? `https://i.ytimg.com/vi/${encodeURIComponent(p.ref)}/mqdefault.jpg` : (p.platform==='upload' && p.thumb ? storageUrl(p.thumb) : ''); }
 function postEmbed(p){
   if(p.platform==='tiktok') return `https://www.tiktok.com/embed/v2/${encodeURIComponent(p.ref)}`;
   if(p.platform==='instagram') return `https://www.instagram.com/reel/${encodeURIComponent(p.ref)}/embed`;
   return '';
 }
-function navEmbed(url){
-  const box=$('#navPlayer'); box.querySelectorAll('.nav-embed').forEach(f=>f.remove());
+function navEmbed(url, media){
+  const box=$('#navPlayer'); box.querySelectorAll('.nav-embed').forEach(f=>f.remove()); clearTimeout(navPhotoT);
   const yt=document.getElementById('navYt'); if(yt) yt.style.visibility = url ? 'hidden' : '';
   if(!url) return;
   navPause();
+  if(media==='video'){ box.insertAdjacentHTML('beforeend', `<video class="nav-embed" src="${esc(url)}" controls autoplay playsinline></video>`);
+    const v=box.querySelector('video.nav-embed'); v.onended=()=>{ navLearn(navCur && navCur.c, 2); navGo(1); }; v.onplay=()=>{ if(!audio.paused) audio.pause(); }; return; }
+  if(media==='foto'){ box.insertAdjacentHTML('beforeend', `<img class="nav-embed" src="${esc(url)}" alt="" style="object-fit:contain">`); navPhotoT=setTimeout(()=>{ if(curView==='nav') navGo(1); }, 12000); return; }
   box.insertAdjacentHTML('beforeend', `<iframe class="nav-embed" src="${esc(url)}" allow="autoplay; encrypted-media; fullscreen; picture-in-picture" allowfullscreen referrerpolicy="strict-origin-when-cross-origin"></iframe>`);
 }
 async function navLoadPosts(){ const d=await navRpc('creator_feed', {p_limit:80}); navPosts = Array.isArray(d) ? d : []; navPostI=0; }
@@ -2758,17 +2853,37 @@ function openCriar(){
       <div class="form">${GOOGLE_BTN}<button class="btn ghost" data-crt-email style="width:100%">Entrar com e-mail e senha</button></div>`;
     body.querySelector('[data-crt-email]').onclick = ()=>{ $('#criarModal').classList.remove('open'); authOpen=true; go('account'); };
   } else {
-    body.innerHTML = `<form id="crtForm">
-      <label class="lbl" for="crtUrl">Link do vídeo</label>
-      <input id="crtUrl" inputmode="url" placeholder="Cole aqui o link do vídeo" required>
-      <div class="crt-plat"><span>YouTube e Shorts</span><span>TikTok</span><span>Instagram Reels</span></div>
-      <label class="lbl" for="crtTitle">Título</label>
+    const common = `<label class="lbl" for="crtTitle">Título</label>
       <input id="crtTitle" maxlength="120" placeholder="Sobre o que é o vídeo?" required>
+      <div class="crt-emo">${['🙏','🔥','❤️','😂','🎶','✝️','👏','😍','🙌','⚽','🍲','💪'].map(e=>`<button type="button" data-emo="${e}">${e}</button>`).join('')}</div>
       <label class="lbl" for="crtCat">Categoria</label>
       <select id="crtCat">${CRT_CATS.map(c=>`<option>${c}</option>`).join('')}</select>
-      <label class="crt-terms"><input type="checkbox" id="crtTerms" required><span>Declaro que o vídeo é meu ou que tenho autorização para divulgar, que ele não tem conteúdo impróprio e que aceito os <a href="termos.html" target="_blank" rel="noopener">Termos de uso</a>.</span></label>
+      <label class="crt-terms"><input type="checkbox" id="crtTerms" required><span>Declaro que o conteúdo é meu ou que tenho autorização para divulgar, que a música é minha ou liberada, que não tem conteúdo impróprio e que aceito os <a href="termos.html" target="_blank" rel="noopener">Termos de uso</a>.</span></label>`;
+    body.innerHTML = `<div class="crt-tabs"><button type="button" class="on" data-crtmode="up">📁 Enviar do aparelho</button><button type="button" data-crtmode="link">🔗 Colar link</button></div>
+    <form id="crtUp">
+      <label class="crt-drop" for="crtFile"><b>Toque para escolher um vídeo ou foto</b><small>Da galeria, da câmera ou do computador · vídeo até 60 segundos</small></label>
+      <input type="file" id="crtFile" accept="video/*,image/*" hidden>
+      <div class="crt-prev" id="crtPreview"></div>
+      ${common}
+      <div class="crt-prog" id="crtProg" hidden><span></span><div><i></i></div></div>
       <button class="btn" id="crtBtn" style="width:100%">Publicar no TocaPlay</button>
+    </form>
+    <form id="crtForm" hidden>
+      <label class="lbl" for="crtUrl">Link do vídeo</label>
+      <input id="crtUrl" inputmode="url" placeholder="Cole aqui o link do vídeo">
+      <div class="crt-plat"><span>YouTube e Shorts</span><span>TikTok</span><span>Instagram Reels</span></div>
+      <div id="crtCommonSlot"></div>
+      <button class="btn" id="crtBtnLink" style="width:100%">Publicar no TocaPlay</button>
     </form>`;
+    const commonEl = ()=>[...body.querySelectorAll('#crtTitle, .crt-emo, #crtCat, .crt-terms, label[for=crtTitle], label[for=crtCat]')];
+    body.querySelector('.crt-tabs').onclick = e=>{ const t=e.target.closest('[data-crtmode]'); if(!t) return;
+      body.querySelectorAll('[data-crtmode]').forEach(x=>x.classList.toggle('on', x===t));
+      const up=t.dataset.crtmode==='up', target = up ? $('#crtProg') : $('#crtCommonSlot');
+      commonEl().forEach(el=>target.parentNode.insertBefore(el, target));
+      $('#crtUp').hidden=!up; $('#crtForm').hidden=up; };
+    body.querySelector('.crt-emo').onclick = e=>{ const b=e.target.closest('[data-emo]'); if(!b) return; const i=$('#crtTitle'); i.value=(i.value+' '+b.dataset.emo).trim().slice(0,120); i.focus(); };
+    $('#crtFile').onchange = e=>crtPick(e.target.files[0]);
+    $('#crtUp').onsubmit = crtUploadSubmit;
     $('#crtForm').onsubmit = criarSubmit;
   }
   $('#criarModal').classList.add('open'); history.pushState({view:curView, modal:1},'');
@@ -2782,7 +2897,7 @@ async function crtResolve(url){
 }
 async function criarSubmit(e){
   e.preventDefault();
-  const b=$('#crtBtn'), title=$('#crtTitle').value.trim();
+  const b=$('#crtBtnLink'), title=$('#crtTitle').value.trim();
   if(navProibido(title)) return toast('🚫 Título não permitido: palavrão, ofensa ou conteúdo impróprio.');
   b.disabled=true; b.textContent='Publicando…';
   const url = await crtResolve($('#crtUrl').value.trim());
@@ -2814,12 +2929,13 @@ async function renderCanal(){
   const sum = k => posts.reduce((a,p)=>a+(+p[k]||0),0);
   $('#canalStats').innerHTML = [['views','Visualizações'],['likes','Curtidas'],['comments','Comentários'],['shares','Compartilh.']].map(([k,l])=>`<div><b>${fmtN(sum(k))}</b><small>${l}</small></div>`).join('');
   $('#canalList').innerHTML = posts.length ? posts.map(p=>{ const th=postThumb(p);
-    return `<div class="cp"><div class="th" style="background:linear-gradient(135deg,#e5191b,#7a0b0c)">${p.platform==='tiktok'?'TikTok':p.platform==='instagram'?'Reels':''}${th?`<img src="${esc(th)}" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="this.remove()">`:''}</div>
+    return `<div class="cp"><div class="th" style="background:linear-gradient(135deg,#e5191b,#7a0b0c)">${p.platform==='tiktok'?'TikTok':p.platform==='instagram'?'Reels':p.kind==='foto'?'📷':''}${th?`<img src="${esc(th)}" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="this.remove()">`:''}</div>
       <div class="tx"><b>${esc(p.title)}${p.status==='fila'?'<span class="st">em revisão</span>':''}</b>
       <small>👁 ${fmtN(p.views)} · 👍 ${fmtN(p.likes)} · 💬 ${fmtN(p.comments)} · ↗ ${fmtN(p.shares)} · ${esc(p.cat||'')}</small>
-      <div class="acts"><button data-cp-play="${p.id}">▶ Ver</button><button data-cp-share="${p.id}">↗ Compartilhar</button><button class="del" data-cp-del="${p.id}">Apagar</button></div></div></div>`; }).join('')
-    : `<div class="card"><p><b style="color:var(--txt)">Seu canal está pronto!</b><br>Toque em <b>+ Criar</b> e cole o link de um vídeo seu do YouTube, TikTok ou Instagram.</p></div>`;
+      <div class="acts"><button data-cp-play="${p.id}">▶ Ver</button><button data-cp-share="${p.id}">↗ Compartilhar</button>${p.platform==='upload'?`<button data-cp-down="${p.id}">⬇ Baixar</button>`:''}<button class="del" data-cp-del="${p.id}">Apagar</button></div></div></div>`; }).join('')
+    : `<div class="card"><p><b style="color:var(--txt)">Seu canal está pronto!</b><br>Toque em <b>+ Criar conteúdo</b> e envie um vídeo ou foto do seu aparelho, ou cole o link de um vídeo seu do YouTube, TikTok ou Instagram.</p></div>`;
   $('#canalList').onclick = async e=>{
+    const dn=e.target.closest('[data-cp-down]'); if(dn){ const q=posts.find(x=>String(x.id)===dn.dataset.cpDown); if(q) postDownload(q); return; }
     const pl=e.target.closest('[data-cp-play]'), sh=e.target.closest('[data-cp-share]'), del=e.target.closest('[data-cp-del]');
     const p = posts.find(x=>String(x.id)===(pl||sh||del)?.dataset[pl?'cpPlay':sh?'cpShare':'cpDel']);
     if(!p) return;
@@ -2827,16 +2943,157 @@ async function renderCanal(){
     if(sh){ const url=location.origin+'/#p='+p.id, text=`Olha o meu vídeo no TocaPlay Livre: ${p.title}`;
       try{ if(navigator.share) await navigator.share({title:'TocaPlay Livre', text, url}); else openWhatsApp(`${text} ${url}`); }catch{ return; }
       navRpc('nav_event', {p_vid:'p:'+p.id, p_dev:deviceId(), p_kind:'share', p_ch:n}); }
-    if(del){ if(!confirm('Apagar este vídeo do seu canal?')) return; await navRpc('creator_delete', {p_id:p.id}); toast('Vídeo apagado'); navPosts=[]; renderCanal(); }
+    if(del){ if(!confirm('Apagar este vídeo do seu canal?')) return;
+      if(p.platform==='upload') await sb.storage.from(POST_BUCKET).remove([...new Set([p.ref, p.thumb].filter(Boolean))]).catch(()=>{});
+      await navRpc('creator_delete', {p_id:p.id}); toast('Vídeo apagado'); navPosts=[]; renderCanal(); }
   };
 }
 function navOpenPost(p){
-  const it=postItem(p);
-  if(!navSeeded){ navDeep={post:p}; go('nav'); return; }
-  go('nav');
+  const it=postItem(p); navSetMode('watch');
+  if(!navSeeded){ navDeep={post:p}; go('nav'); history.replaceState({view:'nav', watch:1},''); return; }
+  go('nav'); history.replaceState({view:'nav', watch:1},'');
   navFeed.splice(navI+1, 0, it);
-  $('#navList').innerHTML=''; $('#navList').dataset.n=0;
+  $('#navList').innerHTML=''; $('#navList').dataset.n=0; $('#navCards').innerHTML=''; $('#navCards').dataset.n=0;
   navPlay(navI+1);
+}
+
+/* ---------- Etapa 3: enviar vídeo e foto do aparelho (com compressão e marca d'água) ---------- */
+const POST_BUCKET = 'posts';
+const storageUrl = path => `${CONFIG.SUPABASE_URL}/storage/v1/object/public/${POST_BUCKET}/${String(path).split('/').map(encodeURIComponent).join('/')}`;
+const MAX_SEC = 60, MAX_BYTES = 20*1024*1024;
+let wmLogo = null;
+function loadWmLogo(){ if(wmLogo) return Promise.resolve(wmLogo);
+  return new Promise(res=>{ const im=new Image(); im.onload=()=>{ wmLogo=im; res(im); }; im.onerror=()=>res(null); im.src='icon-192.png'; }); }
+// Marca d'água: logo + "TocaPlay Livre" no canto de baixo à direita
+function drawWatermark(ctx, w, h){
+  const s = Math.max(14, Math.round(Math.min(w,h)*0.045)), pad = Math.round(s*0.8);
+  ctx.save(); ctx.font = `800 ${s}px Outfit, system-ui, sans-serif`; ctx.textBaseline='middle';
+  const text='TocaPlay Livre', tw=ctx.measureText(text).width, lw = wmLogo ? s*1.5 : 0;
+  const x = w - pad - tw - (lw ? lw + s*0.4 : 0), y = h - pad - s*0.75;
+  ctx.globalAlpha=.85; ctx.fillStyle='rgba(0,0,0,.45)';
+  const bx=x-s*0.5, bw=tw+(lw?lw+s*0.4:0)+s, bh=s*1.9;
+  ctx.beginPath(); ctx.roundRect ? ctx.roundRect(bx, y-bh/2, bw, bh, bh/2) : ctx.rect(bx, y-bh/2, bw, bh); ctx.fill();
+  ctx.globalAlpha=.95;
+  if(wmLogo) ctx.drawImage(wmLogo, x, y-lw/2, lw, lw);
+  ctx.fillStyle='#ffd23f'; ctx.fillText(text, x + (lw? lw + s*0.4 : 0), y);
+  ctx.restore();
+}
+function fitSize(w, h, max){ const k=Math.min(1, max/Math.max(w,h)); return [Math.round(w*k/2)*2, Math.round(h*k/2)*2]; }
+const canvasBlob = (cv, type='image/jpeg', q=.85) => new Promise(r=>cv.toBlob(r, type, q));
+async function processPhoto(file){
+  await loadWmLogo();
+  const url=URL.createObjectURL(file);
+  const im = await new Promise((res,rej)=>{ const i=new Image(); i.onload=()=>res(i); i.onerror=rej; i.src=url; });
+  const [w,h]=fitSize(im.naturalWidth, im.naturalHeight, 1440), cv=document.createElement('canvas'); cv.width=w; cv.height=h;
+  const ctx=cv.getContext('2d'); ctx.drawImage(im,0,0,w,h); drawWatermark(ctx,w,h); URL.revokeObjectURL(url);
+  const blob=await canvasBlob(cv,'image/jpeg',.85);
+  return {blob, type:'image/jpeg', ext:'jpg', thumb:blob, wm:true};
+}
+function pickRecorderType(){
+  if(!window.MediaRecorder || !MediaRecorder.isTypeSupported) return null;
+  for(const t of ['video/mp4;codecs=avc1,mp4a.40.2','video/mp4','video/webm;codecs=vp9,opus','video/webm;codecs=vp8,opus','video/webm'])
+    if(MediaRecorder.isTypeSupported(t)) return t;
+  return null;
+}
+// Vídeo: redesenha num quadro menor com a marca d'água e grava de novo (fica leve). Leva o tempo do próprio vídeo.
+async function processVideo(file, onProgress, audioCtx){
+  await loadWmLogo();
+  const url=URL.createObjectURL(file), v=document.createElement('video');
+  v.src=url; v.playsInline=true; v.preload='auto'; v.crossOrigin='anonymous';
+  await new Promise((res,rej)=>{ v.onloadedmetadata=res; v.onerror=()=>rej(new Error('formato')); });
+  const dur=v.duration, cut = isFinite(dur) && dur > MAX_SEC;
+  const [w,h]=fitSize(v.videoWidth||720, v.videoHeight||1280, 960);
+  const cv=document.createElement('canvas'); cv.width=w; cv.height=h; const ctx=cv.getContext('2d');
+  // capa (miniatura): um quadro do começo
+  v.currentTime=Math.min(1, (dur||2)/3); await new Promise(r=>v.onseeked=r);
+  ctx.drawImage(v,0,0,w,h); drawWatermark(ctx,w,h); const thumb=await canvasBlob(cv,'image/jpeg',.8);
+  v.currentTime=0; await new Promise(r=>v.onseeked=r);
+  const type=pickRecorderType();
+  if(!type || !cv.captureStream){ URL.revokeObjectURL(url); return null; }
+  const stream=cv.captureStream(30);
+  try{ if(audioCtx){ const src=audioCtx.createMediaElementSource(v), dst=audioCtx.createMediaStreamDestination(); src.connect(dst); dst.stream.getAudioTracks().forEach(t=>stream.addTrack(t)); } }catch{}
+  const rec=new MediaRecorder(stream,{mimeType:type, videoBitsPerSecond:1200000, audioBitsPerSecond:96000}), parts=[];
+  rec.ondataavailable=e=>{ if(e.data && e.data.size) parts.push(e.data); };
+  const done=new Promise(r=>rec.onstop=r);
+  let raf=0; const draw=()=>{ ctx.drawImage(v,0,0,w,h); drawWatermark(ctx,w,h); onProgress && onProgress(Math.min(1, v.currentTime/Math.min(dur||MAX_SEC, MAX_SEC)));
+    if(v.currentTime >= MAX_SEC){ v.pause(); if(rec.state!=='inactive') rec.stop(); return; }
+    raf=requestAnimationFrame(draw); };
+  v.onended=()=>{ if(rec.state!=='inactive') rec.stop(); };
+  rec.start(1000);
+  try{ await v.play(); }catch{ if(rec.state!=='inactive') rec.stop(); URL.revokeObjectURL(url); return null; }
+  draw(); await done; cancelAnimationFrame(raf); URL.revokeObjectURL(url);
+  const clean=type.split(';')[0], blob=new Blob(parts,{type:clean});
+  if(!blob.size) return null;
+  return {blob, type:clean, ext:clean==='video/mp4'?'mp4':'webm', thumb, wm:true, cut};
+}
+function uploadFile(path, blob, type, onProgress){
+  return new Promise(async (res,rej)=>{
+    const {data}=await sb.auth.getSession(); const tok=data?.session?.access_token; if(!tok) return rej(new Error('login'));
+    const x=new XMLHttpRequest();
+    x.open('POST', `${CONFIG.SUPABASE_URL}/storage/v1/object/${POST_BUCKET}/${path.split('/').map(encodeURIComponent).join('/')}`);
+    x.setRequestHeader('Authorization','Bearer '+tok); x.setRequestHeader('apikey', CONFIG.SUPABASE_ANON_KEY);
+    x.setRequestHeader('Content-Type', type); x.setRequestHeader('x-upsert','false');
+    x.upload.onprogress=e=>{ if(e.lengthComputable && onProgress) onProgress(e.loaded/e.total); };
+    x.onload=()=> x.status<300 ? res() : rej(new Error(x.status===413?'grande':'envio'));
+    x.onerror=()=>rej(new Error('rede')); x.send(blob);
+  });
+}
+let crtFile=null;
+function crtSetProgress(label, f){ const b=$('#crtProg'); if(!b) return; b.hidden=false; b.querySelector('span').textContent=label; b.querySelector('i').style.width=Math.round((f||0)*100)+'%'; }
+async function crtPick(file){
+  crtFile=null; const pv=$('#crtPreview'); pv.innerHTML='';
+  if(!file) return;
+  const isV=file.type.startsWith('video/'), isI=file.type.startsWith('image/');
+  if(!isV && !isI) return toast('Escolha um vídeo ou uma foto.');
+  const url=URL.createObjectURL(file);
+  if(isI){ pv.innerHTML=`<img src="${url}" alt="">`; crtFile=file; return; }
+  pv.innerHTML=`<video src="${url}" muted playsinline controls></video><small id="crtDur"></small>`;
+  const v=pv.querySelector('video');
+  v.onloadedmetadata=()=>{ const d=Math.round(v.duration||0);
+    $('#crtDur').textContent = d>MAX_SEC ? `Vídeo com ${d}s: vamos usar só os primeiros ${MAX_SEC} segundos.` : `Vídeo com ${d}s.`; };
+  crtFile=file;
+}
+async function crtUploadSubmit(e){
+  e.preventDefault();
+  if(!crtFile) return toast('Escolha um vídeo ou uma foto do seu aparelho.');
+  const title=$('#crtTitle').value.trim();
+  if(title.length<2) return toast('Escreva um título.');
+  if(navProibido(title)) return toast('🚫 Título não permitido: palavrão, ofensa ou conteúdo impróprio.');
+  if(!$('#crtTerms').checked) return toast('Marque a caixa dos Termos de uso.');
+  const b=$('#crtBtn'); b.disabled=true;
+  let audioCtx=null; try{ audioCtx=new (window.AudioContext||window.webkitAudioContext)(); audioCtx.resume(); }catch{}
+  const isV=crtFile.type.startsWith('video/'); let out=null;
+  try{
+    crtSetProgress(isV?'Preparando o vídeo (não feche esta tela)…':'Preparando a foto…', 0);
+    out = isV ? await processVideo(crtFile, f=>crtSetProgress('Preparando o vídeo (não feche esta tela)…', f), audioCtx) : await processPhoto(crtFile);
+  }catch{ out=null; }
+  try{ audioCtx && audioCtx.close(); }catch{}
+  if(!out){ // aparelho não conseguiu preparar: envia o original, se for pequeno
+    if(crtFile.size > MAX_BYTES){ b.disabled=false; $('#crtProg').hidden=true; return toast('Não deu para preparar este vídeo aqui. Tente um vídeo menor (até 20 MB).'); }
+    const ext=(crtFile.name.split('.').pop()||'mp4').toLowerCase().replace(/[^a-z0-9]/g,'').slice(0,5)||'mp4';
+    out={blob:crtFile, type:crtFile.type||'video/mp4', ext, thumb:null, wm:false};
+  }
+  if(out.blob.size > MAX_BYTES){ b.disabled=false; $('#crtProg').hidden=true; return toast('O arquivo ficou maior que 20 MB. Tente um vídeo mais curto.'); }
+  const uid=user.id, base=`${uid}/${Date.now()}-${Math.random().toString(36).slice(2,8)}`, path=`${base}.${out.ext}`, thumbPath=out.thumb && isV ? `${base}-capa.jpg` : (isV ? null : path);
+  try{
+    crtSetProgress('Enviando…', 0);
+    await uploadFile(path, out.blob, out.type, f=>crtSetProgress('Enviando…', f));
+    if(isV && out.thumb) await uploadFile(thumbPath, out.thumb, 'image/jpeg');
+  }catch(err){ b.disabled=false; $('#crtProg').hidden=true; return toast(err.message==='grande' ? 'Arquivo grande demais.' : 'Não deu para enviar agora. Confira a internet e tente de novo.'); }
+  const d=await navRpc('creator_upload', {p_path:path, p_thumb:thumbPath, p_kind:isV?'video':'foto', p_title:title, p_cat:$('#crtCat').value, p_terms:true, p_bytes:out.blob.size + (out.thumb&&isV?out.thumb.size:0), p_wm:!!out.wm});
+  b.disabled=false; $('#crtProg').hidden=true;
+  const msg={login:'Entre com a sua conta para postar.', limite:'Limite de 5 envios por dia. Volte amanhã!', cheio:'O espaço do TocaPlay está cheio no momento. Poste por link enquanto isso.',
+    bloqueado:'🚫 Título não permitido.', arquivo:'O arquivo não chegou certo. Tente de novo.', termos:'Marque a caixa dos Termos de uso.'};
+  if(!d || msg[d.status]){ sb.storage.from(POST_BUCKET).remove([path, thumbPath].filter(Boolean)).catch(()=>{}); return toast(d ? msg[d.status] : 'Não deu para publicar agora. Tente de novo.'); }
+  $('#criarModal').classList.remove('open');
+  toast(d.status==='fila' ? 'Recebido! Aparece depois de uma revisão.' : (out.cut ? 'Publicado! 🎉 (usamos os primeiros 60 segundos)' : 'Publicado! 🎉 Já está na Navegação.'));
+  logArea('Criadores · envio');
+  navPosts=[]; navLoadPosts(); go('canal');
+}
+function postDownload(p){
+  if(p.platform!=='upload') return;
+  const a=document.createElement('a'); a.href=storageUrl(p.ref)+'?download='+encodeURIComponent((p.title||'tocaplay').replace(/[^\wÀ-ú -]/g,'').slice(0,40)+'.'+(p.ref.split('.').pop())); a.rel='noopener';
+  document.body.appendChild(a); a.click(); a.remove();
 }
 
 /* ---------- Início do app ---------- */
@@ -2848,9 +3105,9 @@ $('#srTv').textContent = `📺 ${Math.floor(TV_CHANNELS.length/10)*10}+`;
 (function openFromContentLink(){
   const h = decodeURIComponent(location.hash||'');
   let m = h.match(/^#p=(\d+)$/);
-  if(m){ history.replaceState(history.state,'',location.pathname); navDeep={postId:m[1]}; go('nav'); return; }
+  if(m){ history.replaceState(history.state,'',location.pathname); navDeep={postId:m[1]}; navSetMode('watch'); go('nav'); return; }
   m = h.match(/^#v=([\w-]*)&c=(.+)$/);
-  if(m){ history.replaceState(history.state,'',location.pathname); navDeep={vid:m[1]||null, c:m[2]}; go('nav'); return; }
+  if(m){ history.replaceState(history.state,'',location.pathname); navDeep={vid:m[1]||null, c:m[2]}; navSetMode('watch'); go('nav'); return; }
   m = h.match(/^#canal=(.+)$/);
   if(m){ const c = TV_CHANNELS.find(x=>x.name.toLowerCase()===m[1].toLowerCase()); history.replaceState(history.state,'',location.pathname);
     if(c){ go('tv'); openTv(c); } return; }
