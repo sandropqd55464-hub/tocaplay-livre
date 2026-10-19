@@ -183,11 +183,13 @@ begin
                   where created_at > now() - interval '30 days' and station_id like 'pod:%'
                   group by station_name order by plays desc limit 10) x),
     'visit_estado', (select coalesce(json_agg(x order by pessoas desc),'[]') from (
-                  select coalesce(region,'Não identificado') as estado, max(region_code) as uf, count(distinct device_id) as pessoas
-                  from visits where created_at > now() - interval '30 days' and coalesce(country,'BR')='BR' group by 1) x),
+                  select region as estado, max(region_code) as uf, count(distinct device_id) as pessoas
+                  from visits where created_at > now() - interval '30 days' and country='BR' and region is not null group by 1) x),
+    'visit_sem_local', (select count(distinct device_id) from visits
+                  where created_at > now() - interval '30 days' and region is null and country is null),
     'visit_cidade', (select coalesce(json_agg(x),'[]') from (
                   select city as cidade, max(region_code) as uf, count(distinct device_id) as pessoas from visits
-                  where created_at > now() - interval '30 days' and city is not null group by city order by pessoas desc limit 15) x),
+                  where created_at > now() - interval '30 days' and city is not null and country='BR' group by city order by pessoas desc limit 15) x),
     'visit_exterior', (select count(distinct device_id) from visits
                   where created_at > now() - interval '30 days' and country is not null and country <> 'BR'),
     'por_dia', (select coalesce(json_agg(x order by dia),'[]') from (
