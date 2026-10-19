@@ -1847,12 +1847,17 @@ function openTv(c, mode){
     // vídeos do canal pela API: se um vídeo estiver bloqueado, pula para o próximo sozinho
     $('#tvPlayer').innerHTML = '<div id="tvYt"></div><div class="tv-loading">Carregando…</div>';
     tvErr=0; tvTriedAll=false;
-    whenYT(()=>{
+    const listP = tvMode==='live' ? Promise.resolve(null) : ytList(c);
+    whenYT(async ()=>{
+      const d = await listP;
       if(token!==tvToken) return;
       const liveTry = tvMode==='live';
+      if(!liveTry && d && d.total>0 && !d.videos.length) return tvFail(c);   // o dono não libera nenhum vídeo fora do YouTube
+      const okIds = d && d.videos.length ? ((d.videos.filter(v=>!v.shorts).length ? d.videos.filter(v=>!v.shorts) : d.videos).map(v=>v.id)) : null;
       const base = {autoplay:1, playsinline:1, rel:0, modestbranding:1};
       tvYt = new YT.Player('tvYt', {width:'100%', height:'100%',
         ...(liveTry ? {videoId:'live_stream', playerVars:{...base, channel:c.channelId}}
+                    : okIds ? {videoId:okIds[0], playerVars:{...base, playlist:okIds.slice(1).join(','), loop:1}}
                     : {playerVars:{...base, listType:'playlist', list:uploadsList(c), loop:1}}),
         events:{
           onReady:e=>{ $('.tv-loading')?.remove(); try{ e.target.playVideo(); }catch{} },
@@ -2234,7 +2239,23 @@ const FEATURED = (()=>{
 })();
 let featI = 0, featT = null, featYt = null, featToken = 0;
 function featStopVideo(){ featToken++; if(featYt){ try{ featYt.destroy(); }catch{} featYt=null; } const h=document.getElementById('featYt'); if(h) h.remove(); }
-function avatarUrl(c){ const m=(c.url||'').match(/youtube\.com\/@([\w.-]+)/); return c.avatar || (m ? `https://unavatar.io/youtube/${m[1]}?fallback=false` : ''); }
+// Foto do canal: pelo nosso servidor (/api/yt, grátis e com cache); se não der, pelo unavatar
+function avatarUrl(c){ if(c.avatar) return c.avatar; if(c.channelId) return `/api/yt?c=${c.channelId}&av=1`;
+  const m=(c.url||'').match(/youtube\.com\/@([\w.-]+)/); return m ? `https://unavatar.io/youtube/${m[1]}?fallback=false` : ''; }
+// Últimos vídeos do canal que PODEM tocar aqui (os bloqueados pelo dono já vêm de fora), com título
+const ytListMem = {};
+async function ytList(c){
+  if(!c || !c.channelId) return null;
+  if(ytListMem[c.channelId]) return ytListMem[c.channelId];
+  const key='tp_ytl_'+c.channelId, hit=store.get(key,null);
+  if(hit && hit.v && Date.now()-hit.t < 3*3600e3) return (ytListMem[c.channelId]=hit.v);
+  try{ const ctl=new AbortController(); setTimeout(()=>ctl.abort(),6000);
+    const r=await fetch('/api/yt?c='+c.channelId, {signal:ctl.signal}); if(!r.ok) return null;
+    const d=await r.json(); if(!d || !Array.isArray(d.videos)) return null;
+    d.videos.forEach(v=>{ try{ if(v.title) navTitleCache[v.id]=v.title; }catch{} });
+    store.set(key,{t:Date.now(), v:d}); return (ytListMem[c.channelId]=d);
+  }catch{ return null; }
+}
 // Vídeo só no computador ou no Wi-Fi; nos dados móveis, imagem animada (economiza internet)
 function featVideoOk(){
   if(typeof CONFIG!=='undefined' && CONFIG.HOME_VIDEO===false) return false;
@@ -2541,7 +2562,12 @@ function navBuildOrder(){
 }
 // Pega a lista de vídeos de um canal pelo player oficial do YouTube (sem chave e sem custo). Guarda por 6 horas.
 const navHq=[]; let navHBusy=false, navHOk=0, navHFail=0;
-function navIds(c, kind='UULF'){
+async function navIds(c, kind='UULF'){
+  const d = await ytList(c);
+  if(d && d.videos){ const longs=d.videos.filter(v=>!v.shorts).map(v=>v.id); const all=d.videos.map(v=>v.id); return longs.length ? longs : all; }
+  return navIdsHarvest(c, kind);
+}
+function navIdsHarvest(c, kind='UULF'){
   const key='tp_nv_'+kind+c.channelId, hit=store.get(key,null);
   if(hit && hit.ids && Date.now()-hit.t < 6*3600e3) return Promise.resolve(hit.ids);
   if(navHFail>=2 && !navHOk) return Promise.resolve([]);   // a lista não carregou: usa o modo simples, sem esperar
