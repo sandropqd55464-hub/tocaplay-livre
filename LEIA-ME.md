@@ -253,3 +253,6 @@ Abra o site no Chrome do Android → menu ⋮ → **Instalar app** (ou **Adicion
 - Na Navegação: um vídeo de criador logo no começo do "Para você" e 1 a cada 3 vídeos.
 - Página inicial: fileira "🎬 Novos no TocaPlay" com os vídeos do público.
 - Política de privacidade atualizada (login Google, envios, comentários, LGPD).
+
+## Versão 35 (19/10/2026)
+- Barra de pesquisa na Navegação (como no YouTube): acha canais, cantores, pregadores, categorias e vídeos do público.

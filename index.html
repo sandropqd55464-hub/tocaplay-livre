@@ -687,6 +687,14 @@ body.in-nav main{max-width:none;padding:0 24px}
   filter:drop-shadow(0 0 4px rgba(255,200,40,.35))}
 #v-nav .nav-top .brand img{filter:none}
 @media (prefers-reduced-motion:reduce){ #v-home .row-head h2,#v-home > h2,#homePlBlock h2,#v-tv h2,#v-pod h2{animation:none} }
+.nav-search{flex:1 1 320px;max-width:620px;display:flex;margin:0 auto;border:1.5px solid var(--line);border-radius:999px;overflow:hidden;background:var(--bg2)}
+.nav-search:focus-within{border-color:var(--yellow)}
+.nav-search input{flex:1;min-width:0;background:none;border:0;outline:0;color:var(--txt);font-size:15px;padding:10px 16px;font-family:inherit}
+.nav-search button{padding:0 18px;background:var(--card);color:var(--yellow);border-left:1px solid var(--line)}
+@media (max-width:700px){ .nav-search{order:5;flex-basis:100%;max-width:none} }
+.nav-res-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:4px 0 14px}
+.nav-res-head h2{font-size:18px}.nav-res-head button{padding:8px 14px;border-radius:999px;border:1.5px solid var(--yellow);color:var(--yellow);font-weight:800;font-size:13.5px}
+.nav-res-empty{grid-column:1/-1;color:var(--muted);padding:20px 0}
 </style>
 </head>
 <body>
@@ -799,10 +807,11 @@ body.in-nav main{max-width:none;padding:0 24px}
   <section class="view" id="v-nav">
     <div class="nav-top">
       <div class="brand"><img src="icon.svg" alt="">Navegação</div>
+      <form class="nav-search" id="navSearchF" role="search"><input id="navSearchQ" type="search" placeholder="Pesquisar vídeos, canais, cantores…" autocomplete="off" enterkeyhint="search" aria-label="Pesquisar na Navegação"><button aria-label="Pesquisar"><svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.4" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg></button></form>
       <div class="nav-tabs" role="tablist"><button class="on" data-navtab="foryou">Para você</button><button data-navtab="geral">Geral</button></div>
       <div class="nav-me"><button class="nav-create" id="navCreate" aria-label="Criar post"><b>+</b> Criar</button><button class="nav-avatar" id="navMeBtn" aria-label="Meu canal">?</button></div>
     </div>
-    <div id="navBrowse"><div class="nav-cards" id="navCards"></div><button class="nav-more" id="navMore2">Carregar mais vídeos</button></div>
+    <div id="navBrowse"><div id="navRes" hidden><div class="nav-res-head"><h2 id="navResTitle"></h2><button id="navResClear">✕ Limpar busca</button></div><div class="nav-cards" id="navResCards"></div></div><div class="nav-cards" id="navCards"></div><button class="nav-more" id="navMore2">Carregar mais vídeos</button></div>
     <button class="nav-backgrid" id="navBackGrid" hidden>‹ Todos os vídeos</button>
     <div class="nav-grid" id="navWatch" hidden>
       <div class="nav-main">
@@ -3111,6 +3120,36 @@ async function renderHomeCria(){
 }
 document.addEventListener('click', e=>{ const b=e.target.closest('[data-hcria]'); if(b){ const p=homePosts[+b.dataset.hcria]; if(p) navOpenPost(p); } });
 $('#rowCriaAll').onclick = ()=>{ if(navTab!=='geral'){ document.querySelector('[data-navtab="geral"]').click(); } navSetMode('grid'); go('nav'); };
+
+// Busca da Navegação: canais, cantores, pregadores e vídeos do público (e títulos já carregados)
+const navFold = t => String(t||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase();
+let navResItems=[];
+async function navSearch(q){
+  q=q.trim(); if(!q){ navSearchClear(); return; }
+  const f=navFold(q), words=f.split(/\s+/).filter(Boolean).map(w=>w.length>5 ? w.slice(0, w.length-2) : w), hit=t=>words.every(w=>navFold(t).includes(w));   // "pregação" acha "pregações"
+  if(!navPosts.length) await navLoadPosts();
+  const posts = navPosts.filter(p=>hit(`${p.title} ${p.name} ${p.cat}`)).map(postItem);
+  const chans = TV_CHANNELS.filter(c=>c.channelId && hit(`${c.name} ${c.cat} ${tvSubsOf(c).join(' ')} ${c.desc||''}`)).slice(0,24);
+  const seen=new Set(), vids = navFeed.filter(it=>!it.post && it.vid && it.title && hit(`${it.title} ${it.c.name}`) && !seen.has(it.vid) && seen.add(it.vid));
+  navResItems = [...posts, ...vids, ...chans.map(c=>({c, vid:null, idx:0, isCh:true}))];
+  $('#navResTitle').textContent = navResItems.length ? `Resultados para "${q}"` : `Nada encontrado para "${q}"`;
+  $('#navResCards').innerHTML = navResItems.length ? navResItems.map((it,n)=>navCardHTML(it,'r'+n).replace('data-nc=','data-nr=')).join('')
+    : `<p class="nav-res-empty">Tente o nome de um cantor, pregador, canal ou assunto (ex.: louvor, pregação, futebol, receitas).</p>`;
+  $('#navRes').hidden=false; $('#navCards').hidden=true; $('#navMore2').hidden=true;
+  if(navMode==='watch') navSetMode('grid');
+  logArea('Navegação · busca');
+  // capas reais dos canais encontrados
+  for(const [n,it] of navResItems.entries()){ if(!it.isCh) continue;
+    const ids=await Promise.race([navIds(it.c,'UULF'), new Promise(r=>setTimeout(()=>r([]),5000))]);
+    if(ids.length && $('#navRes') && !$('#navRes').hidden){ it.vid=ids[0]; const el=document.querySelector(`[data-nr="r${n}"]`); if(el) el.outerHTML=navCardHTML(it,'r'+n).replace('data-nc=','data-nr='); } }
+}
+function navSearchClear(){ $('#navSearchQ').value=''; $('#navRes').hidden=true; $('#navCards').hidden=false; $('#navMore2').hidden=false; }
+$('#navSearchF').onsubmit = e=>{ e.preventDefault(); $('#navSearchQ').blur(); navSearch($('#navSearchQ').value); };
+$('#navResClear').onclick = navSearchClear;
+$('#navResCards').addEventListener('click', e=>{ const b=e.target.closest('[data-nr]'); if(!b) return; const it=navResItems[+b.dataset.nr.slice(1)]; if(!it) return;
+  if(it.post) return navOpenPost(it.post);
+  const k=navFeed.indexOf(it); if(k>=0){ navSetMode('watch', true); return navPlay(k); }
+  navOpenChannel(it.c); });
 
 /* ---------- Início do app ---------- */
 renderChips(); renderFavs(); renderAccount(); renderPlaylists(); loadHome(); updatePlayer(); checkImport();
