@@ -645,6 +645,13 @@ body.in-nav main{max-width:none;padding:0 24px}
 .cp .acts button{padding:6px 11px;border-radius:999px;border:1.5px solid var(--yellow);color:var(--yellow);font-weight:700;font-size:12.5px}
 .cp .acts button.del{border-color:var(--line);color:var(--muted)}
 .cp .st{font-size:11px;font-weight:800;padding:2px 7px;border-radius:6px;background:var(--card2);color:var(--muted);margin-left:6px}
+.creator-card{border:2px solid #e5191b;background:linear-gradient(135deg,rgba(229,25,27,.16),var(--card))}
+.cc-head{display:flex;gap:12px;align-items:flex-start}.cc-ic{font-size:30px;line-height:1}
+.cc-head b{display:block;font-size:18px;color:var(--txt)}.cc-head small{display:block;color:var(--muted);font-size:13.5px;margin-top:3px;line-height:1.4}
+.cc-btns{display:flex;gap:8px;margin-top:14px;flex-wrap:wrap}
+.cc-btns button{flex:1;min-width:150px;padding:13px;border-radius:14px;font-weight:900;font-size:15px}
+.cc-create{background:#e5191b;color:#fff;border:2px solid #fff}.cc-create b{font-size:18px}
+.cc-see{border:1.5px solid var(--yellow);color:var(--yellow)}
 </style>
 </head>
 <body>
@@ -789,7 +796,7 @@ body.in-nav main{max-width:none;padding:0 24px}
   <!-- MEU CANAL (criadores) -->
   <section class="view" id="v-canal">
     <div class="canal-head"><div class="nav-avatar" id="canalAv">?</div><div style="flex:1;min-width:0"><h1 id="canalName">Meu canal</h1><small id="canalSub">Seus vídeos no TocaPlay</small></div>
-      <button class="nav-create" id="canalCreate"><b>+</b> Criar</button></div>
+      <button class="nav-create" id="canalCreate"><b>+</b> Criar conteúdo</button></div>
     <div class="canal-stats" id="canalStats"></div>
     <div id="canalList"></div>
   </section>
@@ -1464,7 +1471,9 @@ function renderAccount(){
   if(user){
     box.innerHTML = `<div class="card"><p>Olá,</p><div style="font-weight:800;font-size:20px;margin:2px 0 4px">${esc(nome||'ouvinte')} 👋</div>
       <p style="word-break:break-all">${esc(user.email)}</p>
-      <p style="margin-top:10px">Suas favoritas estão sincronizadas em todos os aparelhos.</p><div class="form"><button class="btn" data-go-canal>🎬 Meu canal</button><button class="btn ghost" id="logoutBtn">Sair da conta</button></div></div>` + ownerCard + installCard + inviteCard;
+      <p style="margin-top:10px">Suas favoritas estão sincronizadas em todos os aparelhos.</p><div class="form"><button class="btn ghost" id="logoutBtn">Sair da conta</button></div></div>
+    <div class="card creator-card"><div class="cc-head"><span class="cc-ic">🎬</span><div><b>Meu canal de criador</b><small>Poste seus vídeos e veja quantas pessoas assistiram, curtiram e comentaram.</small></div></div>
+      <div class="cc-btns"><button class="cc-create" data-criar><b>+</b> Criar conteúdo</button><button class="cc-see" data-go-canal>Ver meu canal</button></div></div>` + ownerCard + installCard + inviteCard;
     $('#logoutBtn').onclick = async()=>{ await sb.auth.signOut(); toast('Você saiu da conta'); };
     return;
   }
@@ -2739,7 +2748,7 @@ function navMeRefresh(){
 }
 $('#navMeBtn').onclick = ()=>go('canal');
 $('#navCreate').onclick = $('#canalCreate').onclick = ()=>openCriar();
-document.addEventListener('click', e=>{ if(e.target.closest('[data-go-canal]')) go('canal'); });
+document.addEventListener('click', e=>{ if(e.target.closest('[data-go-canal]')) go('canal'); if(e.target.closest('[data-criar]')) openCriar(); });
 $('#criarModal').addEventListener('click', e=>{ if(e.target.id==='criarModal') $('#criarModal').classList.remove('open'); });
 
 function openCriar(){
@@ -2798,7 +2807,7 @@ async function renderCanal(){
     $('#canalStats').innerHTML=''; $('#canalList').innerHTML = `<div class="card"><p>Com a sua conta, você posta vídeos, vê quantas pessoas assistiram, curtiram e comentaram, e compartilha com os amigos.</p><div class="form">${GOOGLE_BTN}</div></div>`;
     return;
   }
-  $('#canalName').textContent = n || 'Meu canal'; $('#canalSub').textContent = 'Seus vídeos no TocaPlay';
+  $('#canalName').textContent = n || 'Meu canal'; $('#canalSub').textContent = 'Meu canal · toque em + Criar para postar';
   $('#canalList').innerHTML = '<p style="color:var(--muted)">Carregando…</p>';
   const d = await navRpc('creator_my', {});
   const posts = (d && d.posts) || [];
