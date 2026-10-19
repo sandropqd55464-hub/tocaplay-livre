@@ -764,6 +764,8 @@ body.in-nav main{max-width:none;padding:0 24px}
     <div class="chips-wrap row-wrap"><button class="chip-arrow l" data-rowscroll="-1" aria-label="Voltar"><svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg></button><div class="ch-row" id="rowLive"></div><button class="chip-arrow r" data-rowscroll="1" aria-label="Ver mais"><svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></svg></button></div>
     <div id="rowRomBlock" hidden><div class="row-head"><h2>💕 Rádios Românticas</h2><button data-romplay="0">▶ Tocar</button></div><p class="row-note" style="margin:-6px 0 10px">Músicas para o coração, ao vivo e de graça.</p>
     <div class="chips-wrap row-wrap"><button class="chip-arrow l" data-rowscroll="-1" aria-label="Voltar"><svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg></button><div class="ch-row" id="rowRom"></div><button class="chip-arrow r" data-rowscroll="1" aria-label="Ver mais"><svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></svg></button></div></div>
+    <div id="rowCriaBlock" hidden><div class="row-head"><h2>🎬 Novos no TocaPlay</h2><button id="rowCriaAll">Ver todos</button></div><p class="row-note" style="margin:-6px 0 10px">Vídeos do público. Poste o seu também!</p>
+    <div class="chips-wrap row-wrap vids"><button class="chip-arrow l" data-rowscroll="-1" aria-label="Voltar"><svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg></button><div class="ch-row" id="rowCria"></div><button class="chip-arrow r" data-rowscroll="1" aria-label="Ver mais"><svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></svg></button></div></div>
     <div class="row-head"><h2>Pregadores</h2><button data-gotv="Cristão" data-gosub="Pregações">Ver tudo</button></div>
     <div class="chips-wrap row-wrap"><button class="chip-arrow l" data-rowscroll="-1" aria-label="Voltar"><svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg></button><div class="ch-row" id="rowPreg"></div><button class="chip-arrow r" data-rowscroll="1" aria-label="Ver mais"><svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></svg></button></div>
     <div class="row-head"><h2>🎤 Galeria Gospel</h2><button data-gotv="Cristão" data-gosub="Gospel Nacional">Ver todos</button></div>
@@ -2565,11 +2567,12 @@ async function navExtend(nCh=4){
       navTrend.slice(0,12).forEach(t=>{ const c=TV_CHANNELS.find(x=>x.name===t.ch); if(c && t.vid && !navSeen(t.vid)) navFeed.push({c, vid:t.vid}); });
       navRenderList(); if(navMode==='watch' && !navCur && navFeed.length) navPlay(0);
     }
+    if(tab==='foryou' && navOi===0 && !navFeed.some(x=>x.post)){ const pi=navNextPost(); if(pi) navFeed.push(pi); }   // criador novo logo no começo
     if(navOi>=navOrder.length) navBuildOrder();
     const chans=navOrder.slice(navOi, navOi+nCh); navOi+=chans.length;
     // 1) mostra na hora um cartão por canal; 2) depois troca pela capa de um vídeo de verdade
     const slots = chans.map(c=>{ const it={c, vid:null, idx:Math.floor(Math.random()*4)}; navFeed.push(it);
-      if(navFeed.length%4===0){ const pi=navNextPost(); if(pi) navFeed.push(pi); } return it; });
+      if(navFeed.length%3===2){ const pi=navNextPost(); if(pi) navFeed.push(pi); } return it; });   // 1 vídeo de criador a cada 3
     navRenderList();
     if(navMode==='watch' && !navCur && navFeed.length) navPlay(0);
     for(const it of slots){
@@ -3096,9 +3099,22 @@ function postDownload(p){
   document.body.appendChild(a); a.click(); a.remove();
 }
 
+// Fileira "Novos no TocaPlay" na página inicial: entrega os vídeos dos criadores para quem abre o app
+let homePosts=[];
+async function renderHomeCria(){
+  const d = await navRpc('creator_feed', {p_limit:20}); homePosts = Array.isArray(d) ? d : [];
+  if(!homePosts.length) return;
+  $('#rowCria').innerHTML = homePosts.map((p,i)=>{ const th=postThumb(p);
+    return `<button class="vc" data-hcria="${i}"><div class="th" style="background:linear-gradient(135deg,#e5191b,#7a0b0c)"><i style="background:linear-gradient(135deg,#e5191b,#7a0b0c)">${p.kind==='foto'?'📷':p.platform==='tiktok'?'TikTok':p.platform==='instagram'?'Reels':'▶'}${th?`<img src="${esc(th)}" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="this.remove()">`:''}</i>${th?`<span class="bl" style="background-image:url('${esc(th)}')"></span>`:''}<em>${p.novo?'NOVO':'CRIADOR'}</em></div><b>${esc(p.title)}</b><small>${esc(p.name||'Criador')} · ${esc(p.cat||'')}</small></button>`; }).join('');
+  $('#rowCriaBlock').hidden=false;
+  requestAnimationFrame(()=>rowArrows($('#rowCria').closest('.row-wrap')));
+}
+document.addEventListener('click', e=>{ const b=e.target.closest('[data-hcria]'); if(b){ const p=homePosts[+b.dataset.hcria]; if(p) navOpenPost(p); } });
+$('#rowCriaAll').onclick = ()=>{ if(navTab!=='geral'){ document.querySelector('[data-navtab="geral"]').click(); } navSetMode('grid'); go('nav'); };
+
 /* ---------- Início do app ---------- */
 renderChips(); renderFavs(); renderAccount(); renderPlaylists(); loadHome(); updatePlayer(); checkImport();
-renderFeat(); renderRows(); renderHomePods(); renderHomeGym(); renderGospelRadios(); renderRomRadios(); setTimeout(fillAds, 800);
+renderFeat(); renderRows(); renderHomePods(); renderHomeGym(); renderGospelRadios(); renderRomRadios(); renderHomeCria(); setTimeout(fillAds, 800);
 $('#gymBanner').onclick = ()=>{ go('tv'); tvCat='Malhação'; tvSub=''; renderTv(); openTv(GYM()[0]); enterGym(); };
 $('#srTv').textContent = `📺 ${Math.floor(TV_CHANNELS.length/10)*10}+`;
 // Links das páginas de conteúdo: /#radios=gospel, /#radios=romanticas, /#canal=Nome do canal

@@ -639,3 +639,24 @@ end $$;
 
 revoke all on function public.creator_upload(text,text,text,text,text,boolean,bigint,boolean) from public, anon;
 grant execute on function public.creator_upload(text,text,text,text,text,boolean,bigint,boolean) to authenticated;
+
+
+-- ===== Navegação: impulso para criadores novos (versão 34) =====
+-- Posts das últimas 72 horas vêm primeiro, e entre eles os que ainda tiveram menos visualizações,
+-- para todo post novo ser entregue para bastante gente no começo.
+create or replace function public.creator_feed(p_limit int default 60) returns json
+language sql security definer set search_path = public as $$
+  select coalesce(json_agg(x),'[]') from (
+    select p.id, p.platform, p.ref, p.title, p.cat, p.created_at, p.kind, p.thumb, p.wm, c.name, c.avatar,
+      (select count(*) from nav_events e where e.vid = 'p:'||p.id and e.kind = 'view') as views,
+      (select count(*) from nav_likes l where l.vid = 'p:'||p.id) as likes,
+      (p.created_at > now() - interval '72 hours') as novo
+    from creator_posts p join creators c on c.user_id = p.user_id
+    where p.status = 'ok' and not exists(select 1 from nav_hidden h where h.target = 'v:p:'||p.id and h.status <> 'ok')
+    order by (p.created_at > now() - interval '72 hours') desc,
+             case when p.created_at > now() - interval '72 hours'
+                  then (select count(*) from nav_events e where e.vid = 'p:'||p.id and e.kind = 'view') end asc nulls last,
+             (select count(*) from nav_likes l where l.vid = 'p:'||p.id) desc,
+             p.created_at desc
+    limit least(coalesce(p_limit,60),200)) x;
+$$;

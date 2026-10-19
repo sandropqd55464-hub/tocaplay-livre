@@ -247,3 +247,9 @@ Abra o site no Chrome do Android → menu ⋮ → **Instalar app** (ou **Adicion
 
 ## Versão 33 (19/10/2026)
 - Títulos das seções (Ao vivo agora, Pregadores, Galeria Gospel, Rádios Românticas, Podcasts, Malhação etc.) em dourado com brilho passando, igual à barra de baixo.
+
+## Versão 34 (19/10/2026) — impulso para criadores
+- Post novo (até 72 h) aparece primeiro; entre os novos, os menos vistos vão na frente (todo post chega a bastante gente).
+- Na Navegação: um vídeo de criador logo no começo do "Para você" e 1 a cada 3 vídeos.
+- Página inicial: fileira "🎬 Novos no TocaPlay" com os vídeos do público.
+- Política de privacidade atualizada (login Google, envios, comentários, LGPD).
