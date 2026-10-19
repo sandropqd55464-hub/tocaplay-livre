@@ -154,6 +154,7 @@ function render(d){
     <div class="box"><h2>🔥 Rádios mais ouvidas (7 dias)</h2>${list(d.top_radios,'nome','plays')}</div>
     <div class="box"><h2>📍 Inscritos por estado</h2>${list(d.por_estado,'estado','total')}</div>
   </div>
+  <div id="adsBox"></div>
   <div id="navFila"></div>
   <div class="box"><h2>📲 Instalações por aparelho</h2>${list(d.instalacoes_por_tipo,'tipo','total')}
     <p class="muted" style="margin-top:8px">Conta cada aparelho uma vez, quando o app é instalado ou aberto pelo ícone.</p></div>
@@ -163,8 +164,44 @@ function render(d){
     :'<div class="empty">Ninguém se inscreveu ainda.</div>'}
   </div>
   <p class="muted" style="margin:14px 0 30px;text-align:center">Atualizado em ${new Date().toLocaleString('pt-BR')}</p>`;
-  bind(); loadNavFila();
+  bind(); loadNavFila(); loadAds();
   if($('#areaSel')){ $('#areaSel').onchange=()=>areaChart(d); areaChart(d); }
+}
+// Anúncios pagos: aprovar (entra no ar) ou recusar (devolve o dinheiro pelo Mercado Pago)
+async function loadAds(){
+  const el=$('#adsBox'); if(!el) return;
+  const {data,error}=await sb.rpc('admin_ads');
+  if(error){ el.innerHTML=`<div class="box"><h2>📣 Anúncios</h2><p class="muted">Rode o SQL dos anúncios (versão 37) no Supabase para ver esta parte.</p></div>`; return; }
+  const brl=v=>Number(v||0).toLocaleString('pt-BR',{style:'currency',currency:'BRL'}), now=Date.now();
+  const L=data.lista||[], img=p=>CONFIG.SUPABASE_URL+'/storage/v1/object/public/ads/'+p.split('/').map(encodeURIComponent).join('/');
+  const fila=L.filter(a=>a.status==='em_analise');
+  const ativos=L.filter(a=>a.status==='aprovado' && Date.parse(a.end_at)>now);
+  const dt=d=>new Date(d).toLocaleString('pt-BR',{dateStyle:'short',timeStyle:'short'});
+  const contato=a=>[a.whatsapp?`<a href="https://wa.me/${a.whatsapp.length<=11?'55':''}${esc(a.whatsapp)}" target="_blank" rel="noopener" style="color:var(--yellow)">WhatsApp</a>`:'', a.link?`<a href="${esc(a.link)}" target="_blank" rel="noopener" style="color:var(--yellow)">Link</a>`:''].filter(Boolean).join(' · ');
+  const card=(a,btns)=>`<div class="fila"><div style="display:flex;gap:12px;align-items:flex-start"><img src="${esc(img(a.image))}" alt="" style="width:150px;aspect-ratio:16/9;object-fit:cover;border-radius:10px;flex:none">
+    <div><b>${esc(a.title)}</b><p class="muted" style="margin:2px 0">${esc(a.name||'')} · ${esc(a.email||'')}<br>${a.days} dia${a.days>1?'s':''} · pago ${brl(a.paid)} · ${a.end_at?`até ${dt(a.end_at)}`:`início ${dt(a.start_at)}`}${a.renew_of?' · 🔁 renovação':''}<br>👁 ${fmt(a.views)} vistas · 👆 ${fmt(a.clicks)} cliques · ${contato(a)}</p></div></div>${btns}</div>`;
+  el.innerHTML=`<div class="box"><h2>📣 Anúncios pagos</h2>
+    <div class="tiles"><div class="tile hl"><div class="l">Receita do mês</div><div class="n">${brl(data.receita_mes)}</div></div>
+    <div class="tile"><div class="l">Receita total</div><div class="n">${brl(data.receita_total)}</div></div>
+    <div class="tile"><div class="l">No ar agora</div><div class="n">${fmt(data.no_ar)}</div></div>
+    <div class="tile"><div class="l">Para revisar</div><div class="n">${fmt(data.em_analise)}</div></div>
+    <div class="tile"><div class="l">Vencendo em 3 dias</div><div class="n">${fmt(data.vencendo)}</div></div></div>
+    <h2 style="margin-top:16px">🛡️ Pagos, esperando sua revisão ${fila.length?`(${fila.length})`:''}</h2>
+    ${fila.length?fila.map(a=>card(a,`<div class="fb"><button class="btn" data-adok="${a.id}">Aprovar</button><button class="btn ghost" data-adno="${a.id}">Recusar e devolver</button></div>`)).join(''):'<div class="empty">Nenhum anúncio esperando. 🙌</div>'}
+    <h2 style="margin-top:16px">📺 No ar e agendados</h2>
+    ${ativos.length?ativos.map(a=>card(a, Date.parse(a.end_at)-now<3*864e5?'<p style="color:var(--yellow);font-weight:800">⚠️ Vence em menos de 3 dias</p>':'')).join(''):'<div class="empty">Nenhum anúncio no ar.</div>'}
+    <p class="muted" style="margin-top:10px">Link para mandar aos anunciantes: <a href="/anunciar.html" style="color:var(--yellow)">tocaplaylivre.com.br/anunciar.html</a></p>
+  </div>`;
+  el.querySelectorAll('[data-adok]').forEach(b=>b.onclick=async()=>{ b.disabled=true;
+    const {error}=await sb.rpc('admin_ad_approve',{p_id:+b.dataset.adok});
+    if(error){ alert('Erro: '+error.message); b.disabled=false; return; } loadAds(); });
+  el.querySelectorAll('[data-adno]').forEach(b=>b.onclick=async()=>{
+    if(!confirm('Recusar este anúncio e devolver o dinheiro ao cliente?')) return; b.disabled=true;
+    const {data:s}=await sb.auth.getSession();
+    const r=await fetch('/api/ad-refuse',{method:'POST',headers:{'content-type':'application/json',authorization:'Bearer '+s.session.access_token},body:JSON.stringify({id:+b.dataset.adno})});
+    const j=await r.json().catch(()=>({}));
+    if(!j.ok){ alert('Não deu para recusar agora: '+(j.error||r.status)); b.disabled=false; return; }
+    loadAds(); });
 }
 // Navegação: fila de revisão (só o que o filtro automático ou as denúncias separaram)
 async function loadNavFila(){

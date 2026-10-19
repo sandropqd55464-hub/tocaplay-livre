@@ -326,6 +326,7 @@ details.more-login[open] summary::after{content:' ▴'}
 @keyframes promoBg{from{background-position:0% 50%}to{background-position:100% 50%}}
 @keyframes promoPop{from{transform:scale(1) rotate(-3deg)}to{transform:scale(1.08) rotate(3deg)}}
 .feat-tag.promo-tag{background:rgba(255,215,0,.9);color:#1a1300}
+.feat-media .promo.ad-img{background-size:cover;background-position:center;animation:none}
 .ad-slot:empty{display:none}
 
 /* Mini player */
@@ -800,7 +801,7 @@ body.in-nav main{max-width:none;padding:0 24px}
     <div class="list" id="homeList"></div>
     <button class="more" id="homeMore" hidden>Carregar mais rádios</button>
     <div class="ad-slot" data-ad="fim"></div>
-    <div class="site-links"><a href="sobre.html">Sobre o TocaPlay</a><a href="como-usar.html">Como usar</a><a href="radios-por-estado.html">Rádios por estado</a><a href="radios-gospel.html">Rádios gospel</a><a href="artistas-gospel.html">Artistas gospel</a><a href="radios-romanticas.html">Rádios românticas</a><a href="privacidade.html">Privacidade</a><a href="termos.html">Termos de uso</a><a href="admin.html" class="adm" rel="nofollow">Acesso ADM</a></div>
+    <div class="site-links"><a href="sobre.html">Sobre o TocaPlay</a><a href="como-usar.html">Como usar</a><a href="radios-por-estado.html">Rádios por estado</a><a href="radios-gospel.html">Rádios gospel</a><a href="artistas-gospel.html">Artistas gospel</a><a href="radios-romanticas.html">Rádios românticas</a><a href="anunciar.html" style="color:var(--yellow)">📣 Anuncie aqui</a><a href="privacidade.html">Privacidade</a><a href="termos.html">Termos de uso</a><a href="admin.html" class="adm" rel="nofollow">Acesso ADM</a></div>
   </section>
 
   <!-- NAVEGAÇÃO: feed de vídeos com curtir, comentar e compartilhar (contagem do próprio TocaPlay) -->
@@ -1522,7 +1523,8 @@ function renderAccount(){
       <p style="word-break:break-all">${esc(user.email)}</p>
       <p style="margin-top:10px">Suas favoritas estão sincronizadas em todos os aparelhos.</p><div class="form"><button class="btn ghost" id="logoutBtn">Sair da conta</button></div></div>
     <div class="card creator-card"><div class="cc-head"><span class="cc-ic">🎬</span><div><b>Meu canal de criador</b><small>Poste seus vídeos e veja quantas pessoas assistiram, curtiram e comentaram.</small></div></div>
-      <div class="cc-btns"><button class="cc-create" data-criar><b>+</b> Criar conteúdo</button><button class="cc-see" data-go-canal>Ver meu canal</button></div></div>` + ownerCard + installCard + inviteCard;
+      <div class="cc-btns"><button class="cc-create" data-criar><b>+</b> Criar conteúdo</button><button class="cc-see" data-go-canal>Ver meu canal</button></div></div>
+    <a class="card" href="anunciar.html" style="display:flex;gap:12px;align-items:center;text-decoration:none;color:inherit"><span style="font-size:30px">📣</span><span><b style="color:var(--yellow)">Anuncie no TocaPlay</b><br><small style="color:var(--muted)">Sua empresa, igreja ou evento no destaque da página inicial. A partir de R$ 10.</small></span></a>` + ownerCard + installCard + inviteCard;
     $('#logoutBtn').onclick = async()=>{ await sb.auth.signOut(); toast('Você saiu da conta'); };
     return;
   }
@@ -2238,9 +2240,27 @@ const FEATURED = (()=>{
   return out.concat(promos.slice(0,1));
 })();
 let featI = 0, featT = null, featYt = null, featToken = 0;
+// Anúncios pagos (anunciar.html): entram no destaque como "Patrocinado" — o 2º item e depois 1 a cada 4
+async function loadPaidAds(){
+  if(!sb) return;
+  try{
+    const {data} = await sb.rpc('ads_active'); const ads = Array.isArray(data) ? data : [];
+    if(!ads.length) return;
+    const items = ads.map(a=>({promo:true, ad:true, adId:a.id, id:'ad'+a.id, name:a.title, desc:'',
+      img:`${CONFIG.SUPABASE_URL}/storage/v1/object/public/ads/${a.image.split('/').map(encodeURIComponent).join('/')}`,
+      cta: a.whatsapp ? '💬 Chamar no WhatsApp' : '👉 Saiba mais',
+      act:()=>{ sb.rpc('ad_event',{p_id:a.id, p_dev:deviceId(), p_kind:'click'}).then(()=>{},()=>{});
+        const wa = a.whatsapp ? String(a.whatsapp).replace(/\D/g,'') : '';
+        window.open(wa ? 'https://wa.me/'+(wa.length<=11?'55':'')+wa+'?text='+encodeURIComponent('Olá! Vi seu anúncio no TocaPlay Livre.') : a.link, '_blank', 'noopener'); }}));
+    const cur = FEATURED[featI];
+    items.forEach((it,i)=>{ const pos=Math.min(FEATURED.length, 1+i*4+(i?1:0)); FEATURED.splice(pos,0,it); });
+    featI = Math.max(0, FEATURED.indexOf(cur));
+    const dots=document.querySelector('#featDots span'); if(dots) dots.textContent=`${featI+1} / ${FEATURED.length}`;
+  }catch{}
+}
 function featStopVideo(){ featToken++; if(featYt){ try{ featYt.destroy(); }catch{} featYt=null; } const h=document.getElementById('featYt'); if(h) h.remove(); }
 // Foto do canal: pelo nosso servidor (/api/yt, grátis e com cache); se não der, pelo unavatar
-function avatarUrl(c){ if(c.avatar) return c.avatar; if(c.channelId) return `/api/yt?c=${c.channelId}&av=1`;
+function avatarUrl(c){ if(c.avatar) return c.avatar;
   const m=(c.url||'').match(/youtube\.com\/@([\w.-]+)/); return m ? `https://unavatar.io/youtube/${m[1]}?fallback=false` : ''; }
 // Últimos vídeos do canal que PODEM tocar aqui (os bloqueados pelo dono já vêm de fora), com título
 const ytListMem = {};
@@ -2248,10 +2268,10 @@ async function ytList(c){
   if(!c || !c.channelId) return null;
   if(ytListMem[c.channelId]) return ytListMem[c.channelId];
   const key='tp_ytl_'+c.channelId, hit=store.get(key,null);
-  if(hit && hit.v && Date.now()-hit.t < 3*3600e3) return (ytListMem[c.channelId]=hit.v);
+  if(hit && hit.v && hit.v.total>0 && Date.now()-hit.t < 3*3600e3) return (ytListMem[c.channelId]=hit.v);
   try{ const ctl=new AbortController(); setTimeout(()=>ctl.abort(),6000);
     const r=await fetch('/api/yt?c='+c.channelId, {signal:ctl.signal}); if(!r.ok) return null;
-    const d=await r.json(); if(!d || !Array.isArray(d.videos)) return null;
+    const d=await r.json(); if(!d || !Array.isArray(d.videos) || !d.total) return null;   // o servidor não conseguiu ler o canal: usa o jeito antigo
     d.videos.forEach(v=>{ try{ if(v.title) navTitleCache[v.id]=v.title; }catch{} });
     store.set(key,{t:Date.now(), v:d}); return (ytListMem[c.channelId]=d);
   }catch{ return null; }
@@ -2281,14 +2301,15 @@ function renderFeat(){
   m.classList.remove('fade'); void m.offsetWidth; m.classList.add('fade');
   if(c.promo){
     featStopVideo();
-    m.innerHTML = `<div class="promo" style="--pg:${c.bg}"><span>${c.emoji}</span></div>`;
-    $('#featTag').textContent = 'TocaPlay'; $('#featTag').classList.remove('live'); $('#featTag').classList.add('promo-tag');
+    m.innerHTML = c.ad ? `<div class="promo ad-img" style="background-image:url('${esc(c.img)}')"></div>` : `<div class="promo" style="--pg:${c.bg}"><span>${c.emoji}</span></div>`;
+    $('#featTag').textContent = c.ad ? 'Patrocinado' : 'TocaPlay'; $('#featTag').classList.remove('live'); $('#featTag').classList.add('promo-tag');
+    if(c.ad && !c.seen && curView==='home' && !document.hidden){ c.seen=true; sb.rpc('ad_event',{p_id:c.adId, p_dev:deviceId(), p_kind:'view'}).then(()=>{},()=>{}); }
     $('#featName').textContent = c.name; $('#featDesc').textContent = c.desc;
     document.querySelector('#feat .feat-cta').textContent = c.cta;
     $('#featHit').setAttribute('aria-label', c.name);
     $('#featDots').innerHTML = `<button data-feat="-1" aria-label="Anterior">‹</button><span>${featI+1} / ${FEATURED.length}</span><button data-feat="1" aria-label="Próximo">›</button>`;
     $('#featSound').hidden = true;
-    featTimer(7000); return;
+    featTimer(c.ad ? 9000 : 7000); return;
   }
   $('#featSound').hidden = false;
   const av = avatarUrl(c);
@@ -2564,7 +2585,7 @@ function navBuildOrder(){
 const navHq=[]; let navHBusy=false, navHOk=0, navHFail=0;
 async function navIds(c, kind='UULF'){
   const d = await ytList(c);
-  if(d && d.videos){ const longs=d.videos.filter(v=>!v.shorts).map(v=>v.id); const all=d.videos.map(v=>v.id); return longs.length ? longs : all; }
+  if(d && d.videos && d.videos.length){ const longs=d.videos.filter(v=>!v.shorts).map(v=>v.id); const all=d.videos.map(v=>v.id); return longs.length ? longs : all; }
   return navIdsHarvest(c, kind);
 }
 function navIdsHarvest(c, kind='UULF'){
@@ -3179,7 +3200,7 @@ $('#navResCards').addEventListener('click', e=>{ const b=e.target.closest('[data
 
 /* ---------- Início do app ---------- */
 renderChips(); renderFavs(); renderAccount(); renderPlaylists(); loadHome(); updatePlayer(); checkImport();
-renderFeat(); renderRows(); renderHomePods(); renderHomeGym(); renderGospelRadios(); renderRomRadios(); renderHomeCria(); setTimeout(fillAds, 800);
+renderFeat(); loadPaidAds(); renderRows(); renderHomePods(); renderHomeGym(); renderGospelRadios(); renderRomRadios(); renderHomeCria(); setTimeout(fillAds, 800);
 $('#gymBanner').onclick = ()=>{ go('tv'); tvCat='Malhação'; tvSub=''; renderTv(); openTv(GYM()[0]); enterGym(); };
 $('#srTv').textContent = `📺 ${Math.floor(TV_CHANNELS.length/10)*10}+`;
 // Links das páginas de conteúdo: /#radios=gospel, /#radios=romanticas, /#canal=Nome do canal
