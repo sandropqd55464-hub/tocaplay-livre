@@ -572,10 +572,14 @@ body.in-nav main{max-width:none;padding:0 24px}
 .nav-ch .av img{position:absolute;top:0;left:0;width:100%;height:100%;object-fit:cover}
 .nav-ch b{display:block;font-size:15px}.nav-ch small{color:var(--muted);font-size:13px}
 .nav-acts{display:flex;gap:8px;flex-wrap:wrap;margin:6px 0 4px}
-.nav-acts button{display:flex;align-items:center;gap:7px;padding:10px 15px;border-radius:999px;background:var(--card);font-weight:800;font-size:14px}
-.nav-acts button.on{background:var(--yellow);color:#1a1300}
+.nav-acts button{display:flex;align-items:center;gap:7px;padding:10px 16px;border-radius:999px;background:rgba(255,210,63,.08);
+  border:1.5px solid var(--yellow);color:var(--yellow);font-weight:800;font-size:14.5px;transition:transform .12s}
+.nav-acts button:active{transform:scale(.94)}
+.nav-acts button:hover,.nav-acts button:focus-visible{background:rgba(255,210,63,.18)}
+.nav-acts button.on{background:var(--yellow);color:#1a1300;border-color:var(--yellow)}
+.nav-acts #navNext{background:var(--green);border-color:var(--green);color:#06120c}
+.nav-acts .rep{border-color:var(--line)!important;background:none!important;color:var(--muted)!important;font-weight:600}
 .nav-acts button span{font-variant-numeric:tabular-nums}
-.nav-acts .rep{color:var(--muted);font-weight:600}
 .nav-views{color:var(--muted);font-size:13px;margin:6px 2px 0}
 .nav-brand{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-top:8px;padding:8px 12px;border-radius:12px;background:linear-gradient(90deg,rgba(255,210,63,.12),rgba(25,195,125,.12));font-size:12.5px;color:var(--muted)}
 .nav-brand b{color:var(--yellow)}
@@ -2378,8 +2382,13 @@ function fillAds(){
 // Vídeos dos canais oficiais (player oficial do YouTube). Curtidas, comentários e compartilhamentos
 // são contados pelo próprio TocaPlay, começando do zero para cada vídeo.
 const NAV_CHANS = TV_CHANNELS.filter(c=>c.channelId && c.live!=='first' && c.cat!=='TV Ao Vivo');
-const NAV_BAD = /(^|[^a-zà-ú])(porra|caralh\w*|buceta|put[ao]s?|putaria|merda|fod[aeiu]\w*|fdp|viad[oa]\w*|arrombad\w*|vagabund\w*|piranha|cacete|otari[oa]s?|corn[oa]s?|punhet\w*|xoxota|bostas?|vsf|vtnc|pqp|krl|desgra[cç]ad\w*)(?=$|[^a-zà-ú])/i;
-const NAV_LINK = /https?:\/\/|www\.|\.com\b|\.br\b/i;
+// Filtro forte (o mesmo do banco): palavrão, ofensa, sexual/obsceno, pornografia, ameaça e ódio, mesmo escritos com truques
+const NAV_TR = ['áàâãäéèêëíìîïóòôõöúùûüç0134578@$!|','aaaaaeeeeiiiiooooouuuucoieastbaasii'];
+const navNorm = t => String(t||'').toLowerCase().split('').map(ch=>{ const i=NAV_TR[0].indexOf(ch); return i<0?ch:NAV_TR[1][i]; }).join('')
+  .replace(/[^a-z ]+/g,' ').replace(/([a-z])\1+/g,'$1').replace(/\s+/g,' ');
+const NAV_WORDS = / (pora|poras|caralh[a-z]*|buceta[a-z]*|buseta[a-z]*|puta|putas|puto|putos|putaria[a-z]*|merda[a-z]*|fod[aeio][a-z]*|fdp|vsf|vtnc|pqp|krl|tnc|cu|cus|cuzao|cuzinho|arombad[a-z]*|vagabund[a-z]*|cacete|otari[ao]s?|corn[ao]s?|punhet[a-z]*|xoxot[a-z]*|xerec[a-z]*|xota|bosta[a-z]*|desgracad[a-z]*|viad[ao][a-z]*|traveco[a-z]*|retardad[ao]s?|mongoloide[a-z]*|piroca[a-z]*|pica|picas|siririca[a-z]*|boquete[a-z]*|gozad[ao]s?|gozei|tesao|tesud[ao]s?|safad[ao]s?|sexo|sexual|porn[a-z]*|nudes?|pelad[ao]s? na cam|estupr[a-z]*|pedofil[a-z]*|zoofil[a-z]*|incest[a-z]*|xvideos|pornhub|onlyfans|privacy|sacanagem|bucetinh[a-z]*|transar|trepar|chupa (meu|minha)|vai se f[a-z]*|filh[ao] da puta|vou te matar|te matar|se mata|morre logo|vou te pegar) /;
+const NAV_JOINED = /(caralh|buceta|buseta|putaria|punhet|xoxot|xerec|piroca|siririca|boquete|pornografia|pornhub|xvideos|onlyfans|estupr|pedofil|zoofil|filhodaputa|filhadaputa|vaisefoder|arombad|desgracad)/;
+function navProibido(t){ const n=' '+navNorm(t).trim()+' '; return NAV_WORDS.test(n) || NAV_JOINED.test(n.replace(/ /g,'')); }
 let navTab='foryou', navFeed=[], navI=-1, navP=null, navState=-1, navCur=null, navStart=0, navSeeded=false, navToken=0;
 let navOrder=[], navOi=0, navHot={}, navTrend=[], navExtending=false, navViewT=null, navDeep=null;
 const navPref = ()=>{ const p=store.get('tp_navpref',null); return p && p.ch ? p : {ch:{},cat:{}}; };
@@ -2528,7 +2537,7 @@ function navShowInfo(d){
   d = d || {likes:0, liked:false, shares:0, views:0, comments:[]};
   $('#navLikeN').textContent=fmtN(d.likes); $('#navLike').classList.toggle('on', !!d.liked);
   $('#navShareN').textContent=fmtN(d.shares); $('#navComN').textContent=fmtN((d.comments||[]).length); $('#navComN2').textContent=fmtN((d.comments||[]).length);
-  $('#navViews').textContent = d.views ? `${fmtN(d.views)} visualizações no TocaPlay` : 'Seja o primeiro a assistir no TocaPlay';
+  $('#navViews').textContent = d.views ? `${fmtN(d.views)} ${+d.views===1?'visualização':'visualizações'} no TocaPlay` : 'Seja o primeiro a assistir no TocaPlay';
   $('#navComList').innerHTML = (d.comments||[]).length ? d.comments.map(c=>`<div class="nav-c"><b>${esc(c.name||'Visitante')}</b><small>${new Date(c.created_at).toLocaleDateString('pt-BR')}</small><p>${esc(c.body)}</p><button data-navrepc="${c.id}">⚑ Denunciar</button></div>`).join('') : '<p class="muted" style="color:var(--muted);font-size:14px">Ainda sem comentários. Comece a conversa!</p>';
 }
 const fmtN = n => (+n||0) >= 1000 ? ((+n)/1000).toFixed(1).replace('.0','').replace('.',',')+' mil' : String(+n||0);
@@ -2570,6 +2579,7 @@ $('#navComForm').onsubmit = async e=>{
   const name=(navUserName() || store.get('tp_name','') || $('#navComName').value.trim()).slice(0,40), body=$('#navComTxt').value.trim().slice(0,500);
   if(!name){ $('#navComName').hidden=false; $('#navComName').focus(); return toast('Qual é o seu nome?'); }
   if(body.length<2) return toast('Escreva o comentário.');
+  if(navProibido(name+' '+body)) return toast('🚫 Comentário não permitido: palavrão, ofensa ou conteúdo impróprio.');
   if(!navUserName()) store.set('tp_name', name);
   navComIdentity();
   $('#navComBtn').disabled=true;
@@ -2577,6 +2587,7 @@ $('#navComForm').onsubmit = async e=>{
   $('#navComBtn').disabled=false;
   if(!d) return toast('Não deu para comentar agora. Tente de novo.');
   if(d.status==='limite') return toast('Muitos comentários seguidos. Espere alguns minutos.');
+  if(d.status==='bloqueado') return toast('🚫 Comentário não permitido: palavrão, ofensa ou conteúdo impróprio.');
   $('#navComTxt').value='';
   if(d.status==='fila') return toast('Comentário enviado. Ele aparece depois de uma revisão.');
   toast('Comentário publicado 💬'); navLoadInfo(navCur);

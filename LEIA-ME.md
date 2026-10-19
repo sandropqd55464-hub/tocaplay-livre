@@ -217,3 +217,8 @@ Abra o site no Chrome do Android → menu ⋮ → **Instalar app** (ou **Adicion
 - Painel ADM: números da Navegação e fila de revisão com Aprovar/Remover.
 - Rodapé da página inicial corrigido (os links ficavam escondidos atrás da barra de baixo).
 - SQL novo: parte "Navegação TocaPlay" no fim do supabase.sql (rodar uma vez).
+
+## Versão 27/28 (19/10/2026)
+- Navegação em tela inteira no computador (vídeo grande + corredor de vídeos à direita), botão NAVEGAÇÃO vermelho, clicar no vídeo do destaque abre a Navegação.
+- Comentários fechados atrás do ícone 💬; quem tem conta comenta com o nome da conta, sem aviso.
+- Filtro forte: palavrão, ofensa, sexual/obsceno, pornografia, ameaça e ódio são bloqueados na hora (também com truques como p0rr4 ou porrraaa). Link vai para a revisão. SQL: parte "filtro forte (versão 28)" no fim do supabase.sql.

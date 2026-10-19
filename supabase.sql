@@ -362,3 +362,49 @@ grant execute on function public.nav_info(text,text), public.nav_like(text,text,
   public.nav_comment(text,text,text,text,text), public.nav_report(text,text,text), public.nav_trending() to anon, authenticated;
 revoke all on function public.admin_nav_fila(), public.admin_nav_decidir(text,text,boolean) from public, anon;
 grant execute on function public.admin_nav_fila(), public.admin_nav_decidir(text,text,boolean) to authenticated;
+
+
+-- ===== Navegação: filtro forte (versão 28) =====
+-- Bloqueia na hora: palavrão, ofensa, conteúdo sexual/obsceno, pornografia, ameaça e discurso de ódio.
+-- Funciona mesmo com truques: acentos, letras repetidas (porrraaa), números no lugar de letras (p0rr4) e letras separadas (p.o.r.r.a).
+create or replace function public.nav_normaliza(t text) returns text language sql immutable as $$
+  select regexp_replace(regexp_replace(
+           translate(lower(coalesce(t,'')), 'áàâãäéèêëíìîïóòôõöúùûüç0134578@$!|', 'aaaaaeeeeiiiiooooouuuucoieastbaasii'),
+         '[^a-z ]+', ' ', 'g'), '([a-z])\1+', '\1', 'g')
+$$;
+
+create or replace function public.nav_proibido(t text) returns boolean language sql immutable as $$
+  with n as (select ' ' || regexp_replace(nav_normaliza(t), '\s+', ' ', 'g') || ' ' as s)
+  select
+    -- palavras inteiras (forma já sem acento e sem letra repetida)
+    s ~ ' (pora|poras|caralh[a-z]*|buceta[a-z]*|buseta[a-z]*|puta|putas|puto|putos|putaria[a-z]*|merda[a-z]*|fod[aeio][a-z]*|fdp|vsf|vtnc|pqp|krl|tnc|cu|cus|cuzao|cuzinho|arombad[a-z]*|vagabund[a-z]*|cacete|otari[ao]s?|corn[ao]s?|punhet[a-z]*|xoxot[a-z]*|xerec[a-z]*|xota|bosta[a-z]*|desgracad[a-z]*|viad[ao][a-z]*|traveco[a-z]*|retardad[ao]s?|mongoloide[a-z]*|piroca[a-z]*|pica|picas|siririca[a-z]*|boquete[a-z]*|gozad[ao]s?|gozei|tesao|tesud[ao]s?|safad[ao]s?|sexo|sexual|porn[a-z]*|nudes?|pelad[ao]s? na cam|estupr[a-z]*|pedofil[a-z]*|zoofil[a-z]*|incest[a-z]*|xvideos|pornhub|onlyfans|privacy|sacanagem|bucetinh[a-z]*|transar|trepar|chupa (meu|minha)|vai se f[a-z]*|filh[ao] da puta|vou te matar|te matar|se mata|morre logo|vou te pegar) '
+    -- mesmas palavras fortes escritas com letras separadas (p o r r a)
+    or replace(s, ' ', '') ~ '(caralh|buceta|buseta|putaria|punhet|xoxot|xerec|piroca|siririca|boquete|pornografia|pornhub|xvideos|onlyfans|estupr|pedofil|zoofil|filhodaputa|filhadaputa|vaisefoder|arombad|desgracad)'
+  from n
+$$;
+
+create or replace function public.nav_comment(p_vid text, p_dev text, p_name text, p_body text, p_ch text) returns json
+language plpgsql security definer set search_path = public as $$
+declare v_motivo text; v_status text := 'ok';
+begin
+  -- limite: 5 comentários a cada 10 minutos por aparelho
+  if (select count(*) from nav_comments where device_id = p_dev and created_at > now() - interval '10 minutes') >= 5 then
+    return json_build_object('status','limite');
+  end if;
+  -- bloqueio na hora: não é publicado (fica guardado só como registro, e o aparelho perde a aprovação automática)
+  if nav_proibido(p_name || ' ' || p_body) then
+    insert into nav_comments(vid, device_id, ch, name, body, status, motivo)
+    values (left(p_vid,64), left(p_dev,64), left(p_ch,80), left(trim(p_name),40), left(trim(p_body),500), 'removido', 'bloqueado pelo filtro');
+    return json_build_object('status','bloqueado');
+  end if;
+  -- quem já teve comentário removido ou bloqueado passa pela revisão
+  if exists(select 1 from nav_comments where device_id = p_dev and status = 'removido') then
+    v_motivo := 'aparelho com bloqueio anterior';
+  end if;
+  -- link (possível golpe) vai para a revisão
+  if p_body ~* '(https?://|www\.|\.com($|[^a-z])|\.br($|[^a-z])|wa\.me|bit\.ly)' then v_motivo := 'link'; end if;
+  if v_motivo is not null then v_status := 'fila'; end if;
+  insert into nav_comments(vid, device_id, ch, name, body, status, motivo)
+  values (left(p_vid,64), left(p_dev,64), left(p_ch,80), left(trim(p_name),40), left(trim(p_body),500), v_status, v_motivo);
+  return json_build_object('status', v_status);
+end $$;
