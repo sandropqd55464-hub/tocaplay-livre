@@ -215,3 +215,150 @@ end $$;
 
 revoke all on function public.admin_stats() from public, anon;
 grant execute on function public.admin_stats() to authenticated;
+
+
+-- ===== Navegação TocaPlay (Etapa 1): curtidas, comentários, compartilhamentos e denúncias =====
+-- Tudo passa por funções seguras; as tabelas ficam fechadas para acesso direto.
+create table if not exists nav_likes (vid text not null, device_id text not null, ch text, created_at timestamptz default now(), primary key (vid, device_id));
+create table if not exists nav_events (id bigserial primary key, vid text not null, device_id text, ch text, kind text not null check (kind in ('view','share')), created_at timestamptz default now());
+create table if not exists nav_comments (id bigserial primary key, vid text not null, device_id text, user_id uuid default auth.uid(), ch text,
+  name text not null check (char_length(name) between 1 and 40), body text not null check (char_length(body) between 2 and 500),
+  status text not null default 'ok' check (status in ('ok','fila','removido')), motivo text, created_at timestamptz default now());
+create table if not exists nav_reports (id bigserial primary key, target text not null, device_id text not null, reason text, created_at timestamptz default now(), unique (target, device_id));
+create table if not exists nav_hidden (target text primary key, status text not null default 'fila' check (status in ('fila','removido','ok')), created_at timestamptz default now());
+create index if not exists nav_events_vid on nav_events(vid, kind);
+create index if not exists nav_events_time on nav_events(created_at);
+create index if not exists nav_comments_vid on nav_comments(vid, status);
+alter table nav_likes enable row level security;
+alter table nav_events enable row level security;
+alter table nav_comments enable row level security;
+alter table nav_reports enable row level security;
+alter table nav_hidden enable row level security;
+
+-- filtro automático: palavrões, ofensas e links (golpes) vão para a fila de revisão
+create or replace function public.nav_suspeito(t text) returns text language sql immutable as $$
+  select case
+    when t ~* '(^|[^a-zà-ú])(porra|caralh\w*|buceta|put[ao]s?|putaria|merda|fod[aeiu]\w*|fdp|viad[oa]\w*|arrombad\w*|vagabund\w*|piranha|cacete|otari[oa]s?|corn[oa]s?|punhet\w*|xoxota|bostas?|vsf|vtnc|pqp|krl|desgra[cç]ad\w*)($|[^a-zà-ú])' then 'palavrão ou ofensa'
+    when t ~* '(https?://|www\.|\.com($|[^a-z])|\.br($|[^a-z]))' then 'link'
+    else null end
+$$;
+
+create or replace function public.nav_info(p_vid text, p_dev text) returns json
+language sql security definer set search_path = public as $$
+  select json_build_object(
+    'hidden',   exists(select 1 from nav_hidden where target = 'v:'||p_vid and status <> 'ok'),
+    'likes',    (select count(*) from nav_likes where vid = p_vid),
+    'liked',    exists(select 1 from nav_likes where vid = p_vid and device_id = p_dev),
+    'views',    (select count(*) from nav_events where vid = p_vid and kind = 'view'),
+    'shares',   (select count(*) from nav_events where vid = p_vid and kind = 'share'),
+    'comments', (select coalesce(json_agg(x order by x.created_at desc),'[]') from (
+                   select c.id, c.name, c.body, c.created_at from nav_comments c
+                   where c.vid = p_vid and c.status = 'ok' order by c.created_at desc limit 50) x)
+  );
+$$;
+
+create or replace function public.nav_like(p_vid text, p_dev text, p_ch text) returns json
+language plpgsql security definer set search_path = public as $$
+begin
+  if exists(select 1 from nav_likes where vid = p_vid and device_id = p_dev) then
+    delete from nav_likes where vid = p_vid and device_id = p_dev;
+  else
+    insert into nav_likes(vid, device_id, ch) values (left(p_vid,64), left(p_dev,64), left(p_ch,80));
+  end if;
+  return json_build_object('likes', (select count(*) from nav_likes where vid = p_vid),
+                           'liked', exists(select 1 from nav_likes where vid = p_vid and device_id = p_dev));
+end $$;
+
+create or replace function public.nav_event(p_vid text, p_dev text, p_kind text, p_ch text) returns void
+language plpgsql security definer set search_path = public as $$
+begin
+  if p_kind not in ('view','share') then return; end if;
+  -- 1 visualização por aparelho, por vídeo, por dia
+  if p_kind = 'view' and exists(select 1 from nav_events where vid = p_vid and device_id = p_dev and kind = 'view' and created_at > now() - interval '1 day') then return; end if;
+  insert into nav_events(vid, device_id, kind, ch) values (left(p_vid,64), left(p_dev,64), p_kind, left(p_ch,80));
+end $$;
+
+create or replace function public.nav_comment(p_vid text, p_dev text, p_name text, p_body text, p_ch text) returns json
+language plpgsql security definer set search_path = public as $$
+declare v_motivo text; v_status text := 'ok';
+begin
+  -- limite: 5 comentários a cada 10 minutos por aparelho
+  if (select count(*) from nav_comments where device_id = p_dev and created_at > now() - interval '10 minutes') >= 5 then
+    return json_build_object('status','limite');
+  end if;
+  -- quem já teve comentário removido perde a aprovação automática
+  if exists(select 1 from nav_comments where device_id = p_dev and status = 'removido') then
+    v_motivo := 'aparelho com remoção anterior';
+  end if;
+  v_motivo := coalesce(nav_suspeito(p_name || ' ' || p_body), v_motivo);
+  if v_motivo is not null then v_status := 'fila'; end if;
+  insert into nav_comments(vid, device_id, ch, name, body, status, motivo)
+  values (left(p_vid,64), left(p_dev,64), left(p_ch,80), left(trim(p_name),40), left(trim(p_body),500), v_status, v_motivo);
+  return json_build_object('status', v_status);
+end $$;
+
+create or replace function public.nav_report(p_target text, p_dev text, p_reason text) returns void
+language plpgsql security definer set search_path = public as $$
+begin
+  insert into nav_reports(target, device_id, reason) values (left(p_target,80), left(p_dev,64), left(p_reason,40))
+    on conflict (target, device_id) do nothing;
+  -- 3 denúncias de aparelhos diferentes: sai do ar na hora e vai para a fila do painel ADM
+  if (select count(*) from nav_reports where target = p_target) >= 3 then
+    if p_target like 'c:%' then
+      update nav_comments set status = 'fila', motivo = '3 denúncias' where id = substr(p_target,3)::bigint and status = 'ok';
+    else
+      insert into nav_hidden(target) values (p_target)
+        on conflict (target) do update set status = 'fila', created_at = now() where nav_hidden.status = 'ok';
+    end if;
+  end if;
+end $$;
+
+-- "Em alta" da aba Geral: últimos 7 dias; compartilhar vale mais que curtir, que vale mais que assistir
+create or replace function public.nav_trending() returns json
+language sql security definer set search_path = public as $$
+  select coalesce(json_agg(x order by x.score desc),'[]') from (
+    select vid, max(ch) as ch, sum(p) as score from (
+      select vid, ch, 4 as p from nav_events where kind = 'share' and created_at > now() - interval '7 days'
+      union all select vid, ch, 1 from nav_events where kind = 'view' and created_at > now() - interval '7 days'
+      union all select vid, ch, 3 from nav_likes where created_at > now() - interval '7 days'
+    ) t where not exists(select 1 from nav_hidden h where h.target = 'v:'||t.vid and h.status <> 'ok')
+    group by vid order by score desc limit 30) x;
+$$;
+
+-- Painel ADM: fila de suspeitos e números da Navegação
+create or replace function public.admin_nav_fila() returns json
+language plpgsql security definer set search_path = public as $$
+begin
+  if coalesce(auth.jwt()->>'email','') <> 'sandropqd55464@gmail.com' then raise exception 'acesso negado'; end if;
+  return json_build_object(
+    'comentarios', (select coalesce(json_agg(x),'[]') from (
+        select id, vid, ch, name, body, motivo, created_at from nav_comments where status = 'fila' order by created_at desc limit 100) x),
+    'videos', (select coalesce(json_agg(x),'[]') from (
+        select h.target, h.created_at, (select count(*) from nav_reports r where r.target = h.target) as denuncias
+        from nav_hidden h where h.status = 'fila' order by h.created_at desc limit 100) x),
+    'totais', json_build_object(
+        'curtidas_7d',    (select count(*) from nav_likes where created_at > now() - interval '7 days'),
+        'views_7d',       (select count(*) from nav_events where kind = 'view' and created_at > now() - interval '7 days'),
+        'shares_7d',      (select count(*) from nav_events where kind = 'share' and created_at > now() - interval '7 days'),
+        'comentarios_7d', (select count(*) from nav_comments where created_at > now() - interval '7 days')));
+end $$;
+
+create or replace function public.admin_nav_decidir(p_tipo text, p_id text, p_aprovar boolean) returns void
+language plpgsql security definer set search_path = public as $$
+begin
+  if coalesce(auth.jwt()->>'email','') <> 'sandropqd55464@gmail.com' then raise exception 'acesso negado'; end if;
+  if p_tipo = 'comentario' then
+    update nav_comments set status = case when p_aprovar then 'ok' else 'removido' end where id = p_id::bigint;
+    if p_aprovar then delete from nav_reports where target = 'c:'||p_id; end if;
+  else
+    update nav_hidden set status = case when p_aprovar then 'ok' else 'removido' end where target = p_id;
+    if p_aprovar then delete from nav_reports where target = p_id; end if;
+  end if;
+end $$;
+
+revoke all on function public.nav_info(text,text), public.nav_like(text,text,text), public.nav_event(text,text,text,text),
+  public.nav_comment(text,text,text,text,text), public.nav_report(text,text,text), public.nav_trending() from public;
+grant execute on function public.nav_info(text,text), public.nav_like(text,text,text), public.nav_event(text,text,text,text),
+  public.nav_comment(text,text,text,text,text), public.nav_report(text,text,text), public.nav_trending() to anon, authenticated;
+revoke all on function public.admin_nav_fila(), public.admin_nav_decidir(text,text,boolean) from public, anon;
+grant execute on function public.admin_nav_fila(), public.admin_nav_decidir(text,text,boolean) to authenticated;

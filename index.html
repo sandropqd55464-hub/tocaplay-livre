@@ -543,6 +543,61 @@ a.pill{color:var(--txt);text-decoration:none}
 .steps{color:var(--muted);font-size:14.5px;line-height:1.6;margin:4px 0 14px;padding-left:20px}
 .steps b{color:var(--txt)}
 .hint{background:var(--card);border-radius:12px;padding:10px 12px;color:var(--muted);font-size:13px;line-height:1.45;margin-bottom:12px}
+/* ---------- Navegação (feed de vídeos) ---------- */
+.feat-nav{position:absolute;z-index:5;left:12px;top:12px;display:flex;align-items:center;gap:7px;padding:9px 15px;border-radius:999px;
+  font-weight:900;font-size:13.5px;letter-spacing:.08em;color:#1a1300;background:linear-gradient(90deg,#ffd23f,#19c37d);animation:navPulse 2s infinite}
+@keyframes navPulse{0%{box-shadow:0 0 0 0 rgba(255,210,63,.65)}70%{box-shadow:0 0 0 14px rgba(255,210,63,0)}100%{box-shadow:0 0 0 0 rgba(255,210,63,0)}}
+body.in-nav .side,body.in-nav .side-r{display:none!important}
+body.in-nav main{max-width:1240px}
+@media (min-width:1200px){ body.in-nav main{margin-left:auto;margin-right:auto} body.in-nav .mini{left:8px;right:8px;margin:0 auto} }
+.nav-top{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin:4px 0 12px}
+.nav-top .brand{display:flex;align-items:center;gap:8px;font-weight:900;font-size:19px}
+.nav-top .brand img{width:30px;height:30px;border-radius:9px}
+.nav-tabs{display:flex;gap:6px;margin-left:auto}
+.nav-tabs button{padding:8px 16px;border-radius:999px;background:var(--card);font-weight:800;font-size:14px;color:var(--muted)}
+.nav-tabs button.on{background:var(--yellow);color:#1a1300}
+.nav-grid{display:block}
+@media (min-width:900px){ .nav-grid{display:grid;grid-template-columns:minmax(0,1fr) 360px;gap:22px;align-items:start} }
+.nav-player{position:relative;width:100%;aspect-ratio:16/9;border-radius:16px;overflow:hidden;background:#000}
+.nav-player iframe,.nav-player>div{position:absolute;top:0;left:0;width:100%;height:100%;border:0}
+@supports not (aspect-ratio:1/1){ .nav-player{height:0;padding-top:56.25%} }
+.nav-title{font-size:19px;line-height:1.3;margin:12px 0 8px;font-weight:800}
+.nav-ch{display:flex;align-items:center;gap:10px;margin-bottom:10px}
+.nav-ch .av{width:40px;height:40px;border-radius:50%;overflow:hidden;display:grid;place-items:center;font-weight:800;font-size:13px;flex:none;position:relative}
+.nav-ch .av img{position:absolute;top:0;left:0;width:100%;height:100%;object-fit:cover}
+.nav-ch b{display:block;font-size:15px}.nav-ch small{color:var(--muted);font-size:13px}
+.nav-acts{display:flex;gap:8px;flex-wrap:wrap;margin:6px 0 4px}
+.nav-acts button{display:flex;align-items:center;gap:7px;padding:10px 15px;border-radius:999px;background:var(--card);font-weight:800;font-size:14px}
+.nav-acts button.on{background:var(--yellow);color:#1a1300}
+.nav-acts button span{font-variant-numeric:tabular-nums}
+.nav-acts .rep{color:var(--muted);font-weight:600}
+.nav-views{color:var(--muted);font-size:13px;margin:6px 2px 0}
+.nav-brand{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-top:8px;padding:8px 12px;border-radius:12px;background:linear-gradient(90deg,rgba(255,210,63,.12),rgba(25,195,125,.12));font-size:12.5px;color:var(--muted)}
+.nav-brand b{color:var(--yellow)}
+.nav-com{margin-top:14px;background:var(--card);border-radius:16px;padding:14px}
+.nav-com h3{font-size:15px;margin-bottom:10px}
+.nav-com form{display:flex;flex-direction:column;gap:8px;margin-bottom:12px}
+.nav-com input,.nav-com textarea{width:100%;background:var(--bg);border:1px solid var(--line);border-radius:12px;padding:11px 12px;font-size:15px;color:var(--txt);font-family:inherit;outline:0;resize:vertical}
+.nav-com textarea{min-height:44px}
+.nav-com form .btn{align-self:flex-end;padding:9px 18px}
+.nav-c{padding:10px 0;border-top:1px solid var(--line)}
+.nav-c b{font-size:14px}.nav-c small{color:var(--muted);font-size:12px;margin-left:6px}
+.nav-c p{font-size:14.5px;margin-top:3px;white-space:pre-wrap;word-break:break-word}
+.nav-c button{font-size:12px;color:var(--muted);margin-top:4px}
+.nav-side h3{font-size:14px;color:var(--muted);margin:16px 0 8px;letter-spacing:.04em}
+@media (min-width:900px){ .nav-side h3{margin-top:0} }
+.nv{display:flex;gap:10px;width:100%;text-align:left;padding:6px;border-radius:12px;margin-bottom:6px}
+.nv:hover,.nv:focus-visible{background:var(--card)}
+.nv.cur{background:var(--card);outline:2px solid var(--yellow)}
+.nv .th{width:150px;flex:none;aspect-ratio:16/9;border-radius:10px;overflow:hidden;position:relative;background:var(--card2)}
+@supports not (aspect-ratio:1/1){ .nv .th{height:84px} }
+.nv .th img{position:absolute;top:0;left:0;width:100%;height:100%;object-fit:cover}
+.nv .th i{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-style:normal;font-weight:800}
+.nv .th em{position:absolute;right:5px;bottom:5px;font-style:normal;font-size:10.5px;font-weight:800;padding:2px 6px;border-radius:5px;background:rgba(0,0,0,.7)}
+.nv div b{display:block;font-size:14px;line-height:1.25}
+.nv div small{display:block;color:var(--muted);font-size:12.5px;margin-top:3px}
+.nav-side .ad-slot{margin:8px 0}
+.nav-more{width:100%;padding:12px;border-radius:12px;border:1px dashed var(--line);color:var(--muted);font-weight:700;margin-top:6px}
 </style>
 </head>
 <body>
@@ -600,6 +655,7 @@ a.pill{color:var(--txt);text-decoration:none}
       <div class="feat-dots" id="featDots"></div>
       <div class="feat-prog"><i id="featProg"></i></div>
       <button class="feat-sound" id="featSound" aria-label="Ligar som">🔇 <span>Ouvir</span></button>
+      <button class="feat-nav" id="featNav" aria-label="Abrir a Navegação de vídeos">🧭 NAVEGAÇÃO</button>
     </div>
     <div class="intro">
       <h1>Rádio boa, <span class="gold">de graça</span>, do Oiapoque ao Chuí.</h1>
@@ -646,6 +702,41 @@ a.pill{color:var(--txt);text-decoration:none}
     <button class="more" id="homeMore" hidden>Carregar mais rádios</button>
     <div class="ad-slot" data-ad="fim"></div>
     <div class="site-links"><a href="sobre.html">Sobre o TocaPlay</a><a href="como-usar.html">Como usar</a><a href="radios-por-estado.html">Rádios por estado</a><a href="radios-gospel.html">Rádios gospel</a><a href="artistas-gospel.html">Artistas gospel</a><a href="radios-romanticas.html">Rádios românticas</a><a href="privacidade.html">Privacidade</a><a href="admin.html" class="adm" rel="nofollow">Acesso ADM</a></div>
+  </section>
+
+  <!-- NAVEGAÇÃO: feed de vídeos com curtir, comentar e compartilhar (contagem do próprio TocaPlay) -->
+  <section class="view" id="v-nav">
+    <div class="nav-top">
+      <div class="brand"><img src="icon.svg" alt="">Navegação</div>
+      <div class="nav-tabs" role="tablist"><button class="on" data-navtab="foryou">Para você</button><button data-navtab="geral">Geral</button></div>
+    </div>
+    <div class="nav-grid">
+      <div class="nav-main">
+        <div class="nav-player" id="navPlayer"><div id="navYt"></div></div>
+        <h1 class="nav-title" id="navTitle">Carregando…</h1>
+        <div class="nav-ch" id="navCh"></div>
+        <div class="nav-acts">
+          <button id="navLike" aria-label="Curtir">👍 <span id="navLikeN">0</span></button>
+          <button id="navComGo" aria-label="Comentários">💬 <span id="navComN">0</span></button>
+          <button id="navShare" aria-label="Compartilhar">↗ Compartilhar <span id="navShareN">0</span></button>
+          <button id="navNext" aria-label="Próximo vídeo">Próximo ⏭</button>
+          <button id="navReport" class="rep" aria-label="Denunciar vídeo">⚑ Denunciar</button>
+        </div>
+        <div class="nav-views" id="navViews"></div>
+        <div class="nav-brand"><span>Assistindo no <b>TocaPlay Livre</b> · curtidas e comentários contados aqui</span><span>tocaplaylivre.com.br</span></div>
+        <div class="nav-com" id="navCom">
+          <h3>Comentários</h3>
+          <form id="navComForm">
+            <input id="navComName" maxlength="40" placeholder="Seu nome" autocomplete="name">
+            <textarea id="navComTxt" maxlength="500" placeholder="Escreva um comentário com respeito"></textarea>
+            <button class="btn" id="navComBtn">Comentar</button>
+          </form>
+          <div id="navComList"></div>
+        </div>
+      </div>
+      <aside class="nav-side" id="navSide"><h3>A SEGUIR</h3><div id="navList"></div><button class="nav-more" id="navMore">Carregar mais vídeos</button></aside>
+    </div>
+    <div id="navHarvest" aria-hidden="true" style="position:absolute;left:-9999px;top:0;width:200px;height:120px;overflow:hidden"></div>
   </section>
 
   <!-- BUSCAR -->
@@ -1022,7 +1113,7 @@ function play(s){
   if(s.yt) return playSong(s);
   ensureRadioQueue(s);
   setTimeout(featQuiet,0);
-  stopTv(); stopSong(); $('#ytBox').hidden=true;
+  stopTv(); stopSong(); navPause(); $('#ytBox').hidden=true;
   current = s; store.set('tp_last', s);
   loading = true; updatePlayer();
   audio.src = s.url; audio.play().catch(err=>{ if(err.name!=='AbortError') failed(); });
@@ -1990,6 +2081,7 @@ if(IS_TV){
 const FEAT_PER_CAT = (typeof CONFIG!=='undefined' && CONFIG.HOME_PER_CATEGORY) || 2;
 const FEAT_SECONDS = (typeof CONFIG!=='undefined' && CONFIG.HOME_SECONDS) || 10;
 const PROMOS = [
+  {promo:true, id:'nav', emoji:'🧭', name:'Navegação TocaPlay', desc:'Vídeos um atrás do outro: curta, comente e compartilhe.', cta:'🧭 Abrir a Navegação', bg:'linear-gradient(120deg,#2b2300,#19c37d,#2b2300)', act:()=>go('nav')},
   {promo:true, id:'app', emoji:'📲', name:'Baixe o app TocaPlay', desc:'Grátis. Fica com ícone no seu celular, computador ou TV.', cta:'📲 Baixar agora', bg:'linear-gradient(120deg,#0b3d2e,#14a37f,#0b3d2e)', act:()=>openInstall()},
   {promo:true, id:'gym', emoji:'🏋️', name:'Modo Academia', desc:'Música para treinar sem parar, em tela cheia.', cta:'▶ Começar o treino', bg:'linear-gradient(120deg,#3a0d0d,#d1362f,#3a0d0d)', act:()=>$('#gymBanner').click()},
   {promo:true, id:'gospel', emoji:'🎤', name:'Galeria Gospel', desc:'Os maiores artistas gospel do Brasil e do mundo, num lugar só.', cta:'▶ Ver artistas', bg:'linear-gradient(120deg,#2b1a00,#c99a1c,#2b1a00)', act:()=>{ tvCat='Cristão'; tvSub='Gospel Nacional'; tvQ=''; renderTv(); go('tv'); }},
@@ -2020,7 +2112,7 @@ function featVideoOk(){
 }
 // Som do destaque: os navegadores só deixam tocar som depois do primeiro toque na tela.
 let featSound = false, featUserMuted = false;
-const mediaBusy = () => !audio.paused || !!tvCurrent || ytState===1 || ytState===3;
+const mediaBusy = () => !audio.paused || !!tvCurrent || ytState===1 || ytState===3 || navState===1 || navState===3;
 function featApplySound(){
   const want = featSound && !featUserMuted && !mediaBusy() && curView==='home';
   if(featYt && featYt.unMute){ try{ if(want){ featYt.unMute(); featYt.setVolume(85); } else featYt.mute(); }catch{} }
@@ -2143,9 +2235,11 @@ function go(view, push=true){
   scrollTo({top:0});
   if(view==='search') setTimeout(()=>$('#q').focus(),50);
   if(view==='home') renderFeat(); else featStopVideo();
+  document.body.classList.toggle('in-nav', view==='nav');
+  if(view==='nav') enterNav(); else navPause();
   setTimeout(fillAds, 300);
   if(view==='pod') enterPods();
-  logArea({home:'Início', search:'Busca de rádios', tv:'TV', pod:'Podcasts', favs:'Favoritas', account:'Perfil', playlist:'Playlists'}[view]);
+  logArea({home:'Início', search:'Busca de rádios', tv:'TV', nav:'Navegação', pod:'Podcasts', favs:'Favoritas', account:'Perfil', playlist:'Playlists'}[view]);
   requestAnimationFrame(()=>document.querySelectorAll('.view.active .row-wrap').forEach(rowArrows));
 }
 document.querySelectorAll('nav button').forEach(b=>b.onclick=()=>go(b.dataset.view));
@@ -2272,6 +2366,243 @@ function fillAds(){
   addEventListener('resize', ()=>{ if(!raf) raf=requestAnimationFrame(measure); });
 })();
 
+/* ---------- Navegação: feed de vídeos com curtir, comentar e compartilhar (Etapa 1) ---------- */
+// Vídeos dos canais oficiais (player oficial do YouTube). Curtidas, comentários e compartilhamentos
+// são contados pelo próprio TocaPlay, começando do zero para cada vídeo.
+const NAV_CHANS = TV_CHANNELS.filter(c=>c.channelId && c.live!=='first' && c.cat!=='TV Ao Vivo');
+const NAV_BAD = /(^|[^a-zà-ú])(porra|caralh\w*|buceta|put[ao]s?|putaria|merda|fod[aeiu]\w*|fdp|viad[oa]\w*|arrombad\w*|vagabund\w*|piranha|cacete|otari[oa]s?|corn[oa]s?|punhet\w*|xoxota|bostas?|vsf|vtnc|pqp|krl|desgra[cç]ad\w*)(?=$|[^a-zà-ú])/i;
+const NAV_LINK = /https?:\/\/|www\.|\.com\b|\.br\b/i;
+let navTab='foryou', navFeed=[], navI=-1, navP=null, navState=-1, navCur=null, navStart=0, navSeeded=false, navToken=0;
+let navOrder=[], navOi=0, navHot={}, navTrend=[], navExtending=false, navViewT=null, navDeep=null;
+const navPref = ()=>{ const p=store.get('tp_navpref',null); return p && p.ch ? p : {ch:{},cat:{}}; };
+// O algoritmo aprende com o que a pessoa faz: assistir até o fim, curtir e compartilhar somam; pular rápido diminui
+function navLearn(c, pts){
+  if(!c) return; const p=navPref();
+  p.ch[c.name]=(p.ch[c.name]||0)+pts; p.cat[c.cat]=(p.cat[c.cat]||0)+pts/2;
+  tvSubsOf(c).forEach(s=>p.cat[s]=(p.cat[s]||0)+pts/2);
+  store.set('tp_navpref',p);
+}
+function navScore(c, p){
+  const h=new Date().getHours(); let t=0;
+  if(h>=5 && h<11 && (c.cat==='Cristão' || c.cat==='Cultos e Missas')) t+=1;
+  if((h>=21 || h<5) && c.cat==='Músicas para Dormir') t+=1.5;
+  if(h>=17 && h<23 && (c.cat==='Esportes' || c.cat==='Podcasts')) t+=.5;
+  const cat=(p.cat[c.cat]||0) + tvSubsOf(c).reduce((a,s)=>a+(p.cat[s]||0),0);
+  return (p.ch[c.name]||0) + cat/2 + (navHot[c.name]||0) + t + Math.random()*2;
+}
+const navShuffle = a => a.map(v=>[Math.random(),v]).sort((x,y)=>x[0]-y[0]).map(x=>x[1]);
+function navBuildOrder(){
+  if(navTab==='foryou'){
+    const p=navPref(), ranked=NAV_CHANS.slice().sort((a,b)=>navScore(b,p)-navScore(a,p));
+    const half=Math.ceil(ranked.length/2), top=ranked.slice(0,half), low=navShuffle(ranked.slice(half));
+    navOrder=[]; let k=0;
+    while(top.length || low.length){ navOrder.push((k%5===4 && low.length) || !top.length ? low.shift() : top.shift()); k++; }   // 1 em cada 5: novidade
+  } else navOrder = navShuffle(NAV_CHANS.slice());
+  navOi=0;
+}
+// Pega a lista de vídeos de um canal pelo player oficial do YouTube (sem chave e sem custo). Guarda por 6 horas.
+const navHq=[]; let navHBusy=false, navHOk=0, navHFail=0;
+function navIds(c, kind='UULF'){
+  const key='tp_nv_'+kind+c.channelId, hit=store.get(key,null);
+  if(hit && hit.ids && Date.now()-hit.t < 6*3600e3) return Promise.resolve(hit.ids);
+  if(navHFail>=2 && !navHOk) return Promise.resolve([]);   // a lista não carregou: usa o modo simples, sem esperar
+  return new Promise(res=>{ navHq.push({c,kind,key,res}); navHRun(); });
+}
+function navHRun(){
+  if(navHBusy || !navHq.length) return; navHBusy=true;
+  const job=navHq.shift();
+  whenYT(()=>{
+    const box=$('#navHarvest'); box.innerHTML='<div id="navHv"></div>';
+    let done=false, iv=null, p=null;
+    const finish=ids=>{ if(done) return; done=true; clearInterval(iv); clearTimeout(to);
+      try{ p && p.destroy(); }catch{} box.innerHTML='';
+      if(ids.length){ navHOk++; store.set(job.key,{t:Date.now(), ids}); } else navHFail++;
+      job.res(ids); navHBusy=false; setTimeout(navHRun,60); };
+    const to=setTimeout(()=>finish([]), 5000);
+    try{
+      p=new YT.Player('navHv',{width:200, height:120,
+        playerVars:{listType:'playlist', list:job.kind+job.c.channelId.slice(2), autoplay:0, mute:1, playsinline:1},
+        events:{ onReady:()=>{ iv=setInterval(()=>{ try{ const l=p.getPlaylist(); if(l && l.length) finish(l.slice(0,30)); }catch{} },300); },
+                 onError:()=>finish([]) }});
+    }catch{ finish([]); }
+  });
+}
+const navSeen = vid => !!vid && navFeed.some(x=>x.vid===vid);
+async function navExtend(nCh=4){
+  if(navExtending) return; navExtending=true;
+  const tab=navTab;
+  try{
+    if(tab==='geral' && navOi===0){
+      navTrend.slice(0,12).forEach(t=>{ const c=TV_CHANNELS.find(x=>x.name===t.ch); if(c && t.vid && !navSeen(t.vid)) navFeed.push({c, vid:t.vid}); });
+      navRenderList(); if(!navCur && navFeed.length) navPlay(0);
+    }
+    if(navOi>=navOrder.length) navBuildOrder();
+    const chans=navOrder.slice(navOi, navOi+nCh); navOi+=chans.length;
+    for(const c of chans){
+      if(!navCur && !navFeed.length){ navFeed.push({c, vid:null, idx:0}); navRenderList(); navPlay(0); continue; }   // começa a tocar na hora
+      const ids=await navIds(c,'UULF');
+      if(tab!==navTab) return;
+      if(ids.length) navShuffle(ids.slice(0,12).filter(v=>!navSeen(v))).slice(0,2).forEach(vid=>navFeed.push({c, vid}));
+      else navFeed.push({c, vid:null, idx:Math.floor(Math.random()*4)});
+      navRenderList();
+      if(!navCur && navFeed.length) navPlay(0);
+    }
+  } finally { navExtending=false; }
+}
+function navThumb(it){
+  if(it.vid) return `<img src="https://i.ytimg.com/vi/${esc(it.vid)}/mqdefault.jpg" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="this.remove()">`;
+  const av=avatarUrl(it.c); return `<i>${esc(it.c.short||initials(it.c.name))}</i>${av?`<img src="${esc(av)}" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="this.remove()">`:''}`;
+}
+// A lista "A seguir" cresce para baixo; a cada 6 vídeos entra um espaço de propaganda (separado do conteúdo)
+function navRenderList(){
+  const L=$('#navList'); let n=+(L.dataset.n||0);
+  let html='';
+  for(; n<navFeed.length; n++){
+    const it=navFeed[n];
+    html += `<button class="nv" data-nv="${n}"><div class="th" style="background:${esc(it.c.color||'var(--card2)')}">${navThumb(it)}<em>▶</em></div><div><b data-nvt="${n}">${esc(it.title||it.c.name)}</b><small>${esc(it.c.name)} · ${esc(tvSubsOf(it.c)[0]||it.c.cat)}</small></div></button>`;
+    if(n%6===5) html += `<div class="ad-slot" data-ad="nav-${n}"></div>`;
+  }
+  if(html) L.insertAdjacentHTML('beforeend', html);
+  L.dataset.n = n;
+  L.querySelectorAll('.nv.cur').forEach(b=>b.classList.remove('cur'));
+  const cur=L.querySelector(`[data-nv="${navI}"]`); if(cur) cur.classList.add('cur');
+  if(curView==='nav') setTimeout(fillAds,300);
+}
+function navSkipCheck(){
+  if(!navCur) return; const w=Date.now()-navStart;
+  if(w<8000) navLearn(navCur.c,-1); else if(w>45000) navLearn(navCur.c,1.5);
+}
+function navPlay(i){
+  const it=navFeed[i]; if(!it) return;
+  navSkipCheck();
+  navI=i; navCur=it; navStart=Date.now(); clearTimeout(navViewT);
+  if(!audio.paused) audio.pause();
+  stopTv(); stopSong(); featStopVideo();
+  $('#navTitle').textContent = it.title || it.c.name;
+  const av=avatarUrl(it.c);
+  $('#navCh').innerHTML = `<div class="av" style="background:${esc(it.c.color||'var(--card2)')}">${esc(it.c.short||initials(it.c.name))}${av?`<img src="${esc(av)}" alt="" referrerpolicy="no-referrer" onerror="this.remove()">`:''}</div><div><b>${esc(it.c.name)}</b><small>${esc([it.c.cat, ...tvSubsOf(it.c)].join(' · '))}</small></div>`;
+  navShowInfo(null);
+  const tok=++navToken;
+  whenYT(()=>{
+    if(tok!==navToken) return;
+    const pl = {listType:'playlist', list:uploadsList(it.c), index:it.idx||0};
+    if(!navP){
+      navP = new YT.Player('navYt', {width:'100%', height:'100%', ...(it.vid ? {videoId:it.vid} : {}),
+        playerVars:{autoplay:1, playsinline:1, rel:0, modestbranding:1, ...(it.vid ? {} : pl)},
+        events:{
+          onReady:e=>{ try{ e.target.playVideo(); }catch{} },
+          onStateChange:navOnState,
+          onError:()=>{ toast('Este vídeo não abre fora do YouTube. Indo para o próximo…'); setTimeout(()=>navGo(1),1200); }
+        }});
+    } else if(it.vid) navP.loadVideoById(it.vid);
+    else navP.loadPlaylist(pl);
+  });
+  navRenderList();
+  const cur=$('#navList').querySelector('.nv.cur'); if(cur && innerWidth>=900) cur.scrollIntoView({block:'nearest', behavior:'smooth'});
+  if(navI+4 >= navFeed.length) navExtend();
+  logArea('Navegação');
+}
+function navOnState(e){
+  navState=e.data; featApplySound();
+  if(e.data===1 && navCur){
+    let d={}; try{ d=navP.getVideoData()||{}; }catch{}
+    if(d.video_id && navCur.vid!==d.video_id){ navCur.vid=d.video_id; }
+    if(d.title){ navCur.title=d.title; $('#navTitle').textContent=d.title; const t=document.querySelector(`[data-nvt="${navI}"]`); if(t) t.textContent=d.title; }
+    if(navCur.vid && navCur.infoFor!==navCur.vid){ navCur.infoFor=navCur.vid; navLoadInfo(navCur);
+      const it=navCur; clearTimeout(navViewT); navViewT=setTimeout(()=>{ if(navCur===it) navRpc('nav_event',{p_vid:it.vid, p_dev:deviceId(), p_kind:'view', p_ch:it.c.name}); },5000); }
+  }
+  if(e.data===0){ navLearn(navCur && navCur.c, 2); navGo(1); }
+}
+function navGo(step){ const j=navI+step; if(j>=0 && j<navFeed.length) navPlay(j); else if(step>0){ navExtend().then(()=>{ if(navFeed[navI+1]) navPlay(navI+1); }); } }
+function navPause(){ if(navP && navP.pauseVideo) try{ navP.pauseVideo(); }catch{} }
+async function navRpc(fn, args){ if(!sb) return null; try{ const {data,error}=await sb.rpc(fn,args); if(error) return null; return data; }catch{ return null; } }
+function navShowInfo(d){
+  d = d || {likes:0, liked:false, shares:0, views:0, comments:[]};
+  $('#navLikeN').textContent=fmtN(d.likes); $('#navLike').classList.toggle('on', !!d.liked);
+  $('#navShareN').textContent=fmtN(d.shares); $('#navComN').textContent=fmtN((d.comments||[]).length);
+  $('#navViews').textContent = d.views ? `${fmtN(d.views)} visualizações no TocaPlay` : 'Seja o primeiro a assistir no TocaPlay';
+  $('#navComList').innerHTML = (d.comments||[]).length ? d.comments.map(c=>`<div class="nav-c"><b>${esc(c.name||'Visitante')}</b><small>${new Date(c.created_at).toLocaleDateString('pt-BR')}</small><p>${esc(c.body)}</p><button data-navrepc="${c.id}">⚑ Denunciar</button></div>`).join('') : '<p class="muted" style="color:var(--muted);font-size:14px">Ainda sem comentários. Comece a conversa!</p>';
+}
+const fmtN = n => (+n||0) >= 1000 ? ((+n)/1000).toFixed(1).replace('.0','').replace('.',',')+' mil' : String(+n||0);
+async function navLoadInfo(it){
+  const d = await navRpc('nav_info', {p_vid:it.vid, p_dev:deviceId()});
+  if(navCur!==it) return;
+  if(d && d.hidden){ toast('Este vídeo foi retirado por denúncias. Indo para o próximo…'); return navGo(1); }
+  navShowInfo(d);
+}
+$('#navLike').onclick = async()=>{
+  if(!navCur || !navCur.vid) return;
+  const on=!$('#navLike').classList.contains('on');
+  $('#navLike').classList.toggle('on', on);
+  $('#navLikeN').textContent = fmtN(Math.max(0, parseInt($('#navLikeN').textContent)||0) + (on?1:-1));
+  navLearn(navCur.c, on?3:-3);
+  const d=await navRpc('nav_like', {p_vid:navCur.vid, p_dev:deviceId(), p_ch:navCur.c.name});
+  if(d){ $('#navLikeN').textContent=fmtN(d.likes); $('#navLike').classList.toggle('on', !!d.liked); }
+};
+$('#navShare').onclick = async()=>{
+  if(!navCur) return;
+  const url = location.origin + '/#v=' + encodeURIComponent(navCur.vid||'') + '&c=' + encodeURIComponent(navCur.c.name);
+  const text = `Olha esse vídeo de ${navCur.c.name} no TocaPlay Livre, de graça:`;
+  try{ if(navigator.share) await navigator.share({title:'TocaPlay Livre', text, url}); else openWhatsApp(`${text} ${url}`); }catch{ return; }
+  navLearn(navCur.c, 4);
+  if(navCur.vid){ navRpc('nav_event', {p_vid:navCur.vid, p_dev:deviceId(), p_kind:'share', p_ch:navCur.c.name});
+    $('#navShareN').textContent = fmtN((parseInt($('#navShareN').textContent)||0)+1); }
+};
+$('#navNext').onclick = ()=>navGo(1);
+$('#navComGo').onclick = ()=>$('#navCom').scrollIntoView({behavior:'smooth', block:'start'});
+$('#navReport').onclick = async()=>{
+  if(!navCur || !navCur.vid) return;
+  if(!confirm('Denunciar este vídeo como impróprio? Com 3 denúncias ele sai do TocaPlay até ser revisado.')) return;
+  await navRpc('nav_report', {p_target:'v:'+navCur.vid, p_dev:deviceId(), p_reason:'video'});
+  toast('Obrigado! A denúncia foi registrada.'); navGo(1);
+};
+$('#navComName').value = store.get('tp_name','');
+$('#navComForm').onsubmit = async e=>{
+  e.preventDefault();
+  if(!navCur || !navCur.vid) return toast('Espere o vídeo começar para comentar.');
+  const name=$('#navComName').value.trim().slice(0,40), body=$('#navComTxt').value.trim().slice(0,500);
+  if(!name) return toast('Escreva seu nome.');
+  if(body.length<2) return toast('Escreva o comentário.');
+  store.set('tp_name', name);
+  $('#navComBtn').disabled=true;
+  const d=await navRpc('nav_comment', {p_vid:navCur.vid, p_dev:deviceId(), p_name:name, p_body:body, p_ch:navCur.c.name});
+  $('#navComBtn').disabled=false;
+  if(!d) return toast('Não deu para comentar agora. Tente de novo.');
+  if(d.status==='limite') return toast('Muitos comentários seguidos. Espere alguns minutos.');
+  $('#navComTxt').value='';
+  if(d.status==='fila') return toast('Comentário enviado. Ele aparece depois de uma revisão.');
+  toast('Comentário publicado 💬'); navLoadInfo(navCur);
+};
+$('#navComList').addEventListener('click', async e=>{
+  const b=e.target.closest('[data-navrepc]'); if(!b) return;
+  if(!confirm('Denunciar este comentário?')) return;
+  await navRpc('nav_report', {p_target:'c:'+b.dataset.navrepc, p_dev:deviceId(), p_reason:'comentario'});
+  b.textContent='Denunciado'; b.disabled=true;
+});
+$('#navList').addEventListener('click', e=>{ const b=e.target.closest('[data-nv]'); if(b){ navPlay(+b.dataset.nv); if(innerWidth<900) scrollTo({top:0, behavior:'smooth'}); } });
+$('#navMore').onclick = ()=>navExtend(6);
+document.querySelector('.nav-tabs').addEventListener('click', e=>{
+  const b=e.target.closest('[data-navtab]'); if(!b || b.dataset.navtab===navTab) return;
+  navTab=b.dataset.navtab;
+  document.querySelectorAll('[data-navtab]').forEach(x=>x.classList.toggle('on', x===b));
+  navSkipCheck(); navFeed=[]; navI=-1; navCur=null; $('#navList').innerHTML=''; $('#navList').dataset.n=0;
+  navBuildOrder(); navExtend();
+  logArea(navTab==='geral' ? 'Navegação · Geral' : 'Navegação · Para você');
+});
+async function enterNav(){
+  document.body.classList.add('in-nav');
+  if(navSeeded){ if(navP && navCur) try{ navP.playVideo(); }catch{} return; }
+  navSeeded=true;
+  const tr = await navRpc('nav_trending', {});
+  navTrend = Array.isArray(tr) ? tr : [];
+  navTrend.forEach(t=>{ navHot[t.ch]=(navHot[t.ch]||0)+Math.min(3, (t.score||0)/10); });
+  if(navDeep){ const c=TV_CHANNELS.find(x=>x.name===navDeep.c); if(c) navFeed.push({c, vid:navDeep.vid||null, idx:0}); navDeep=null; }
+  navBuildOrder();
+  if(navFeed.length){ navRenderList(); navPlay(0); }
+  navExtend();
+}
+$('#featNav').onclick = e=>{ e.stopPropagation(); logArea('banner:navegacao'); go('nav'); };
+
 /* ---------- Início do app ---------- */
 renderChips(); renderFavs(); renderAccount(); renderPlaylists(); loadHome(); updatePlayer(); checkImport();
 renderFeat(); renderRows(); renderHomePods(); renderHomeGym(); renderGospelRadios(); renderRomRadios(); setTimeout(fillAds, 800);
@@ -2280,7 +2611,9 @@ $('#srTv').textContent = `📺 ${Math.floor(TV_CHANNELS.length/10)*10}+`;
 // Links das páginas de conteúdo: /#radios=gospel, /#radios=romanticas, /#canal=Nome do canal
 (function openFromContentLink(){
   const h = decodeURIComponent(location.hash||'');
-  let m = h.match(/^#canal=(.+)$/);
+  let m = h.match(/^#v=([\w-]*)&c=(.+)$/);
+  if(m){ history.replaceState(history.state,'',location.pathname); navDeep={vid:m[1]||null, c:m[2]}; go('nav'); return; }
+  m = h.match(/^#canal=(.+)$/);
   if(m){ const c = TV_CHANNELS.find(x=>x.name.toLowerCase()===m[1].toLowerCase()); history.replaceState(history.state,'',location.pathname);
     if(c){ go('tv'); openTv(c); } return; }
   m = h.match(/^#radios=(gospel|romanticas)$/); if(!m) return;

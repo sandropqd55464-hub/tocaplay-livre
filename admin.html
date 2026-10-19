@@ -50,6 +50,9 @@ table{width:100%;border-collapse:collapse;font-size:14px}
 th{text-align:left;color:var(--muted);font-weight:600;padding:8px 6px;border-bottom:1px solid var(--line)}
 td{padding:9px 6px;border-bottom:1px solid var(--line);word-break:break-all}
 .scroll{overflow-x:auto}
+.fila{display:flex;justify-content:space-between;gap:12px;align-items:flex-start;padding:12px 0;border-top:1px solid var(--line)}
+.fila p{margin-top:4px;font-size:14px;white-space:pre-wrap;word-break:break-word}
+.fila .fb{display:flex;gap:6px;flex:none}.fila .btn{padding:8px 12px;font-size:13px}
 .muted{color:var(--muted);font-size:13px}
 .empty{color:var(--muted);font-size:14px;padding:10px 0}
 .hbar{display:grid;grid-template-columns:minmax(110px,40%) 1fr auto;align-items:center;gap:10px;padding:6px 0;font-size:14px}
@@ -151,6 +154,7 @@ function render(d){
     <div class="box"><h2>🔥 Rádios mais ouvidas (7 dias)</h2>${list(d.top_radios,'nome','plays')}</div>
     <div class="box"><h2>📍 Inscritos por estado</h2>${list(d.por_estado,'estado','total')}</div>
   </div>
+  <div id="navFila"></div>
   <div class="box"><h2>📲 Instalações por aparelho</h2>${list(d.instalacoes_por_tipo,'tipo','total')}
     <p class="muted" style="margin-top:8px">Conta cada aparelho uma vez, quando o app é instalado ou aberto pelo ícone.</p></div>
   <div class="box"><h2>👥 Últimos inscritos</h2>
@@ -159,8 +163,35 @@ function render(d){
     :'<div class="empty">Ninguém se inscreveu ainda.</div>'}
   </div>
   <p class="muted" style="margin:14px 0 30px;text-align:center">Atualizado em ${new Date().toLocaleString('pt-BR')}</p>`;
-  bind();
+  bind(); loadNavFila();
   if($('#areaSel')){ $('#areaSel').onchange=()=>areaChart(d); areaChart(d); }
+}
+// Navegação: fila de revisão (só o que o filtro automático ou as denúncias separaram)
+async function loadNavFila(){
+  const el=$('#navFila'); if(!el) return;
+  const {data,error}=await sb.rpc('admin_nav_fila');
+  if(error){ el.innerHTML=`<div class="box"><h2>🧭 Navegação</h2><p class="muted">Rode o SQL da Navegação (versão 26) no Supabase para ver esta parte.</p></div>`; return; }
+  const t=data.totais||{}, cs=data.comentarios||[], vs=data.videos||[];
+  el.innerHTML=`<div class="box"><h2>🧭 Navegação (7 dias)</h2>
+    <div class="tiles"><div class="tile"><div class="l">Visualizações</div><div class="n">${fmt(t.views_7d)}</div></div>
+    <div class="tile"><div class="l">Curtidas</div><div class="n">${fmt(t.curtidas_7d)}</div></div>
+    <div class="tile"><div class="l">Compartilhamentos</div><div class="n">${fmt(t.shares_7d)}</div></div>
+    <div class="tile"><div class="l">Comentários</div><div class="n">${fmt(t.comentarios_7d)}</div></div></div>
+    <h2 style="margin-top:16px">🛡️ Fila de revisão ${cs.length+vs.length?`(${cs.length+vs.length})`:''}</h2>
+    <p class="muted" style="margin-bottom:8px">A aprovação é automática. Aqui aparece só o que o filtro separou (palavrão, link) ou o que recebeu 3 denúncias.</p>
+    ${!cs.length && !vs.length ? '<div class="empty">Nada para revisar. 🙌</div>' : ''}
+    ${cs.map(c=>`<div class="fila"><div><b>${esc(c.name)}</b> <span class="muted">em ${esc(c.ch||'')} · ${esc(c.motivo||'')}</span><p>${esc(c.body)}</p></div>
+      <div class="fb"><button class="btn" data-dec="comentario|${c.id}|1">Aprovar</button><button class="btn ghost" data-dec="comentario|${c.id}|0">Remover</button></div></div>`).join('')}
+    ${vs.map(v=>`<div class="fila"><div><b>Vídeo denunciado</b> <span class="muted">${fmt(v.denuncias)} denúncias</span>
+      <p><a href="https://www.youtube.com/watch?v=${encodeURIComponent(v.target.slice(2))}" target="_blank" rel="noopener" style="color:var(--yellow)">Assistir no YouTube</a></p></div>
+      <div class="fb"><button class="btn" data-dec="video|${esc(v.target)}|1">Voltar ao ar</button><button class="btn ghost" data-dec="video|${esc(v.target)}|0">Remover</button></div></div>`).join('')}
+  </div>`;
+  el.querySelectorAll('[data-dec]').forEach(b=>b.onclick=async()=>{
+    const [tipo,id,ok]=b.dataset.dec.split('|'); b.disabled=true;
+    const {error}=await sb.rpc('admin_nav_decidir',{p_tipo:tipo, p_id:id, p_aprovar:ok==='1'});
+    if(error){ alert('Erro: '+error.message); b.disabled=false; return; }
+    loadNavFila();
+  });
 }
 function bars(arr,k,v,unit,extra){
   if(!arr||!arr.length) return '<div class="empty">Sem dados ainda.</div>';

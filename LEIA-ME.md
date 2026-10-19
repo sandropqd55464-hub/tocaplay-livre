@@ -207,3 +207,13 @@ Abra o site no Chrome do Android → menu ⋮ → **Instalar app** (ou **Adicion
 - Páginas de conteúdo novas: radios-gospel.html, artistas-gospel.html e radios-romanticas.html (ajudam no AdSense e no Google).
 - Painel: acessos de servidores de nuvem (robôs) não contam mais; o "Não identificado" saiu do ranking de estados e virou uma linha "sem localização".
 - Para fazer no AdSense: em Anúncios automáticos, marque como "área excluída" o destaque animado do topo e o player.
+
+## Versão 26 (19/10/2026) — Navegação, Etapa 1
+- Botão "🧭 NAVEGAÇÃO" no destaque da página inicial (e um banner próprio no carrossel).
+- Tela de Navegação: vídeo grande, curtir, comentar, compartilhar, denunciar e "Próximo"; lista "A seguir" à direita (no celular, embaixo), com espaço de propaganda a cada 6 vídeos.
+- Abas "Para você" (algoritmo que aprende com o que a pessoa assiste, curte, compartilha e pula; 1 em cada 5 é novidade) e "Geral" (em alta no TocaPlay + mistura).
+- Curtidas, comentários, visualizações e compartilhamentos contados pelo TocaPlay, do zero.
+- Moderação automática: palavrão e link vão para a fila; 3 denúncias tiram o vídeo ou comentário do ar; limite de 5 comentários a cada 10 minutos.
+- Painel ADM: números da Navegação e fila de revisão com Aprovar/Remover.
+- Rodapé da página inicial corrigido (os links ficavam escondidos atrás da barra de baixo).
+- SQL novo: parte "Navegação TocaPlay" no fim do supabase.sql (rodar uma vez).
