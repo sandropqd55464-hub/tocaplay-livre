@@ -544,12 +544,16 @@ a.pill{color:var(--txt);text-decoration:none}
 .steps b{color:var(--txt)}
 .hint{background:var(--card);border-radius:12px;padding:10px 12px;color:var(--muted);font-size:13px;line-height:1.45;margin-bottom:12px}
 /* ---------- Navegação (feed de vídeos) ---------- */
-.feat-nav{position:absolute;z-index:5;left:12px;top:12px;display:flex;align-items:center;gap:7px;padding:9px 15px;border-radius:999px;
-  font-weight:900;font-size:13.5px;letter-spacing:.08em;color:#1a1300;background:linear-gradient(90deg,#ffd23f,#19c37d);animation:navPulse 2s infinite}
-@keyframes navPulse{0%{box-shadow:0 0 0 0 rgba(255,210,63,.65)}70%{box-shadow:0 0 0 14px rgba(255,210,63,0)}100%{box-shadow:0 0 0 0 rgba(255,210,63,0)}}
+.feat-nav{position:absolute;z-index:5;left:12px;top:12px;display:flex;align-items:center;gap:8px;padding:10px 18px 10px 14px;border-radius:999px;
+  font-weight:900;font-size:15px;letter-spacing:.06em;color:#fff;background:#e5191b;border:2px solid #fff;cursor:pointer;
+  box-shadow:0 4px 14px rgba(0,0,0,.45);animation:navPulse 1.8s infinite}
+.feat-nav b{display:grid;place-items:center;width:24px;height:24px;border-radius:50%;background:#fff;color:#e5191b;font-size:12px}
+.feat-nav:hover,.feat-nav:focus-visible{background:#ff2b2d;transform:scale(1.05)}
+@keyframes navPulse{0%{box-shadow:0 4px 14px rgba(0,0,0,.45),0 0 0 0 rgba(229,25,27,.75)}70%{box-shadow:0 4px 14px rgba(0,0,0,.45),0 0 0 16px rgba(229,25,27,0)}100%{box-shadow:0 4px 14px rgba(0,0,0,.45),0 0 0 0 rgba(229,25,27,0)}}
 body.in-nav .side,body.in-nav .side-r{display:none!important}
-body.in-nav main{max-width:1240px}
-@media (min-width:1200px){ body.in-nav main{margin-left:auto;margin-right:auto} body.in-nav .mini{left:8px;right:8px;margin:0 auto} }
+body.in-nav main{max-width:none;padding:0 24px}
+@media (max-width:600px){ body.in-nav main{padding:0 12px} }
+@media (min-width:1200px){ body.in-nav main{margin-left:0;margin-right:0} body.in-nav .mini{left:8px;right:8px;margin:0 auto} }
 .nav-top{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin:4px 0 12px}
 .nav-top .brand{display:flex;align-items:center;gap:8px;font-weight:900;font-size:19px}
 .nav-top .brand img{width:30px;height:30px;border-radius:9px}
@@ -557,8 +561,9 @@ body.in-nav main{max-width:1240px}
 .nav-tabs button{padding:8px 16px;border-radius:999px;background:var(--card);font-weight:800;font-size:14px;color:var(--muted)}
 .nav-tabs button.on{background:var(--yellow);color:#1a1300}
 .nav-grid{display:block}
-@media (min-width:900px){ .nav-grid{display:grid;grid-template-columns:minmax(0,1fr) 360px;gap:22px;align-items:start} }
-.nav-player{position:relative;width:100%;aspect-ratio:16/9;border-radius:16px;overflow:hidden;background:#000}
+@media (min-width:900px){ .nav-grid{display:grid;grid-template-columns:minmax(0,1fr) 380px;gap:24px;align-items:start} }
+@media (min-width:1500px){ .nav-grid{grid-template-columns:minmax(0,1fr) 420px} }
+.nav-player{position:relative;width:100%;aspect-ratio:16/9;max-height:calc(100vh - 170px);border-radius:16px;overflow:hidden;background:#000}
 .nav-player iframe,.nav-player>div{position:absolute;top:0;left:0;width:100%;height:100%;border:0}
 @supports not (aspect-ratio:1/1){ .nav-player{height:0;padding-top:56.25%} }
 .nav-title{font-size:19px;line-height:1.3;margin:12px 0 8px;font-weight:800}
@@ -580,6 +585,7 @@ body.in-nav main{max-width:1240px}
 .nav-com input,.nav-com textarea{width:100%;background:var(--bg);border:1px solid var(--line);border-radius:12px;padding:11px 12px;font-size:15px;color:var(--txt);font-family:inherit;outline:0;resize:vertical}
 .nav-com textarea{min-height:44px}
 .nav-com form .btn{align-self:flex-end;padding:9px 18px}
+.nav-who{color:var(--muted);font-size:13px}.nav-who b{color:var(--txt)}.nav-who button{color:var(--yellow);font-weight:700;text-decoration:underline}
 .nav-c{padding:10px 0;border-top:1px solid var(--line)}
 .nav-c b{font-size:14px}.nav-c small{color:var(--muted);font-size:12px;margin-left:6px}
 .nav-c p{font-size:14.5px;margin-top:3px;white-space:pre-wrap;word-break:break-word}
@@ -589,7 +595,7 @@ body.in-nav main{max-width:1240px}
 .nv{display:flex;gap:10px;width:100%;text-align:left;padding:6px;border-radius:12px;margin-bottom:6px}
 .nv:hover,.nv:focus-visible{background:var(--card)}
 .nv.cur{background:var(--card);outline:2px solid var(--yellow)}
-.nv .th{width:150px;flex:none;aspect-ratio:16/9;border-radius:10px;overflow:hidden;position:relative;background:var(--card2)}
+.nv .th{width:168px;flex:none;aspect-ratio:16/9;border-radius:10px;overflow:hidden;position:relative;background:var(--card2)}
 @supports not (aspect-ratio:1/1){ .nv .th{height:84px} }
 .nv .th img{position:absolute;top:0;left:0;width:100%;height:100%;object-fit:cover}
 .nv .th i{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-style:normal;font-weight:800}
@@ -655,7 +661,7 @@ body.in-nav main{max-width:1240px}
       <div class="feat-dots" id="featDots"></div>
       <div class="feat-prog"><i id="featProg"></i></div>
       <button class="feat-sound" id="featSound" aria-label="Ligar som">🔇 <span>Ouvir</span></button>
-      <button class="feat-nav" id="featNav" aria-label="Abrir a Navegação de vídeos">🧭 NAVEGAÇÃO</button>
+      <button class="feat-nav" id="featNav" aria-label="Abrir a Navegação de vídeos"><b>▶</b>NAVEGAÇÃO</button>
     </div>
     <div class="intro">
       <h1>Rádio boa, <span class="gold">de graça</span>, do Oiapoque ao Chuí.</h1>
@@ -727,6 +733,7 @@ body.in-nav main{max-width:1240px}
         <div class="nav-com" id="navCom">
           <h3>Comentários</h3>
           <form id="navComForm">
+            <small class="nav-who" id="navComWho"></small>
             <input id="navComName" maxlength="40" placeholder="Seu nome" autocomplete="name">
             <textarea id="navComTxt" maxlength="500" placeholder="Escreva um comentário com respeito"></textarea>
             <button class="btn" id="navComBtn">Comentar</button>
@@ -2186,7 +2193,7 @@ $('#featSound').onclick = e=>{ e.stopPropagation();
   else { featSound=true; featUserMuted=false;
     if(!audio.paused) audio.pause(); if(ytP && (ytState===1||ytState===3)) ytP.pauseVideo(); }
   featApplySound(); };
-$('#featHit').onclick = ()=>{ const c=FEATURED[featI]; if(c.promo){ logArea('banner:'+c.id); return c.act(); } go('tv'); openTv(c); };
+$('#featHit').onclick = ()=>{ const c=FEATURED[featI]; if(c.promo){ logArea('banner:'+c.id); return c.act(); } if(c.live==='first'){ go('tv'); return openTv(c); } navOpenChannel(c); };
 $('#featDots').addEventListener('click', e=>{ const b=e.target.closest('[data-feat]'); if(b){ e.stopPropagation(); featNext(+b.dataset.feat); } });
 (function(){ let x0=null; const f=$('#feat');
   f.addEventListener('touchstart',e=>{ x0=e.touches[0].clientX; },{passive:true});
@@ -2560,8 +2567,8 @@ $('#navComName').value = store.get('tp_name','');
 $('#navComForm').onsubmit = async e=>{
   e.preventDefault();
   if(!navCur || !navCur.vid) return toast('Espere o vídeo começar para comentar.');
-  const name=$('#navComName').value.trim().slice(0,40), body=$('#navComTxt').value.trim().slice(0,500);
-  if(!name) return toast('Escreva seu nome.');
+  const name=(navUserName() || $('#navComName').value.trim()).slice(0,40), body=$('#navComTxt').value.trim().slice(0,500);
+  if(!name) return toast('Escreva seu nome ou entre na sua conta.');
   if(body.length<2) return toast('Escreva o comentário.');
   store.set('tp_name', name);
   $('#navComBtn').disabled=true;
@@ -2581,6 +2588,7 @@ $('#navComList').addEventListener('click', async e=>{
 });
 $('#navList').addEventListener('click', e=>{ const b=e.target.closest('[data-nv]'); if(b){ navPlay(+b.dataset.nv); if(innerWidth<900) scrollTo({top:0, behavior:'smooth'}); } });
 $('#navMore').onclick = ()=>navExtend(6);
+$('#navComWho').addEventListener('click', e=>{ if(e.target.closest('[data-view-go]')) go('account'); });
 document.querySelector('.nav-tabs').addEventListener('click', e=>{
   const b=e.target.closest('[data-navtab]'); if(!b || b.dataset.navtab===navTab) return;
   navTab=b.dataset.navtab;
@@ -2589,7 +2597,23 @@ document.querySelector('.nav-tabs').addEventListener('click', e=>{
   navBuildOrder(); navExtend();
   logArea(navTab==='geral' ? 'Navegação · Geral' : 'Navegação · Para você');
 });
+// Abre a Navegação já tocando um canal (ex.: o vídeo do destaque que a pessoa tocou)
+function navOpenChannel(c){
+  if(!navSeeded){ navDeep={c:c.name}; go('nav'); return; }
+  go('nav');
+  navFeed.splice(navI+1, 0, {c, vid:null, idx:0});
+  $('#navList').innerHTML=''; $('#navList').dataset.n=0;
+  navPlay(navI+1);
+}
+// Comentário com a conta: quem entrou com e-mail (e, na Etapa 2, com o Google) comenta com o próprio nome
+function navUserName(){ return (user && !isAnon(user) && (user.user_metadata?.name || (user.email||'').split('@')[0])) || ''; }
+function navComIdentity(){
+  const n=navUserName();
+  $('#navComName').hidden = !!n;
+  $('#navComWho').innerHTML = n ? `Comentando como <b>${esc(n)}</b>` : 'Ou <button type="button" data-view-go="account">entre na sua conta</button> para comentar com o seu nome.';
+}
 async function enterNav(){
+  navComIdentity();
   document.body.classList.add('in-nav');
   if(navSeeded){ if(navP && navCur) try{ navP.playVideo(); }catch{} return; }
   navSeeded=true;
