@@ -170,7 +170,7 @@ function render(d){
 }
 // Verificar canais: código certo pelo @ do canal, foto e nome
 function nzx(t){return String(t||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toUpperCase().replace(/[^A-Z0-9 ]/g,' ').split(/\s+/).filter(w=>w.length>2&&!['OFICIAL','OFFICIAL','CANAL','THE','TV'].includes(w))}
-function parecido(a,b){const A=nzx(a),B=nzx(b);return !A.length||!B.length||A.some(w=>B.includes(w))}
+function parecido(a,b){const A=nzx(a),B=nzx(b),ja=A.join(''),jb=B.join('');return !A.length||!B.length||A.some(w=>B.includes(w)||jb.includes(w))||B.some(w=>ja.includes(w))}
 async function chkCanais(){
   const CFG=(typeof CONFIG!=='undefined'?CONFIG:window.CONFIG)||{};
   const L=(CFG.TV_CHANNELS||[]).filter(c=>c.channelId||/youtube\.com\/(@|user\/|c\/)/.test(c.url||'')),out=$('#chkOut'),R=[];let n=0;
@@ -178,7 +178,7 @@ async function chkCanais(){
   const um=async c=>{const hd=(String(c.url||'').match(/youtube\.com\/(@[\w.\-]+|user\/[\w.\-]+|c\/[\w.\-]+)/)||[])[1]||'';let a={},h=null;
     if(hd){try{h=await (await fetch('/api/yt?h='+encodeURIComponent(hd))).json()}catch{}}
     if(!c.channelId){const r={c,hd,nome:h&&h.name||'',foto:!!(h&&h.avatar),certo:null,prob:h&&h.id?'':'endereço não encontrado (canal novo não aparece)'};if(h&&h.id)r.ok=h.id;R.push(r);n++;out.innerHTML=`<p class="muted">Conferindo… ${n} de ${L.length}</p>`;return}
-    try{a=await (await fetch('/api/yt?c='+c.channelId)).json()}catch{}
+    try{a=await (await fetch('/api/yt?c='+c.channelId+(/^@/.test(hd)?'&ah='+encodeURIComponent(hd.slice(1)):''))).json()}catch{}
     const r={c,hd,nome:a.name||'',foto:!!a.avatar,certo:h&&h.id&&h.id!==c.channelId?h:null};
     r.prob=r.certo?'código errado':!a.name?'canal não encontrado':!r.foto?'sem foto':!parecido(c.name,a.name)?'nome diferente':'';
     R.push(r);n++;out.innerHTML=`<p class="muted">Conferindo… ${n} de ${L.length}</p>`};

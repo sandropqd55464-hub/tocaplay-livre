@@ -1892,8 +1892,7 @@ const TV_CATS = (()=>{
 })();
 let tvCurrent = null, tvMode = 'videos', tvCat = 'Todos', tvSub = '', tvQ = '';
 function tvAvatar(c){
-  const m = (c.url||'').match(/youtube\.com\/@([\w.-]+)/);
-  const src = c.avatar || (m ? `https://unavatar.io/youtube/${m[1]}?fallback=false` : '');
+  const src = avatarUrl(c);
   return src ? `<img src="${esc(src)}" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="this.remove()">` : '';
 }
 function tvCard(c){
@@ -2413,7 +2412,9 @@ async function loadPaidAds(){
 function featStopVideo(){ featToken++; if(featYt){ try{ featYt.destroy(); }catch{} featYt=null; } const h=document.getElementById('featYt'); if(h) h.remove(); }
 // Foto do canal: pelo nosso servidor (/api/yt, grátis e com cache); se não der, pelo unavatar
 function avatarUrl(c){ if(c.avatar) return c.avatar;
-  const m=(c.url||'').match(/youtube\.com\/@([\w.-]+)/); return m ? `https://unavatar.io/youtube/${m[1]}?fallback=false` : ''; }
+  const m=(c.url||'').match(/youtube\.com\/@([\w.-]+)/);
+  if(c.channelId) return `/api/yt?c=${c.channelId}&av=1${m?'&ah='+m[1]:''}`;   // nosso servidor: página do canal, depois o @
+  return m ? `https://unavatar.io/youtube/${m[1]}?fallback=false` : ''; }
 // Últimos vídeos do canal que PODEM tocar aqui (os bloqueados pelo dono já vêm de fora), com título
 const ytListMem = {};
 async function ytList(c){

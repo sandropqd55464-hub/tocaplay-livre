@@ -1,4 +1,4 @@
-# TocaPlay VERSÃO 43 — Navegação na TV: tela inteira, margem de segurança e player maior; novas categorias, verificação de canais e TV com tudo de um lado
+# TocaPlay VERSÃO 44 — fotos dos artistas pelo nosso servidor; Navegação na TV: tela inteira, margem de segurança e player maior; novas categorias, verificação de canais e TV com tudo de um lado
 
 Arquivos da raiz do GitHub: index.html, admin.html, config.js, sw.js, LEIA-ME.md
 Arquivo da pasta functions/api: yt.js (substitui o atual)
@@ -9,5 +9,10 @@ Arquivo da pasta functions/api: yt.js (substitui o atual)
 - Painel ADM: botão "🔎 Verificar canais" confere todos os canais (código certo, foto, nome) e gera a lista para corrigir.
 - Smart TV: a faixa da direita foi para a coluna da esquerda (nada mais por cima do destaque nem dos vídeos).
 - Inclui a versão 40 (barras fixas no topo, categorias da TV em dourado).
+
+Novo na 44:
+- Fotos dos canais/artistas vêm do nosso servidor (página do canal e, se falhar, o endereço @), não mais do unavatar.
+- "Verificar canais": reconhece nomes escritos juntos no YouTube (ex.: DiantedoTronoOFICIAL) e confere a foto pelo @.
+- "NCS Eletrônica" passa a se chamar "NCS (NoCopyrightSounds)".
 
 Pendente da versão 37: a pasta functions/api precisa ter _ads.js, ad-pay.js, mp-webhook.js e ad-refuse.js.
