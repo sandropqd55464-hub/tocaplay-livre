@@ -163,9 +163,30 @@ function render(d){
     ${d.ultimos.map(u=>`<tr><td>${esc(u.nome||'—')}</td><td>${esc(u.email||'—')}</td><td>${esc(u.tipo||'E-mail')}</td><td>${esc(u.estado||'—')}</td><td>${new Date(u.quando).toLocaleDateString('pt-BR')}</td></tr>`).join('')}</table></div>`
     :'<div class="empty">Ninguém se inscreveu ainda.</div>'}
   </div>
+  <div class="box" id="chkBox"><h2>🔎 Verificar canais (artistas e TV)</h2><p class="muted">Confere cada canal da aba TV: se o código está certo (pelo endereço @ do canal), se a foto aparece e se o nome bate. Leva uns 2 minutos.</p><button class="btn" id="chkGo">Verificar agora</button><div id="chkOut"></div></div>
   <p class="muted" style="margin:14px 0 30px;text-align:center">Atualizado em ${new Date().toLocaleString('pt-BR')}</p>`;
-  bind(); loadNavFila(); loadAds();
+  bind(); loadNavFila(); loadAds(); if($('#chkGo')) $('#chkGo').onclick=chkCanais;
   if($('#areaSel')){ $('#areaSel').onchange=()=>areaChart(d); areaChart(d); }
+}
+// Verificar canais: código certo pelo @ do canal, foto e nome
+const nzx=t=>String(t||'').normalize('NFD').replace(/[̀-ͯ]/g,'').toUpperCase().replace(/[^A-Z0-9 ]/g,' ').split(/\s+/).filter(w=>w.length>2&&!['OFICIAL','OFFICIAL','CANAL','THE','TV'].includes(w));
+const parecido=(a,b)=>{const A=nzx(a),B=nzx(b);return !A.length||!B.length||A.some(w=>B.includes(w))};
+async function chkCanais(){
+  const L=(window.CONFIG&&CONFIG.TV_CHANNELS||[]).filter(c=>c.channelId||/youtube\.com\/(@|user\/|c\/)/.test(c.url||'')),out=$('#chkOut'),R=[];let n=0;
+  $('#chkGo').disabled=true;
+  const um=async c=>{const hd=(String(c.url||'').match(/youtube\.com\/(@[\w.\-]+|user\/[\w.\-]+|c\/[\w.\-]+)/)||[])[1]||'';let a={},h=null;
+    if(hd){try{h=await (await fetch('/api/yt?h='+encodeURIComponent(hd))).json()}catch{}}
+    if(!c.channelId){const r={c,hd,nome:h&&h.name||'',foto:!!(h&&h.avatar),certo:null,prob:h&&h.id?'':'endereço não encontrado (canal novo não aparece)'};if(h&&h.id)r.ok=h.id;R.push(r);n++;out.innerHTML=`<p class="muted">Conferindo… ${n} de ${L.length}</p>`;return}
+    try{a=await (await fetch('/api/yt?c='+c.channelId)).json()}catch{}
+    const r={c,hd,nome:a.name||'',foto:!!a.avatar,certo:h&&h.id&&h.id!==c.channelId?h:null};
+    r.prob=r.certo?'código errado':!a.name?'canal não encontrado':!r.foto?'sem foto':!parecido(c.name,a.name)?'nome diferente':'';
+    R.push(r);n++;out.innerHTML=`<p class="muted">Conferindo… ${n} de ${L.length}</p>`};
+  for(let i=0;i<L.length;i+=4) await Promise.all(L.slice(i,i+4).map(um));
+  const P=R.filter(r=>r.prob);$('#chkGo').disabled=false;
+  const txt=P.map(r=>`${r.c.name} | ${r.prob} | atual ${r.c.channelId}${r.certo?' -> certo '+r.certo.id+' ('+r.certo.name+')':''}${r.nome?' | no YouTube: '+r.nome:''}${r.hd?' | '+r.hd:''}`).join('\n');
+  out.innerHTML=`<p><b>${L.length} canais conferidos • ${P.length} com problema</b></p>`+(P.length?`<div class="scroll"><table><tr><th>Canal no app</th><th>Problema</th><th>No YouTube</th><th>Código certo</th></tr>${P.map(r=>`<tr><td>${esc(r.c.name)}</td><td>${esc(r.prob)}</td><td>${esc(r.nome||'—')}</td><td>${r.certo?esc(r.certo.id+' ('+r.certo.name+')'):'—'}</td></tr>`).join('')}</table></div>
+   <p class="muted" style="margin-top:10px">Copie a lista abaixo e mande para o Claude corrigir:</p><textarea id="chkTxt" rows="8" style="width:100%" readonly>${esc(txt)}</textarea><button class="btn ghost" id="chkCopy">📋 Copiar lista</button>`:'<div class="empty">Todos os canais estão certos.</div>');
+  if($('#chkCopy')) $('#chkCopy').onclick=()=>{navigator.clipboard.writeText(txt).then(()=>{$('#chkCopy').textContent='✓ Copiado'}).catch(()=>{$('#chkTxt').select()})};
 }
 // Anúncios pagos: aprovar (entra no ar) ou recusar (devolve o dinheiro pelo Mercado Pago)
 async function loadAds(){

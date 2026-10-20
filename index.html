@@ -410,6 +410,22 @@ body.gym .tv-aside{display:none!important}
 /* ---------- Modo vídeo: player à esquerda e uma coluna só à direita ---------- */
 .tv-aside{display:none}
 .tv-full-exit{display:none}
+/* Smart TV: tudo de um lado só (navegador da TV não calcula min()/max(), e a faixa da direita invadia o centro) */
+@media (min-width:1000px){
+  body.tvmode .side-r{display:none!important}
+  body.tvmode .side{display:block;position:fixed;left:24px;top:96px;width:250px;max-height:calc(100vh - 140px);overflow:auto}
+  body.tvmode main{margin-left:300px!important;margin-right:32px;max-width:1150px}
+  body.tvmode .mini{left:300px;right:32px;width:auto;margin:0}
+  body.tvmode .side .sr-card{margin-top:14px;padding:16px;border-radius:18px}
+  body.tvmode .side .sr-slogan{font-size:20px}
+  body.tvmode .side .sr-nums,body.tvmode .side .sr-note{display:none}
+  body.tvmode.vplay main{margin-left:auto!important;margin-right:auto}
+  body.tvmode.vplay .side{display:none!important}
+}
+/* Navegadores antigos sem min()/max(): mesma solução */
+@supports not (width:min(1px,2px)){
+  @media (min-width:1200px){ .side-r{display:none!important} main{margin-left:300px} .mini{left:300px;right:24px;width:auto;margin:0} }
+}
 @media (min-width:1000px){
   body.vplay .side,body.vplay .side-r{display:none!important}
   body.vplay main{max-width:1500px;margin-left:auto!important;margin-right:auto;padding:0 24px}
@@ -1838,7 +1854,26 @@ document.addEventListener('click', e=>{
 });
 
 /* ---------- TV e vídeos (YouTube) ---------- */
-const TV_CHANNELS = (typeof CONFIG!=='undefined' && CONFIG.TV_CHANNELS) || [];
+// Canais cadastrados só com o endereço do YouTube (@apelido ou /user/...): o servidor descobre o código (UC...).
+// Até descobrir, o canal não aparece; se o endereço estiver errado, ele simplesmente não entra.
+const TV_ALL = (typeof CONFIG!=='undefined' && CONFIG.TV_CHANNELS) || [];
+const tvPath = c => ((c.url||'').match(/youtube\.com\/(@[\w.\-]+|user\/[\w.\-]+|c\/[\w.\-]+)/)||[])[1] || '';
+const TV_HID = store.get('tp_hid', {});
+TV_ALL.forEach(c=>{ if(!c.channelId && !c.videoId && !c.playlist){ const h=TV_HID[tvPath(c).toLowerCase()]; if(h && h.id) c.channelId=h.id; } });
+const TV_CHANNELS = TV_ALL.filter(c=>c.channelId || c.videoId || c.playlist);
+async function tvResolver(){
+  const P = TV_ALL.filter(c=>!c.channelId && !c.videoId && !c.playlist && tvPath(c)); if(!P.length) return;
+  let add = 0;
+  for(let i=0;i<P.length;i+=4) await Promise.all(P.slice(i,i+4).map(async c=>{ const k=tvPath(c).toLowerCase(), h=TV_HID[k];
+    if(h && !h.id && Date.now()-h.t < 864e5) return;   // endereço não encontrado: tenta de novo só amanhã
+    try{ const r=await fetch('/api/yt?h='+encodeURIComponent(tvPath(c))); const d=r.ok?await r.json():{};
+      TV_HID[k]={id:d.id||null, t:Date.now()}; if(d.id){ c.channelId=d.id; TV_CHANNELS.push(c); add++; } }catch{} }));
+  store.set('tp_hid', TV_HID);
+  if(add){ const order=(CONFIG.TV_CAT_ORDER||[]); TV_CHANNELS.forEach(c=>{ if(c.cat && !TV_CATS.includes(c.cat)) TV_CATS.push(c.cat); });
+    TV_CATS.splice(1, TV_CATS.length-1, ...TV_CATS.slice(1).sort((a,b)=>{const x=order.indexOf(a),y=order.indexOf(b);return (x<0?99:x)-(y<0?99:y)}));
+    try{ renderTv(); }catch{} }
+}
+setTimeout(tvResolver, 1500);
 const tvSubsOf = c => !c.sub ? [] : Array.isArray(c.sub) ? c.sub : [c.sub];
 const TV_CATS = (()=>{
   const found = [...new Set(TV_CHANNELS.map(c=>c.cat).filter(Boolean))];
@@ -2289,6 +2324,7 @@ function enterPods(){ if(!podsLoaded){ podsLoaded=true; renderPodCats(); loadPod
 const IS_TV = /web0s|webos|netcast|smart-?tv|smarttv|tizen|hbbtv|bravia|vidaa|roku|crkey|aft[a-z]|googletv|android tv|philipstv|viera/i.test(navigator.userAgent);
 if(IS_TV){
   document.body.classList.add('tvmode');
+  { const c=document.querySelector('.side-r .sr-card'), sd=document.querySelector('#side'); if(c && sd) sd.appendChild(c); }
   audio.preload = 'auto';
   // rádio caiu ou travou na TV: tenta reconectar sozinha até 3 vezes
   let tvRetry = 0;

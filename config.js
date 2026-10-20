@@ -16,7 +16,7 @@ const CONFIG = {
   // Para adicionar: no YouTube abra o canal → Mais informações → Compartilhar canal →
   // Copiar ID do canal (começa com UC) e copie um bloco abaixo.
   // Ordem das categorias na tela:
-  TV_CAT_ORDER: ['Cristão','Cultos e Missas','TV Ao Vivo','Podcasts','Malhação','Internacionais','Músicas para Dormir','Infantil','Esportes','Filmes','Sertanejo','Pagode','Funk e Urbana'],
+  TV_CAT_ORDER: ['Cristão','Cultos e Missas','TV Ao Vivo','Podcasts','Malhação','Futebol','Esportes','Lutas','Gastronomia','Viagens','Internacionais','Músicas para Dormir','Infantil','Filmes','Sertanejo','Pagode','Funk e Urbana'],
 
   TV_CHANNELS: [
     {"name": "Rev. Hernandes Dias Lopes", "short": "HD", "cat": "Cristão", "sub": "Pregações", "desc": "Pregações expositivas", "url": "https://www.youtube.com/@HernandesDiasLopesOficial", "channelId": "UCT8yKUrnFmq5COl15dasxog", "live": true, "color": "linear-gradient(135deg,#b38bff,#3a1d8f)"},
@@ -208,7 +208,33 @@ const CONFIG = {
     {"name": "Anitta", "short": "AN", "cat": "Funk e Urbana", "desc": "Clipes oficiais", "url": "https://www.youtube.com/@anitta", "channelId": "UCqjjyPUghDSSKFBABM_CXMw", "color": "linear-gradient(135deg,#ff4fa3,#9b1d64)"},
     // ---- Aguardando confirmação (me mande o link do canal para ativar) ----
     // Hillsong Worship, Lucinho Barreto,
-    // Bíblia narrada (NVI, ARA, NTLH): ainda sem canal oficial confirmado.
+    // Bíblia narrada (NVI, ARA, NTLH): ainda sem canal oficial confirmado.,
+    // --- 20/10: novas categorias (canais oficiais; os sem código são descobertos pelo endereço do YouTube) ---
+    {"name": "Flamengo (FlaTV)", "short": "FL", "cat": "Futebol", "sub": "Clubes", "desc": "Canal oficial do Flamengo", "url": "https://www.youtube.com/@flamengo"},
+    {"name": "TV Palmeiras", "short": "PA", "cat": "Futebol", "sub": "Clubes", "desc": "Canal oficial do Palmeiras", "url": "https://www.youtube.com/channel/UCBKc-rPDivvwFiWdG-81wxw", "channelId": "UCBKc-rPDivvwFiWdG-81wxw"},
+    {"name": "São Paulo FC", "short": "SP", "cat": "Futebol", "sub": "Clubes", "desc": "Canal oficial do São Paulo", "url": "https://www.youtube.com/channel/UCX3zTAsEoZ61rQMYb_08Tow", "channelId": "UCX3zTAsEoZ61rQMYb_08Tow"},
+    {"name": "Corinthians TV", "short": "CO", "cat": "Futebol", "sub": "Clubes", "desc": "Canal oficial do Corinthians", "url": "https://www.youtube.com/@corinthianstv"},
+    {"name": "Vasco TV", "short": "VA", "cat": "Futebol", "sub": "Clubes", "desc": "Canal oficial do Vasco", "url": "https://www.youtube.com/@vascotv"},
+    {"name": "FluTV", "short": "FU", "cat": "Futebol", "sub": "Clubes", "desc": "Canal oficial do Fluminense", "url": "https://www.youtube.com/@flutv"},
+    {"name": "Santos TV", "short": "SA", "cat": "Futebol", "sub": "Clubes", "desc": "Canal oficial do Santos", "url": "https://www.youtube.com/@santostv"},
+    {"name": "Grêmio TV", "short": "GR", "cat": "Futebol", "sub": "Clubes", "desc": "Canal oficial do Grêmio", "url": "https://www.youtube.com/@gremiotv"},
+    {"name": "TV Galo", "short": "GA", "cat": "Futebol", "sub": "Clubes", "desc": "Canal oficial do Atlético-MG", "url": "https://www.youtube.com/@tvgalo"},
+    {"name": "CBF TV", "short": "CB", "cat": "Futebol", "sub": "Seleção e campeonatos", "desc": "Seleção Brasileira e campeonatos da CBF", "url": "https://www.youtube.com/@cbftv"},
+    {"name": "Tastemade Brasil", "short": "TB", "cat": "Gastronomia", "sub": "Receitas", "desc": "Receitas rápidas e viagens gastronômicas", "url": "https://www.youtube.com/channel/UC-ddSPJhtaBX8Nf6DK2RFIg", "channelId": "UC-ddSPJhtaBX8Nf6DK2RFIg"},
+    {"name": "Receitas de Pai", "short": "RP", "cat": "Gastronomia", "sub": "Receitas", "desc": "Receitas caseiras passo a passo", "url": "https://www.youtube.com/channel/UCF5WzS-iBJRfp_EcFI-GT1w", "channelId": "UCF5WzS-iBJRfp_EcFI-GT1w"},
+    {"name": "Ana Maria Brogui", "short": "AB", "cat": "Gastronomia", "sub": "Receitas", "desc": "Receitas fáceis e divertidas", "url": "https://www.youtube.com/user/brogui"},
+    {"name": "Danielle Noce", "short": "DN", "cat": "Gastronomia", "sub": "Doces", "desc": "Confeitaria e receitas", "url": "https://www.youtube.com/user/nocedanielle"},
+    {"name": "Cozinha para 2", "short": "C2", "cat": "Gastronomia", "sub": "Receitas", "desc": "Receitas práticas para o dia a dia", "url": "https://www.youtube.com/user/cozinhapara2"},
+    {"name": "Receitas de Minuto", "short": "RM", "cat": "Gastronomia", "sub": "Receitas", "desc": "Receitas em poucos minutos", "url": "https://www.youtube.com/user/receitasdeminuto"},
+    {"name": "Rolê Gourmet", "short": "RG", "cat": "Gastronomia", "sub": "Receitas", "desc": "Gastronomia com bom humor", "url": "https://www.youtube.com/user/oRoleGourmet"},
+    {"name": "BBQ em Casa", "short": "BQ", "cat": "Gastronomia", "sub": "Churrasco", "desc": "Churrasco e carnes", "url": "https://www.youtube.com/user/bbqpitmastersbrasil"},
+    {"name": "Trip de Casal", "short": "TC", "cat": "Viagens", "desc": "Roteiros de viagem pelo Brasil e mundo", "url": "https://www.youtube.com/@tripdecasal"},
+    {"name": "Nômades Digitais", "short": "ND", "cat": "Viagens", "desc": "Viajando o mundo e trabalhando", "url": "https://www.youtube.com/@nomadesdigitais"},
+    {"name": "Travel and Share", "short": "TS", "cat": "Viagens", "desc": "Dicas e roteiros de viagem", "url": "https://www.youtube.com/@travelandshare"},
+    {"name": "Loucos por Viagens", "short": "LV", "cat": "Viagens", "desc": "Destinos e dicas de viagem", "url": "https://www.youtube.com/@loucosporviagens"},
+    {"name": "UFC", "short": "UF", "cat": "Lutas", "sub": "MMA", "desc": "Canal oficial do UFC", "url": "https://www.youtube.com/@ufc"},
+    {"name": "PFL MMA", "short": "PF", "cat": "Lutas", "sub": "MMA", "desc": "Canal oficial da PFL", "url": "https://www.youtube.com/@PFLMMA"},
+    {"name": "Jungle Fight", "short": "JF", "cat": "Lutas", "sub": "MMA", "desc": "Maior evento de MMA da América Latina", "url": "https://www.youtube.com/@junglefight"}
   ],
 
   // Google AdSense
