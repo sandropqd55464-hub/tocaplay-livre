@@ -232,7 +232,9 @@ h2{font-size:18px;font-weight:700;margin:20px 0 10px}
   .pc .cv,.pod-cover{height:0;padding-top:100%;position:relative}
   .pc .cv img,.pod-cover img{position:absolute;top:0;left:0}
 }
-body.tvmode{zoom:1.15}
+body.tvmode{zoom:1.15;padding-bottom:calc(220px + 5vh)}
+body.tvmode header{padding-left:4vw;padding-right:4vw}
+body.tvmode nav{padding-bottom:2vh}
 body.tvmode #tvYtLink,body.tvmode .tv-fail a{display:none!important}
 body.tvmode :focus{outline:4px solid var(--yellow)!important;outline-offset:3px;border-radius:12px}
 body.tvmode .tv-card:focus,body.tvmode .vc:focus,body.tvmode .ch:focus,body.tvmode .st:focus,body.tvmode .pc:focus{transform:scale(1.05);transition:transform .15s}
@@ -420,11 +422,19 @@ body.gym .tv-aside{display:none!important}
   body.tvmode .side .sr-slogan{font-size:20px}
   body.tvmode .side .sr-nums,body.tvmode .side .sr-note{display:none}
   body.tvmode.vplay main{margin-left:auto!important;margin-right:auto}
+  body.tvmode.in-nav main{margin-left:0!important;margin-right:0;max-width:none}
+  body.tvmode.in-nav .side{display:none!important}
+  body.tvmode.in-nav .mini{left:8px;right:8px;margin:0 auto}
+  /* Navegação na TV: margem de segurança (a TV corta as bordas), player maior e nada escondido atrás do menu */
+  body.tvmode.in-nav main{padding:0 4vw!important}
+  body.tvmode.in-nav .stickbar{margin-left:-4vw;margin-right:-4vw;padding-left:4vw;padding-right:4vw}
+  body.tvmode .nav-grid{grid-template-columns:minmax(0,1fr) 330px;gap:28px}
+  body.tvmode .nav-player{max-height:calc(100vh - 230px)}
   body.tvmode.vplay .side{display:none!important}
 }
 /* Navegadores antigos sem min()/max(): mesma solução */
 @supports not (width:min(1px,2px)){
-  @media (min-width:1200px){ .side-r{display:none!important} main{margin-left:300px} .mini{left:300px;right:24px;width:auto;margin:0} }
+  @media (min-width:1200px){ .side-r{display:none!important} body:not(.in-nav) main{margin-left:300px} body:not(.in-nav) .mini{left:300px;right:24px;width:auto;margin:0} }
 }
 @media (min-width:1000px){
   body.vplay .side,body.vplay .side-r{display:none!important}
