@@ -61,3 +61,29 @@ export async function onRequest(context) {
     let hit = await cache.match(key), data;
     if (hit) data = await hit.json();
     else { data = await byHandle(h); if (data.id) context.waitUntil(cache.put(key, new Response(JSON.stringify(data), { headers: { 'content-type': 'application/json', 'cache-control': `public, max-age=${CACHE_SEC * 4}` } }))); }
+    return new Response(JSON.stringify(data), { headers: { 'content-type': 'application/json; charset=utf-8' } });
+  }
+  const c = url.searchParams.get('c') || '';
+  if (!/^UC[\w-]{22}$/.test(c)) return new Response('{"error":"canal"}', { status: 400, headers: { 'content-type': 'application/json' } });
+  const cache = caches.default;
+  const key = new Request(`https://tocaplay-cache/yt2/${c}`);
+  let data;
+  const hit = await cache.match(key);
+  if (hit) data = await hit.json();
+  else {
+    data = await build(c);
+    const resp = new Response(JSON.stringify(data), { headers: { 'content-type': 'application/json', 'cache-control': `public, max-age=${CACHE_SEC}` } });
+    context.waitUntil(cache.put(key, resp.clone()));
+  }
+  // sem foto pela página do canal: tenta pelo endereço @ (ah=apelido), e guarda
+  const hh = (url.searchParams.get('ah') || '').replace(/^@/, '');
+  if (!data.avatar && hh && /^[\w.\-]{2,60}$/.test(hh)) {
+    const b = await byHandle(hh);
+    if (b.avatar && (!b.id || b.id === c)) { data.avatar = b.avatar.replace(/=s\d+-/, '=s240-'); context.waitUntil(cache.put(key, new Response(JSON.stringify(data), { headers: { 'content-type': 'application/json', 'cache-control': `public, max-age=${CACHE_SEC}` } }))); }
+  }
+  if (url.searchParams.get('av')) {
+    if (data.avatar) return Response.redirect(data.avatar, 302);
+    return new Response('', { status: 404 });
+  }
+  return new Response(JSON.stringify(data), { headers: { 'content-type': 'application/json; charset=utf-8', 'cache-control': 'public, max-age=1800' } });
+}
