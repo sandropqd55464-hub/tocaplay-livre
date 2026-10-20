@@ -101,7 +101,7 @@ function loginView(msg=''){
 async function load(){
   app.innerHTML = head(true)+'<p class="muted">Carregando números…</p>';
   bind();
-  const {data,error}=await sb.rpc('admin_stats');
+  const {data,error}=await sb.rpc('admin_stats');if(data)areaLimpa(data);
   if(error){
     if(String(error.message).includes('negado')){ await sb.auth.signOut(); return loginView('Esta conta não tem acesso ao painel.'); }
     app.innerHTML = head(true)+`<div class="box">Erro ao carregar: ${esc(error.message)}<p class="muted" style="margin-top:8px">Confira se você rodou o supabase.sql inteiro no SQL Editor.</p></div>`;
@@ -233,6 +233,14 @@ async function loadNavFila(){
     if(error){ alert('Erro: '+error.message); b.disabled=false; return; }
     loadNavFila();
   });
+}
+// Acesso por área: tira cliques gravados como área (registros antigos) e junta nomes repetidos
+const AREA_ALIAS={'Busca de rádios':'Rádios','Podcasts (áudio)':'Podcasts','TV · Podcasts':'Podcasts'};
+const areaFora=a=>/^banner:|^Navegação · |^Criadores · /.test(a||'');
+function areaLimpa(d){
+  if(Array.isArray(d.por_area)){const m=new Map();d.por_area.forEach(x=>{if(areaFora(x.area))return;const a=AREA_ALIAS[x.area]||x.area;m.set(a,Math.max(m.get(a)||0,+x.pessoas||0))});
+    d.por_area=[...m].map(([area,pessoas])=>({area,pessoas})).sort((a,b)=>b.pessoas-a.pessoas)}
+  if(Array.isArray(d.area_dia)){const m=new Map();d.area_dia.forEach(x=>{if(areaFora(x.area))return;const a=AREA_ALIAS[x.area]||x.area,k=x.dia+'|'+a;m.set(k,{dia:x.dia,area:a,n:Math.max((m.get(k)||{}).n||0,+x.n||0)})});d.area_dia=[...m.values()]}
 }
 function bars(arr,k,v,unit,extra){
   if(!arr||!arr.length) return '<div class="empty">Sem dados ainda.</div>';

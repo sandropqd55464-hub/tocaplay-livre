@@ -399,6 +399,40 @@ nav button.on::after{content:'';position:absolute;bottom:-2px;width:26px;height:
 body.gym #tvPlayerBox{position:fixed;top:0;right:0;bottom:0;left:0;inset:0;z-index:200;background:#000;margin:0;display:flex;flex-direction:column}
 body.gym #tvPlayerBox .tv-player{flex:1;aspect-ratio:auto;border-radius:0;margin:0}
 body.gym #tvPlayerBox .tv-now,body.gym #tvPlayerBox .tv-bar{display:none}
+body.gym .tv-stage{flex:1;display:flex;flex-direction:column}
+body.gym .tv-aside{display:none!important}
+/* ---------- Modo vídeo: player à esquerda e uma coluna só à direita ---------- */
+.tv-aside{display:none}
+.tv-full-exit{display:none}
+@media (min-width:1000px){
+  body.vplay .side,body.vplay .side-r{display:none!important}
+  body.vplay main{max-width:1500px;margin-left:auto!important;margin-right:auto;padding:0 24px}
+  body.vplay #tvPlayerBox:not([hidden]){display:flex;align-items:flex-start;gap:24px}
+  body.vplay .tv-stage{flex:1 1 0%;min-width:0}
+  body.vplay .tv-aside{display:block;flex:0 0 27%;max-width:360px;min-width:250px}
+  body.vplay .tv-player{max-height:calc(100vh - 200px)}
+  body.vplay .tv-grid{grid-template-columns:repeat(4,1fr)}
+}
+.tv-aside .sr-card{padding:18px 18px 16px;border-radius:20px}
+.tv-aside .sr-slogan{font-size:22px;margin-top:10px}
+.tv-aside .pl-cta,.tv-aside .pl-ad{width:100%;min-height:0;margin-top:12px;flex-direction:row;align-items:center;justify-content:flex-start;gap:14px;padding:16px}
+.tv-aside .pl-ad{flex-wrap:wrap}
+.tv-aside .pl-ad small{flex-basis:100%;margin-top:-4px}
+/* Tela cheia: navegador sem suporte (algumas TVs) usa esta versão */
+body.tvfull #tvPlayerBox{position:fixed;top:0;right:0;bottom:0;left:0;z-index:200;background:#000;margin:0;display:block!important}
+body.tvfull .tv-stage{position:absolute;top:0;right:0;bottom:0;left:0}
+body.tvfull .tv-player{position:absolute;top:0;right:0;bottom:0;left:0;height:auto;padding:0;max-height:none;border-radius:0;margin:0;aspect-ratio:auto}
+body.tvfull .tv-now,body.tvfull .tv-bar,body.tvfull .tv-tip,body.tvfull .tv-aside{display:none!important}
+body.tvfull .tv-full-exit{display:block;position:absolute;z-index:3;top:16px;right:16px;padding:10px 16px;border-radius:999px;background:rgba(0,0,0,.7);color:#fff;font-weight:800;border:1px solid rgba(255,255,255,.4)}
+/* Card "Anuncie aqui" (ao lado de Criar playlist) */
+.pl-ad{flex:none;width:170px;min-height:118px;border-radius:18px;padding:14px;text-align:left;display:flex;flex-direction:column;justify-content:space-between;
+  text-decoration:none;color:#fff;background:linear-gradient(135deg,#6d4aff,#2a1b7a);border:1px solid #8d74ff;box-shadow:0 8px 24px rgba(109,74,255,.25)}
+.pl-ad .ic{width:40px;height:40px;border-radius:12px;background:rgba(255,255,255,.16);display:grid;place-items:center;font-size:21px}
+.pl-ad b{font-size:17px;line-height:1.15;font-weight:800}
+.pl-ad small{font-size:12px;line-height:1.3;opacity:.85}
+.pl-ad.pulsar{animation:adPulse .8s ease-in-out 3}
+@keyframes adPulse{50%{transform:scale(1.05);box-shadow:0 0 0 4px rgba(141,116,255,.35),0 0 28px rgba(109,74,255,.7)}}
+@media (prefers-reduced-motion:reduce){.pl-ad.pulsar{animation:none}}
 body.gym .gym-ui{display:block;position:absolute;top:0;right:0;bottom:0;left:0;inset:0;pointer-events:none;
   padding:max(14px,env(safe-area-inset-top)) max(16px,env(safe-area-inset-right)) max(14px,env(safe-area-inset-bottom)) max(16px,env(safe-area-inset-left))}
 .gym-top{display:flex;justify-content:space-between;align-items:flex-start;gap:12px}
@@ -495,6 +529,8 @@ a.pill{color:var(--txt);text-decoration:none}
   .side{display:block;position:fixed;left:24px;top:96px;width:250px;max-height:calc(100vh - 260px);overflow:auto;scrollbar-width:thin}
   .side h3{font-size:13px;letter-spacing:1px;color:var(--muted);margin:18px 4px 8px}
   .side .pl-cta{width:100%;min-height:0;flex-direction:row;align-items:center;justify-content:flex-start;gap:14px;padding:16px}
+  .side .pl-ad{width:100%;min-height:0;flex-direction:row;flex-wrap:wrap;align-items:center;justify-content:flex-start;gap:4px 14px;padding:14px 16px;margin-top:10px}
+  .side .pl-ad small{flex-basis:100%}
   main{margin-left:max(300px, calc(50% - 380px))}
   .mini{left:max(308px, calc(50% - 372px));margin:0;right:auto;width:min(744px, calc(100% - 324px))}
   .side .pl-card{width:100%;min-height:0;flex-direction:row;align-items:center;gap:12px;margin-bottom:8px;padding:10px 12px}
@@ -873,7 +909,9 @@ body.in-nav main{max-width:none;padding:0 24px}
   <section class="view" id="v-tv">
     <h2>TV e vídeos</h2>
     <div id="tvPlayerBox" hidden>
+      <div class="tv-stage">
       <div class="tv-player" id="tvPlayer"></div>
+      <button class="tv-full-exit" id="tvFullExit">✕ Sair da tela cheia</button>
       <div class="tv-now" id="tvNow"></div>
       <div class="tv-tip">💡 Vídeos do YouTube param quando você sai do app. Para ouvir com a tela desligada ou digitando no WhatsApp, use uma rádio. <button data-gospelradio>📻 Ouvir rádio gospel</button></div>
       <div class="tv-bar">
@@ -882,8 +920,19 @@ body.in-nav main{max-width:none;padding:0 24px}
         <button class="pill wa" id="tvWa">WhatsApp</button>
         <a class="pill" id="tvYtLink" href="#" target="_blank" rel="noopener">Abrir no YouTube</a>
         <button class="pill gym-btn" id="tvGym" hidden>🏋️ Modo Academia</button>
+        <button class="pill" id="tvFull">⛶ Tela cheia</button>
         <button class="pill" id="tvClose">Fechar vídeo</button>
       </div>
+      </div>
+      <!-- Coluna única ao lado do vídeo (telas largas e Smart TV) -->
+      <aside class="tv-aside" aria-label="TocaPlay">
+        <div class="sr-card">
+          <span class="sr-free">100% grátis</span>
+          <p class="sr-slogan">Rádio boa, <span class="gold">de graça</span>, do Oiapoque ao Chuí.</p>
+        </div>
+        <button class="pl-cta" data-plnew><div class="ic"><svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.4" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg></div><b>Criar sua playlist</b></button>
+        <a class="pl-ad" href="anunciar.html"><div class="ic">📣</div><b>Anuncie aqui</b><small>Sua marca para milhares de ouvintes</small></a>
+      </aside>
       <div class="gym-ui" id="gymUi">
         <div class="gym-top">
           <div><b id="gymName"></b><small id="gymSub"></small></div>
@@ -1030,6 +1079,14 @@ body.in-nav main{max-width:none;padding:0 24px}
 </div>
 
 <!-- NOME DA PLAYLIST -->
+<div class="modal" id="ufModal">
+  <div class="modal-box">
+    <h3>De qual estado você é?</h3>
+    <p style="color:var(--muted);font-size:14px;margin:-4px 0 12px">Só para completar seu cadastro. Ajuda a mostrar rádios e conteúdos da sua região.</p>
+    <select id="ufAsk" style="width:100%;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:13px 14px;font-size:16px;color:var(--txt);margin-bottom:10px"><option value="">Escolha seu estado</option></select>
+    <div class="row2"><button class="btn ghost" id="ufLater">Agora não</button><button class="btn" id="ufOk">Salvar</button></div>
+  </div>
+</div>
 <div class="modal" id="nameModal">
   <div class="modal-box">
     <h3 id="nameTitle">Criar sua playlist</h3>
@@ -1590,11 +1647,27 @@ document.addEventListener('click', e=>{
   const s_=e.target.closest('[data-subscribe]'); if(s_) return subscribe(s_);
   if(e.target.closest('[data-install]')) return openInstall();
 });
+/* Inscrito sem estado (entrou pelo Google ou com 1 toque): pede o estado uma vez, já sugerindo o da internet */
+const UF_NOME={AC:'Acre',AL:'Alagoas',AP:'Amapá',AM:'Amazonas',BA:'Bahia',CE:'Ceará',DF:'Distrito Federal',ES:'Espírito Santo',GO:'Goiás',MA:'Maranhão',MT:'Mato Grosso',MS:'Mato Grosso do Sul',MG:'Minas Gerais',PA:'Pará',PB:'Paraíba',PR:'Paraná',PE:'Pernambuco',PI:'Piauí',RJ:'Rio de Janeiro',RN:'Rio Grande do Norte',RS:'Rio Grande do Sul',RO:'Rondônia',RR:'Roraima',SC:'Santa Catarina',SP:'São Paulo',SE:'Sergipe',TO:'Tocantins'};
+async function pedirEstado(force){
+  if(!sb || !user || isBot()) return;
+  const k='tp_uf_'+user.id; if(!force && store.get(k,0)) return;
+  try{ const {data}=await sb.from('profiles').select('state').eq('id',user.id).maybeSingle(); if(data && data.state){ store.set(k,1); return; } }catch{ return; }
+  let sug=''; try{ const r=await fetch('/api/geo'); if(r.ok){ const g=await r.json(); if(g.country==='BR') sug=UF_NOME[String(g.regionCode||'').toUpperCase()]||''; } }catch{}
+  const sel=$('#ufAsk'); sel.innerHTML='<option value="">Escolha seu estado</option>'+STATES.map(s=>`<option ${s===sug?'selected':''}>${s}</option>`).join('');
+  $('#ufModal').classList.add('open');
+}
+$('#ufLater').onclick=()=>{ $('#ufModal').classList.remove('open'); if(user) store.set('tp_uf_'+user.id, 1); };
+$('#ufOk').onclick=async()=>{ const v=$('#ufAsk').value; if(!v){ $('#ufAsk').focus(); return; }
+  const {error}=await sb.from('profiles').update({state:v}).eq('id',user.id);
+  try{ await sb.auth.updateUser({data:{state:v}}); }catch{}
+  if(error){ toast('Não foi possível salvar agora. Tente mais tarde.'); return; }
+  store.set('tp_uf_'+user.id, 1); $('#ufModal').classList.remove('open'); toast('Estado salvo. Obrigado!'); };
 if(sb){
   sb.auth.onAuthStateChange((_ev, session)=>{
     const was = user?.id; user = session?.user || null;
     renderAccount(); navMeRefresh();
-    if(user && user.id!==was) syncFavs();
+    if(user && user.id!==was){ syncFavs(); setTimeout(pedirEstado, 1500); }
     if(user && !isAnon(user)){ const after=store.get('tp_after_login',''); if(after){ store.set('tp_after_login',''); setTimeout(()=>go(after),300); } }
   });
 }
@@ -1612,9 +1685,18 @@ function renderPlaylists(){
   const cards = pls.map(p=>`<button class="pl-card" data-plopen="${p.id}">
       <div class="ic" style="background:${p.color}">${plIcon(p)}</div>
       <div><b>${esc(p.name)}</b><small>${p.stations.length} rádio${p.stations.length===1?'':'s'}</small></div></button>`).join('');
-  $('#homePl').innerHTML = cta + cards;
-  $('#sidePl').innerHTML = cta + (pls.length ? '<h3>SUAS PLAYLISTS</h3>' + cards : '<p style="color:var(--muted);font-size:13.5px;margin:12px 4px;line-height:1.45">Junte suas rádios preferidas em listas: uma para o trabalho, outra para relaxar, outra para o futebol…</p>');
+  // "Anuncie aqui" fica fixo logo depois de "Criar", mesmo quando a pessoa já tem playlists
+  const ad = `<a class="pl-ad" href="anunciar.html"><div class="ic">📣</div><b>Anuncie aqui</b><small>Sua marca para milhares de ouvintes</small></a>`;
+  $('#homePl').innerHTML = cta + ad + cards;
+  $('#sidePl').innerHTML = cta + ad + (pls.length ? '<h3>SUAS PLAYLISTS</h3>' + cards : '<p style="color:var(--muted);font-size:13.5px;margin:12px 4px;line-height:1.45">Junte suas rádios preferidas em listas: uma para o trabalho, outra para relaxar, outra para o futebol…</p>');
   if(openPl && curView==='playlist') renderPlView();
+  adPulseWatch();
+}
+// Card "Anuncie aqui": pulsa 3 vezes quando aparece na tela e para
+function adPulseWatch(){
+  if(!('IntersectionObserver' in window)) return;
+  document.querySelectorAll('.pl-ad:not([data-w])').forEach(el=>{ el.dataset.w='1';
+    const io=new IntersectionObserver(es=>{ if(es[0].isIntersecting){ el.classList.add('pulsar'); io.disconnect(); } },{threshold:.6}); io.observe(el); });
 }
 function askName(mode){
   nameMode = mode;
@@ -1884,7 +1966,7 @@ function openTv(c, mode){
         }});
     });
   }
-  $('#tvPlayerBox').hidden = false;
+  $('#tvPlayerBox').hidden = false; document.body.classList.add('vplay');
   $('#tvNow').innerHTML = `<b style="color:var(--txt)">${esc(c.name)}</b> · ${tvMode==='live'?'🔴 ao vivo (se não houver transmissão, toca o último vídeo gravado)':'últimos vídeos do canal'}`;
   $('#tvModeLive').hidden = !c.live || !c.channelId; $('#tvModeVid').hidden = !c.live || !c.channelId;
   $('#tvModeLive').classList.toggle('on', tvMode==='live'); $('#tvModeVid').classList.toggle('on', tvMode!=='live');
@@ -1925,7 +2007,7 @@ function stopTv(){
   exitGym();
   if(!tvCurrent) return;
   tvToken++; if(tvYt){ try{ tvYt.destroy(); }catch{} tvYt=null; }
-  tvCurrent=null; $('#tvPlayer').innerHTML=''; $('#tvPlayerBox').hidden=true; renderTv();
+  tvFullOff(); tvCurrent=null; $('#tvPlayer').innerHTML=''; $('#tvPlayerBox').hidden=true; document.body.classList.remove('vplay'); renderTv();
 }
 $('#tvGrid').addEventListener('click', e=>{
   const b=e.target.closest('[data-tv]'); if(b) return openTv(TV_CHANNELS[+b.dataset.tv]);
@@ -1935,6 +2017,18 @@ $('#tvCats').addEventListener('click', e=>{ const b=e.target.closest('[data-tvca
 $('#tvSubs').addEventListener('click', e=>{ if(e.target.closest('[data-gym]')) return enterGym(); const b=e.target.closest('[data-tvsub]'); if(b){ tvSub=b.dataset.tvsub; renderTv(); } });
 $('#tvQ').addEventListener('input', e=>{ tvQ=e.target.value.trim(); renderTv(); });
 $('#tvClose').onclick = stopTv;
+/* Tela cheia do vídeo: usa a do navegador; se a TV não tiver, ocupa a tela por CSS */
+function tvFullOff(){
+  document.body.classList.remove('tvfull');
+  try{ const f=document.fullscreenElement||document.webkitFullscreenElement; if(f) (document.exitFullscreen||document.webkitExitFullscreen).call(document); }catch{}
+}
+$('#tvFull').onclick = ()=>{
+  const el=$('#tvPlayer'), req=el.requestFullscreen||el.webkitRequestFullscreen;
+  if(req && !IS_TV){ try{ const r=req.call(el); if(r && r.catch) r.catch(()=>document.body.classList.add('tvfull')); return; }catch{} }
+  document.body.classList.add('tvfull'); $('#tvFullExit').focus();
+};
+$('#tvFullExit').onclick = tvFullOff;
+addEventListener('keydown', e=>{ if(document.body.classList.contains('tvfull') && (e.key==='Escape'||e.key==='Backspace'||e.keyCode===461||e.key==='GoBack')){ e.preventDefault(); tvFullOff(); } });
 $('#tvModeLive').onclick = ()=>tvCurrent && openTv(tvCurrent,'live');
 $('#tvModeVid').onclick = ()=>tvCurrent && openTv(tvCurrent,'videos');
 $('#tvWa').onclick = ()=>tvCurrent && openWhatsApp(`Estou assistindo *${tvCurrent.name}* no *TocaPlay Livre*! ${SITE}`);
@@ -2409,6 +2503,7 @@ function go(view, push=true){
   if(view==='search') setTimeout(()=>$('#q').focus(),50);
   if(view==='home') renderFeat(); else featStopVideo();
   document.body.classList.toggle('in-nav', view==='nav');
+  document.body.classList.toggle('vplay', view==='tv' && !!tvCurrent);
   if(view==='nav') enterNav(); else navPause();
   if(view==='canal') renderCanal();
   setTimeout(fillAds, 300);
@@ -3241,8 +3336,12 @@ function isBot(){ return store.get('tp_dc',0)===1 || /bot|crawl|spider|slurp|lig
     .then(({error})=>{ if(!error) store.set('tp_visit_day', today); });
 })();
 /* Acesso por área: 1 registro por aparelho, por área, por dia */
+// Só telas/áreas contam como acesso. Cliques (banner, sub-abas, envio) não entram; nomes repetidos viram um só.
+const AREA_ALIAS = {'Busca de rádios':'Rádios','Podcasts (áudio)':'Podcasts','TV · Podcasts':'Podcasts'};
 function logArea(area){
   if(!sb || isBot() || !area) return;
+  if(/^banner:|^Navegação · |^Criadores · /.test(area)) return;
+  area = AREA_ALIAS[area] || area;
   const today = new Date().toISOString().slice(0,10), k = 'tp_area_'+today, seen = store.get(k, {});
   if(seen[area]) return;
   seen[area] = 1; store.set(k, seen);
