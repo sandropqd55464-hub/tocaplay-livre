@@ -45,7 +45,13 @@ img{display:block}
 
 /* Cabeçalho */
 header{position:sticky;top:0;z-index:20;display:flex;align-items:center;justify-content:space-between;
-  padding:14px 16px;background:linear-gradient(var(--bg) 70%,transparent)}
+  padding:14px 16px;background:var(--bg)}
+/* Barras fixas: ficam visíveis logo abaixo do topo enquanto a tela rola (Navegação, TV, Podcasts, Buscar) */
+.stickbar{position:sticky;top:var(--hh,72px);z-index:15;background:var(--bg);margin-left:-16px;margin-right:-16px;padding:8px 16px;box-shadow:0 8px 14px -10px rgba(0,0,0,.55)}
+body.in-nav .stickbar{margin-left:-24px;margin-right:-24px;padding-left:24px;padding-right:24px}
+@media (max-width:600px){ body.in-nav .stickbar{margin-left:-12px;margin-right:-12px;padding-left:12px;padding-right:12px} }
+label.field.stickbar{margin-left:0;margin-right:0}
+body.gym .stickbar,body.tvfull .stickbar{position:static}
 .logo{display:flex;align-items:center;gap:10px;font-weight:800;font-size:20px;letter-spacing:-.3px}
 .logo-mark{width:42px;height:42px;border-radius:12px;box-shadow:0 6px 18px rgba(255,210,63,.25)}
 .wm{font-size:22px;letter-spacing:-.6px}
@@ -718,12 +724,16 @@ body.in-nav main{max-width:none;padding:0 24px}
 .nav-backgrid{margin:0 0 10px;padding:8px 14px;border-radius:999px;border:1.5px solid var(--yellow);color:var(--yellow);font-weight:800;font-size:14px}
 #navMore2{margin-top:18px}
 /* Títulos das seções da página inicial em dourado brilhante */
-#v-home .row-head h2,#v-home > h2,#homePlBlock h2,#v-nav .nav-top .brand,#v-tv h2,#v-pod h2{
+#v-home .row-head h2,#v-home > h2,#homePlBlock h2,#v-nav .nav-top .brand,#v-tv h2,#v-pod h2,#v-tv .tv-sec h3,#v-tv .tv-sub-h{
   background:linear-gradient(100deg,#b8860b 0%,#ffd700 30%,#fff3b0 45%,#ffd700 60%,#b8860b 100%);background-size:250% 100%;
   -webkit-background-clip:text;background-clip:text;color:transparent;animation:goldText 3.2s linear infinite;
   filter:drop-shadow(0 0 4px rgba(255,200,40,.35))}
 #v-nav .nav-top .brand img{filter:none}
-@media (prefers-reduced-motion:reduce){ #v-home .row-head h2,#v-home > h2,#homePlBlock h2,#v-tv h2,#v-pod h2{animation:none} }
+@media (prefers-reduced-motion:reduce){ #v-home .row-head h2,#v-home > h2,#homePlBlock h2,#v-tv h2,#v-pod h2,#v-tv .tv-sec h3,#v-tv .tv-sub-h{animation:none} }
+/* TV: títulos das categorias em destaque e cartões um pouco maiores no computador */
+#v-tv .tv-sec{margin:28px 0 12px}
+#v-tv .tv-sec h3{font-size:19px;font-weight:800;letter-spacing:-.2px}
+@media (min-width:900px){ .tv-card{padding:16px;gap:12px} .tv-logo{width:64px;height:64px;border-radius:14px;font-size:20px} .tv-card b{font-size:16px} .tv-card small{font-size:13px} }
 .nav-search{flex:1 1 320px;max-width:620px;display:flex;margin:0 auto;border:1.5px solid var(--line);border-radius:999px;overflow:hidden;background:var(--bg2)}
 .nav-search:focus-within{border-color:var(--yellow)}
 .nav-search input{flex:1;min-width:0;background:none;border:0;outline:0;color:var(--txt);font-size:15px;padding:10px 16px;font-family:inherit}
@@ -842,7 +852,7 @@ body.in-nav main{max-width:none;padding:0 24px}
 
   <!-- NAVEGAÇÃO: feed de vídeos com curtir, comentar e compartilhar (contagem do próprio TocaPlay) -->
   <section class="view" id="v-nav">
-    <div class="nav-top">
+    <div class="nav-top stickbar">
       <div class="brand"><img src="icon.svg" alt="">Navegação</div>
       <form class="nav-search" id="navSearchF" role="search"><input id="navSearchQ" type="search" placeholder="Pesquisar vídeos, canais, cantores…" autocomplete="off" enterkeyhint="search" aria-label="Pesquisar na Navegação"><button aria-label="Pesquisar"><svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.4" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg></button></form>
       <div class="nav-tabs" role="tablist"><button class="on" data-navtab="foryou">Para você</button><button data-navtab="geral">Geral</button></div>
@@ -890,7 +900,7 @@ body.in-nav main{max-width:none;padding:0 24px}
   <!-- BUSCAR -->
   <section class="view" id="v-search">
     <h2>Buscar</h2>
-    <div class="search">
+    <div class="search stickbar">
       <label class="field">
         <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
         <input id="q" type="search" placeholder="Rádio, cantor ou pregador" autocomplete="off" enterkeyhint="search">
@@ -946,10 +956,12 @@ body.in-nav main{max-width:none;padding:0 24px}
         <p class="gym-ecad">Uso em academias, lojas e locais públicos: tocar música para o público exige licença do ECAD, de responsabilidade do estabelecimento.</p>
       </div>
     </div>
+    <div class="stickbar">
     <label class="field tv-find"><svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
       <input id="tvQ" type="search" placeholder="Procurar canal, pregador ou cantor" autocomplete="off" enterkeyhint="search"></label>
     <div class="chips-wrap row-wrap cats" style="margin-top:8px"><button class="chip-arrow l" data-rowscroll="-1" aria-label="Voltar"><svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg></button><div class="chips" id="tvCats"></div><button class="chip-arrow r" data-rowscroll="1" aria-label="Ver mais"><svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></svg></button></div>
     <div class="chips tv-subs" id="tvSubs" hidden></div>
+    </div>
     <h2 id="tvListTitle">Canais</h2>
     <div id="tvGrid"></div>
     <div class="ad-slot" data-ad="tv"></div>
@@ -960,7 +972,7 @@ body.in-nav main{max-width:none;padding:0 24px}
   <section class="view" id="v-pod">
     <div id="podBrowse">
       <h2>Podcasts</h2>
-      <label class="field"><svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+      <label class="field stickbar"><svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
         <input id="podQ" type="search" placeholder="Procurar podcast ou assunto" autocomplete="off" enterkeyhint="search"></label>
       <div id="podFollowBlock" hidden><h2>Seguindo</h2><div class="pod-grid" id="podFollow"></div></div>
       <div class="chips-wrap row-wrap cats" style="margin-top:10px"><button class="chip-arrow l" data-rowscroll="-1" aria-label="Voltar"><svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg></button><div class="chips" id="podCats"></div><button class="chip-arrow r" data-rowscroll="1" aria-label="Ver mais"><svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></svg></button></div>
@@ -3347,6 +3359,10 @@ function logArea(area){
   seen[area] = 1; store.set(k, seen);
   sb.from('area_visits').insert({device_id:deviceId(), area}).then(()=>{});
 }
+// altura do topo fixo: as barras fixas encaixam logo abaixo dele
+function setHH(){ const h=document.querySelector('header'); if(h) document.documentElement.style.setProperty('--hh', h.offsetHeight+'px'); }
+setHH(); addEventListener('resize', setHH); addEventListener('load', setHH);
+try{ new ResizeObserver(setHH).observe(document.querySelector('header')); }catch{}
 if('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js').catch(()=>{});
 </script>
 </body>
