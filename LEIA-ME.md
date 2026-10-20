@@ -1,4 +1,4 @@
-# TocaPlay VERSÃO 44 — fotos dos artistas pelo nosso servidor; Navegação na TV: tela inteira, margem de segurança e player maior; novas categorias, verificação de canais e TV com tudo de um lado
+# TocaPlay VERSÃO 45 — serviços de filmes grátis também na tela "Todos" da TV; fotos dos artistas pelo nosso servidor; Navegação na TV: tela inteira, margem de segurança e player maior; novas categorias, verificação de canais e TV com tudo de um lado
 
 Arquivos da raiz do GitHub: index.html, admin.html, config.js, sw.js, LEIA-ME.md
 Arquivo da pasta functions/api: yt.js (substitui o atual)

@@ -1940,6 +1940,7 @@ function renderTv(){
     // uma seção por categoria, com até 6 canais e o botão "Ver todos"
     g.innerHTML = TV_CATS.slice(1).map(cat=>{
       const list = TV_CHANNELS.filter(c=>c.cat===cat);
+      if(cat==='Filmes') return `<div class="tv-sec"><h3>${esc(cat)}</h3><button data-tvcat="Filmes">Ver todos</button></div>${tvGrid(list.slice(0,6))}${FILM_LINKS}`;
       return `<div class="tv-sec"><h3>${esc(cat)}</h3>${list.length>6?`<button data-tvcat="${esc(cat)}">Ver todos (${list.length})</button>`:''}</div>${tvGrid(list.slice(0,6))}`;
     }).join('') || emptyBox('Nenhum canal','Adicione canais no config.js.');
     return;
