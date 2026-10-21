@@ -1,23 +1,14 @@
-# TocaPlay VERSÃO 49 — times, lutas e viagens aparecem na hora; config.js sem cache; canais novos (times, viagens) não somem mais; Cinema livre (filmes que tocam dentro do app); serviços de filmes grátis também na tela "Todos" da TV; fotos dos artistas pelo nosso servidor; Navegação na TV: tela inteira, margem de segurança e player maior; novas categorias, verificação de canais e TV com tudo de um lado
+# TocaPlay VERSÃO 50 — versão 49 + Momentos, Seja parceiro, Músicas liberadas, Enfeitar vídeos e Busca do YouTube
 
-Arquivos da raiz do GitHub: index.html, admin.html, config.js, sw.js, LEIA-ME.md
-Arquivos da pasta functions/api: yt.js e cine.js (novo)
+Arquivos da raiz do GitHub: index.html, admin.html, seja-parceiro.html, sw.js, sitemap.xml, LEIA-ME.md
+Arquivo da pasta functions/api: ytsearch.js (novo)
+Supabase (projeto tocaplay): SQL_VERSAO_39_parceiros.sql
+Cloudflare (Variáveis e segredos, tipo Segredo): YT_API_KEY = chave da API do YouTube
 
-- Novas categorias na TV: Futebol (clubes oficiais e CBF TV), Gastronomia, Viagens e Lutas.
-  Canais novos podem ser cadastrados só com o endereço do YouTube (@apelido ou /user/...): o app descobre o código sozinho.
-  Endereço que não existir não aparece no app.
-- Painel ADM: botão "🔎 Verificar canais" confere todos os canais (código certo, foto, nome) e gera a lista para corrigir.
-- Smart TV: a faixa da direita foi para a coluna da esquerda (nada mais por cima do destaque nem dos vídeos).
-- Inclui a versão 40 (barras fixas no topo, categorias da TV em dourado).
-
-Novo na 44:
-- Fotos dos canais/artistas vêm do nosso servidor (página do canal e, se falhar, o endereço @), não mais do unavatar.
-- "Verificar canais": reconhece nomes escritos juntos no YouTube (ex.: DiantedoTronoOFICIAL) e confere a foto pelo @.
-- "NCS Eletrônica" passa a se chamar "NCS (NoCopyrightSounds)".
-
-Novo na 46:
-- Categoria "🎬 Cinema livre" na aba TV: filmes em domínio público / licença livre do Internet Archive,
-  tocando dentro do app (player grande, lista "Mais filmes" ao lado, Criar playlist e Anuncie aqui).
-  Seções: Clássicos, Em português, Desenhos clássicos, Comédia, Faroeste e Terror. O servidor (cine.js) busca e guarda a lista por 24 h.
-
-Pendente da versão 37: a pasta functions/api precisa ter _ads.js, ad-pay.js, mp-webhook.js e ad-refuse.js.
+- Tudo da versão 49 continua (times, lutas, viagens, Cinema livre, Verificar canais, TV).
+- 📱 Momentos: vídeos curtos em pé (Shorts + criadores), arrasta para cima; botão no destaque e na Navegação; link /#momentos.
+- ⭐ Seja parceiro (seja-parceiro.html) + fileira "Artistas parceiros" no início + seção no Painel ADM.
+- 🎵 Músicas liberadas: parceiros aprovados enviam músicas próprias; fileira no início; tocam no player.
+- ✨ Enfeitar ao postar: texto na tela, figurinhas e música liberada de fundo.
+- 🔎 Busca da Navegação também traz "Mais vídeos do YouTube" (precisa da YT_API_KEY).
+Lembrete (versão 37): a pasta functions/api precisa ter _ads.js, ad-pay.js, mp-webhook.js e ad-refuse.js.

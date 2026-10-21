@@ -1,0 +1,267 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Seja parceiro do TocaPlay Livre</title>
+<meta name="description" content="Cantor, banda, igreja, rádio, podcast ou criador: seja parceiro do TocaPlay Livre de graça. Destaque no app, seu canal tocando e suas músicas na biblioteca de músicas liberadas.">
+<link rel="canonical" href="https://tocaplaylivre.com.br/seja-parceiro.html">
+<link rel="icon" href="icon.svg" type="image/svg+xml">
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="config.js"></script>
+<style>
+  :root{--bg:#0b1410;--card:#16251d;--card2:#1d3026;--line:#25392e;--txt:#eef5f0;--muted:#8fa89a;--green:#19c37d;--yellow:#ffd23f;--red:#e5191b}
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:var(--bg);color:var(--txt);font-family:'Outfit',system-ui,sans-serif;line-height:1.5}
+  main{max-width:760px;margin:0 auto;padding:22px 16px 60px}
+  a{color:var(--yellow)}
+  button,input,select,textarea{font:inherit;color:inherit}
+  button{cursor:pointer;border:0;background:none}
+  .top{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:14px}
+  .brand{display:flex;align-items:center;gap:10px;font-weight:800;font-size:19px;color:#fff;text-decoration:none}
+  .brand img{width:40px;height:40px;border-radius:11px}
+  .open{background:linear-gradient(90deg,#ffd23f,#19c37d);color:#06120c;font-weight:800;padding:10px 16px;border-radius:999px;text-decoration:none;font-size:14px}
+  h1{font-size:30px;line-height:1.15;margin:10px 0 6px;font-weight:900;
+    background:linear-gradient(100deg,#b8860b 0%,#ffd700 30%,#fff3b0 45%,#ffd700 60%,#b8860b 100%);background-size:250% 100%;-webkit-background-clip:text;background-clip:text;color:transparent;animation:g 3.2s linear infinite}
+  @keyframes g{to{background-position:-250% 0}}
+  .lead{color:var(--muted);font-size:16.5px;margin-bottom:18px}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:18px;margin:14px 0}
+  .card h2{font-size:18px;margin-bottom:12px}
+  .steps{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin:8px 0 4px}
+  .steps div{background:var(--card2);border-radius:14px;padding:12px;font-size:14px;color:var(--muted)}
+  .steps b{display:block;color:var(--yellow);font-size:22px}
+  label.l{display:block;font-weight:700;font-size:14px;margin:12px 0 6px;color:var(--muted)}
+  input[type=text],input[type=url],input[type=tel],input[type=datetime-local]{width:100%;background:#0f1c16;border:1px solid var(--line);border-radius:12px;padding:12px 14px;font-size:16px;outline:0}
+  input:focus{border-color:var(--yellow)}
+  .drop{display:flex;flex-direction:column;align-items:center;gap:4px;padding:22px 14px;border:2px dashed var(--yellow);border-radius:16px;text-align:center;cursor:pointer;background:rgba(255,210,63,.06)}
+  .drop b{color:var(--yellow)}.drop small{color:var(--muted)}
+  .prev{margin-top:10px;border-radius:14px;overflow:hidden;position:relative;aspect-ratio:16/9;background:#000;display:none}
+  .prev img{width:100%;height:100%;object-fit:cover;display:block}
+  .prev .tag{position:absolute;left:10px;top:10px;background:rgba(255,210,63,.95);color:#1a1300;font-weight:900;font-size:12px;padding:4px 10px;border-radius:999px}
+  .prev .tt{position:absolute;left:0;right:0;bottom:0;padding:30px 14px 12px;background:linear-gradient(transparent,rgba(0,0,0,.85));font-weight:900;font-size:20px}
+  .plans{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+  .plans label{display:block;border:2px solid var(--line);border-radius:14px;padding:12px;text-align:center;cursor:pointer}
+  .plans input{display:none}
+  .plans label:has(input:checked){border-color:var(--yellow);background:rgba(255,210,63,.08)}
+  .plans b{display:block;font-size:20px;color:var(--yellow)}.plans small{color:var(--muted)}
+  .sum{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-top:16px;padding:14px;border-radius:14px;background:var(--card2)}
+  .sum b{font-size:24px;color:var(--yellow)}
+  .pay{width:100%;margin-top:14px;padding:15px;border-radius:14px;background:var(--green);color:#06120c;font-weight:900;font-size:17px}
+  .pay:disabled{opacity:.6}
+  .google{width:100%;padding:14px;border-radius:14px;background:#fff;color:#1f1f1f;font-weight:800;font-size:16px;display:flex;align-items:center;justify-content:center;gap:10px}
+  .note{color:var(--muted);font-size:13.5px;margin-top:10px}
+  .terms{display:flex;gap:10px;align-items:flex-start;font-size:13.5px;color:var(--muted);margin-top:14px}
+  .terms input{width:20px;height:20px;flex:none;accent-color:var(--green);margin-top:1px}
+  .msg{padding:14px;border-radius:14px;margin:12px 0;font-weight:700}
+  .msg.ok{background:rgba(25,195,125,.15);border:1px solid var(--green)}
+  .msg.warn{background:rgba(255,210,63,.12);border:1px solid var(--yellow)}
+  .ad{display:flex;gap:12px;padding:12px;border-radius:14px;background:var(--card2);margin-bottom:10px;align-items:center}
+  .ad img{width:120px;aspect-ratio:16/9;object-fit:cover;border-radius:10px;flex:none}
+  .ad .tx{flex:1;min-width:0}.ad b{display:block}.ad small{display:block;color:var(--muted);font-size:13px}
+  .st{display:inline-block;font-size:11.5px;font-weight:900;padding:2px 8px;border-radius:6px;margin-top:4px}
+  .st.on{background:var(--green);color:#06120c}.st.wait{background:var(--yellow);color:#1a1300}.st.off{background:var(--line);color:var(--muted)}
+  .renew{margin-top:8px;padding:8px 12px;border-radius:999px;border:1.5px solid var(--yellow);color:var(--yellow);font-weight:800;font-size:13px}
+  footer{margin-top:40px;padding-top:16px;border-top:1px solid var(--line);display:flex;flex-wrap:wrap;gap:8px 18px;font-size:14px}
+  footer a{color:var(--muted);text-decoration:none}
+  .toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:#000;color:#fff;padding:12px 18px;border-radius:12px;font-weight:700;opacity:0;transition:.3s;pointer-events:none;max-width:90vw;text-align:center}
+  .toast.show{opacity:1}
+  select,textarea{width:100%;background:#0f1c16;border:1px solid var(--line);border-radius:12px;padding:12px 14px;font-size:16px;outline:0;color:inherit;font:inherit}
+  textarea{resize:vertical}
+  .two{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+  .ben{display:grid;gap:10px}
+  .ben div{display:flex;gap:12px;align-items:flex-start;background:var(--card2);border-radius:14px;padding:12px;font-size:15px}
+  .ben b{font-size:24px;line-height:1}
+  .photo-row{display:flex;gap:14px;align-items:center;margin-bottom:6px}
+  .ph{width:84px;height:84px;border-radius:50%;border:2px dashed var(--yellow);display:grid;place-items:center;font-size:30px;cursor:pointer;overflow:hidden;flex:none;background:rgba(255,210,63,.06)}
+  .ph img{width:100%;height:100%;object-fit:cover}
+  .bar{height:8px;border-radius:6px;background:var(--line);margin-top:10px;overflow:hidden}.bar i{display:block;height:100%;width:0;background:var(--green);transition:width .2s}
+  .song{display:flex;gap:10px;align-items:center;flex-wrap:wrap;padding:10px;border-radius:12px;background:var(--card2);margin-bottom:8px}
+  .song audio{width:100%;height:36px}.song div{flex:1;min-width:0}.song b{display:block}.song small{color:var(--muted);font-size:13px}
+  .song button{font-size:20px;padding:6px}
+</style>
+</head>
+<body>
+<main>
+  <div class="top"><a class="brand" href="/"><img src="icon.svg" alt="">TocaPlay Livre</a><a class="open" href="/">▶ Abrir o app</a></div>
+  <h1>⭐ Seja parceiro do TocaPlay</h1>
+  <p class="lead">Você é <b>cantor, banda, igreja, rádio, podcast ou criador</b>? Cadastre-se de graça e leve seu trabalho para quem ouve rádio, assiste TV e vídeos no TocaPlay, do Oiapoque ao Chuí.</p>
+  <div id="flash"></div>
+
+  <div class="card">
+    <h2>O que o parceiro ganha</h2>
+    <div class="ben">
+      <div><b>🏠</b><span><strong>Destaque na página inicial</strong>, na fileira "Artistas parceiros"</span></div>
+      <div><b>📺</b><span>Seu <strong>canal do YouTube</strong> tocando dentro do TocaPlay, com seus vídeos e Shorts nos Momentos</span></div>
+      <div><b>🎵</b><span>Suas <strong>músicas na biblioteca de Músicas liberadas</strong>, que o público ouve e usa nos vídeos</span></div>
+      <div><b>✅</b><span><strong>Selo de parceiro</strong> e números de quantas vezes sua música tocou e foi usada</span></div>
+      <div><b>💸</b><span><strong>Grátis</strong>. O TocaPlay não cobra nada para ser parceiro</span></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>Como funciona</h2>
+    <div class="steps"><div><b>1</b>Entre com o Google e preencha o cadastro</div><div><b>2</b>A equipe do TocaPlay confere o cadastro</div><div><b>3</b>Aprovado: você aparece no app</div><div><b>4</b>Envie suas músicas para a biblioteca</div></div>
+    <p class="note">Os direitos das suas músicas e vídeos continuam <b>seus</b>. Você só autoriza o TocaPlay a mostrar e tocar o conteúdo que você mesmo enviar ou indicar, e pode pedir para tirar a qualquer momento.</p>
+  </div>
+
+  <div id="loginBox" class="card" hidden>
+    <h2>Entre para se cadastrar</h2>
+    <button class="google" id="gBtn"><svg width="20" height="20" viewBox="0 0 48 48"><path fill="#FFC107" d="M43.6 20.5H42V20H24v8h11.3C33.7 32.7 29.2 36 24 36c-6.6 0-12-5.4-12-12s5.4-12 12-12c3.1 0 5.8 1.2 7.9 3.1l5.7-5.7C34 6.1 29.3 4 24 4 12.9 4 4 12.9 4 24s8.9 20 20 20 20-8.9 20-20c0-1.3-.1-2.4-.4-3.5z"/><path fill="#FF3D00" d="m6.3 14.7 6.6 4.8C14.7 15.1 19 12 24 12c3.1 0 5.8 1.2 7.9 3.1l5.7-5.7C34 6.1 29.3 4 24 4 16.3 4 9.7 8.3 6.3 14.7z"/><path fill="#4CAF50" d="M24 44c5.2 0 9.9-2 13.4-5.2l-6.2-5.2C29.2 35.1 26.7 36 24 36c-5.2 0-9.6-3.3-11.3-7.9l-6.5 5C9.5 39.6 16.2 44 24 44z"/><path fill="#1976D2" d="M43.6 20.5H42V20H24v8h11.3c-.8 2.2-2.2 4.2-4.1 5.6l6.2 5.2C37 39.2 44 34 44 24c0-1.3-.1-2.4-.4-3.5z"/></svg>Entrar com o Google</button>
+  </div>
+
+  <div id="statusBox" class="card" hidden></div>
+
+  <form id="pForm" class="card" hidden>
+    <h2 id="pFormTitle">Cadastro de parceiro</h2>
+    <div class="photo-row"><label class="ph" for="photo" id="phPrev">📷</label><div><b>Foto ou logo</b><br><small class="note" style="margin:0">Quadrada, de rosto ou da marca. Toque para escolher.</small></div></div>
+    <input type="file" id="photo" accept="image/*" hidden>
+    <label class="l" for="name">Nome artístico / da igreja / do canal</label>
+    <input type="text" id="name" maxlength="80" required placeholder="Ex.: Banda Louvor Amazônia">
+    <div class="two">
+      <div><label class="l" for="kind">Você é</label>
+        <select id="kind"><option value="artista">Cantor(a) / Artista</option><option value="banda">Banda / Grupo</option><option value="igreja">Igreja / Ministério</option><option value="radio">Rádio</option><option value="podcast">Podcast</option><option value="criador">Criador de conteúdo</option><option value="empresa">Empresa / Produtora</option></select></div>
+      <div><label class="l" for="genre">Estilo</label>
+        <select id="genre"><option>Gospel</option><option>Sertanejo</option><option>Forró</option><option>Pagode e Samba</option><option>Funk</option><option>Rap e Hip Hop</option><option>Pop</option><option>Rock</option><option>MPB</option><option>Romântica</option><option>Brega e Arrocha</option><option>Reggae</option><option>Eletrônica</option><option>Infantil</option><option>Instrumental</option><option>Notícias e Conversa</option><option>Outro</option></select></div>
+    </div>
+    <div class="two">
+      <div><label class="l" for="city">Cidade</label><input type="text" id="city" maxlength="60" placeholder="Ex.: Manaus"></div>
+      <div><label class="l" for="uf">Estado</label><select id="uf"></select></div>
+    </div>
+    <label class="l" for="wa">WhatsApp (só a equipe do TocaPlay vê)</label>
+    <input type="tel" id="wa" placeholder="(92) 99999-9999" inputmode="tel">
+    <label class="l" for="yt">Canal do YouTube</label>
+    <input type="url" id="yt" placeholder="https://www.youtube.com/channel/UC… ou https://youtube.com/@seucanal">
+    <label class="l" for="ig">Instagram</label>
+    <input type="url" id="ig" placeholder="https://instagram.com/seuperfil">
+    <label class="l" for="sp">Spotify ou outro site (opcional)</label>
+    <input type="url" id="sp" placeholder="https://open.spotify.com/artist/…">
+    <label class="l" for="bio">Conte um pouco sobre você (até 500 letras)</label>
+    <textarea id="bio" maxlength="500" rows="3" placeholder="Ex.: Banda gospel de Manaus, 10 anos de estrada…"></textarea>
+    <label class="terms"><input type="checkbox" id="terms"><span>Declaro que sou o responsável por este trabalho e <b>autorizo o TocaPlay Livre</b> a mostrar meu nome, foto, links e o conteúdo que eu indicar ou enviar. Os direitos continuam meus. Li os <a href="termos.html" target="_blank" rel="noopener">Termos de uso</a>.</span></label>
+    <button class="pay" id="sendBtn">Enviar cadastro</button>
+  </form>
+
+  <div id="songBox" class="card" hidden>
+    <h2>🎵 Minhas músicas liberadas</h2>
+    <p class="note" style="margin:0 0 10px">Envie músicas <b>suas</b> (MP3 ou M4A, até 15 MB). Elas entram na biblioteca do TocaPlay: o público ouve e pode usar de fundo nos vídeos que posta aqui, sempre com o seu nome.</p>
+    <label class="drop" for="song"><b>Toque para escolher a música</b><small>MP3 ou M4A, até 15 MB</small></label>
+    <input type="file" id="song" accept="audio/*" hidden>
+    <div id="songForm" hidden>
+      <label class="l" for="sTitle">Nome da música</label>
+      <input type="text" id="sTitle" maxlength="100" placeholder="Ex.: Deus de Milagres">
+      <label class="terms"><input type="checkbox" id="sTerms"><span>Esta música é <b>minha</b> (sou autor/dono dos direitos ou tenho autorização) e libero o uso dela no TocaPlay.</span></label>
+      <button class="pay" id="sBtn" type="button">Enviar música</button>
+      <div class="bar" id="sBar" hidden><i></i></div>
+    </div>
+    <div id="songList" style="margin-top:14px"></div>
+  </div>
+
+  <footer><a href="/">Início</a><a href="sobre.html">Sobre</a><a href="anunciar.html">Anuncie</a><a href="termos.html">Termos de uso</a><a href="privacidade.html">Privacidade</a></footer>
+</main>
+<div class="toast" id="toast"></div>
+<script>
+const $ = s => document.querySelector(s);
+const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+let tt; function toast(m){ const t=$('#toast'); t.textContent=m; t.classList.add('show'); clearTimeout(tt); tt=setTimeout(()=>t.classList.remove('show'),3500); }
+const sb = window.supabase.createClient(CONFIG.SUPABASE_URL, CONFIG.SUPABASE_ANON_KEY);
+const pub = (b,p) => `${CONFIG.SUPABASE_URL}/storage/v1/object/public/${b}/${p.split('/').map(encodeURIComponent).join('/')}`;
+const UFS='AC AL AP AM BA CE DF ES GO MA MT MS MG PA PB PR PE PI RJ RN RS RO RR SC SP SE TO'.split(' ');
+$('#uf').innerHTML = '<option value="">—</option>' + UFS.map(u=>`<option>${u}</option>`).join('');
+let user=null, photoBlob=null, photoPath=null, songFile=null, songSecs=null;
+
+$('#gBtn').onclick = ()=>sb.auth.signInWithOAuth({provider:'google', options:{redirectTo: location.origin + '/seja-parceiro.html'}});
+
+// Foto: corta quadrada 400 × 400 e deixa leve
+$('#photo').onchange = async e=>{
+  const f=e.target.files[0]; if(!f || !f.type.startsWith('image/')) return;
+  const url=URL.createObjectURL(f), im=await new Promise((res,rej)=>{ const i=new Image(); i.onload=()=>res(i); i.onerror=rej; i.src=url; });
+  const S=400, cv=document.createElement('canvas'); cv.width=cv.height=S; const ctx=cv.getContext('2d');
+  const k=Math.max(S/im.naturalWidth, S/im.naturalHeight), w=im.naturalWidth*k, h=im.naturalHeight*k;
+  ctx.drawImage(im,(S-w)/2,(S-h)/2,w,h); URL.revokeObjectURL(url);
+  photoBlob = await new Promise(r=>cv.toBlob(r,'image/jpeg',.88));
+  $('#phPrev').innerHTML = `<img src="${URL.createObjectURL(photoBlob)}" alt="">`;
+};
+
+$('#pForm').onsubmit = async e=>{
+  e.preventDefault();
+  const v=id=>$('#'+id).value.trim();
+  if(v('name').length<2) return toast('Escreva o seu nome artístico.');
+  const wa=v('wa').replace(/\D/g,'');
+  if(!wa && !v('yt') && !v('ig')) return toast('Coloque o WhatsApp, o YouTube ou o Instagram.');
+  for(const id of ['yt','ig','sp']) if(v(id) && !/^https?:\/\//i.test(v(id))) return toast('Os links precisam começar com https://');
+  if(!$('#terms').checked) return toast('Marque a caixa de autorização.');
+  const b=$('#sendBtn'); b.disabled=true; b.textContent='Enviando…';
+  try{
+    if(photoBlob){ const path=`${user.id}/${Date.now()}.jpg`;
+      const up=await sb.storage.from('parceiros').upload(path, photoBlob, {contentType:'image/jpeg'}); if(up.error) throw new Error('A foto não foi enviada. Tente de novo.'); photoPath=path; }
+    const {data:d, error} = await sb.rpc('partner_apply', {p_name:v('name'), p_kind:v('kind'), p_genre:v('genre'), p_city:v('city'), p_uf:v('uf'), p_whatsapp:wa,
+      p_youtube:v('yt'), p_instagram:v('ig'), p_spotify:v('sp'), p_site:'', p_photo:photoPath||'', p_bio:v('bio'), p_terms:true});
+    if(error || !d) throw new Error('Não deu para enviar agora. Tente de novo.');
+    const m={bloqueado:'🚫 Nome ou texto não permitido.', contato:'Coloque um contato.', foto:'A foto não foi enviada. Tente de novo.', termos:'Marque a caixa de autorização.', login:'Entre com o Google.'};
+    if(d.status!=='ok') throw new Error(m[d.status]||'Não deu para enviar agora.');
+    photoBlob=null; toast(d.situacao==='aprovado' ? 'Dados atualizados ✅' : 'Cadastro enviado! ✅'); scrollTo({top:0, behavior:'smooth'}); load();
+  }catch(err){ toast(err.message); }
+  b.disabled=false; b.textContent='Enviar cadastro';
+};
+
+// Música: mostra o formulário, pega a duração e envia com barra de progresso
+$('#song').onchange = e=>{
+  const f=e.target.files[0]; if(!f) return;
+  if(!/^audio\//.test(f.type) && !/\.(mp3|m4a|aac|ogg|wav)$/i.test(f.name)) return toast('Escolha um arquivo de música (MP3 ou M4A).');
+  if(f.size>15*1024*1024) return toast('A música passa de 15 MB. Use um MP3 menor.');
+  songFile=f; songSecs=null; $('#songForm').hidden=false; $('#sTitle').value=f.name.replace(/\.[^.]+$/,'').replace(/[_-]+/g,' ').slice(0,100);
+  const a=new Audio(); a.preload='metadata'; a.onloadedmetadata=()=>{ songSecs=Math.round(a.duration)||null; URL.revokeObjectURL(a.src); }; a.src=URL.createObjectURL(f);
+};
+$('#sBtn').onclick = async ()=>{
+  if(!songFile) return; const title=$('#sTitle').value.trim();
+  if(title.length<2) return toast('Escreva o nome da música.');
+  if(!$('#sTerms').checked) return toast('Marque a caixa: a música é sua.');
+  const ext=(songFile.name.match(/\.(mp3|m4a|aac|ogg|wav)$/i)||[,'mp3'])[1].toLowerCase();
+  const type=songFile.type || ({mp3:'audio/mpeg',m4a:'audio/mp4',aac:'audio/aac',ogg:'audio/ogg',wav:'audio/wav'})[ext];
+  const path=`${user.id}/${Date.now()}.${ext}`, {data:s}=await sb.auth.getSession();
+  const b=$('#sBtn'); b.disabled=true; $('#sBar').hidden=false;
+  const ok=await new Promise(res=>{ const x=new XMLHttpRequest();
+    x.open('POST', `${CONFIG.SUPABASE_URL}/storage/v1/object/musicas/${path}`);
+    x.setRequestHeader('Authorization','Bearer '+s.session.access_token); x.setRequestHeader('apikey', CONFIG.SUPABASE_ANON_KEY);
+    x.setRequestHeader('Content-Type', type); x.setRequestHeader('x-upsert','false');
+    x.upload.onprogress=e=>{ if(e.lengthComputable) $('#sBar i').style.width=(e.loaded/e.total*100)+'%'; };
+    x.onload=()=>res(x.status<300); x.onerror=()=>res(false); x.send(songFile); });
+  if(!ok){ b.disabled=false; $('#sBar').hidden=true; return toast('A música não foi enviada. Confira a internet e tente de novo.'); }
+  const {data:d}=await sb.rpc('song_add',{p_path:path, p_title:title, p_genre:$('#genre').value, p_seconds:songSecs, p_terms:true});
+  b.disabled=false; $('#sBar').hidden=true; $('#sBar i').style.width='0';
+  if(!d || d.status!=='ok') return toast({bloqueado:'🚫 Nome da música não permitido.', limite:'Limite de 20 músicas por dia.', parceiro:'Seu cadastro ainda não foi aprovado.'}[d && d.status] || 'Não deu para salvar a música.');
+  songFile=null; $('#song').value=''; $('#songForm').hidden=true; $('#sTerms').checked=false; toast('Música enviada 🎵'); load();
+};
+$('#songList').addEventListener('click', async e=>{
+  const b=e.target.closest('[data-del]'); if(!b) return;
+  if(!confirm('Tirar esta música da biblioteca?')) return;
+  await sb.rpc('song_delete',{p_id:+b.dataset.del}); load();
+});
+const KIND={artista:'Cantor(a) / Artista',banda:'Banda / Grupo',igreja:'Igreja / Ministério',radio:'Rádio',podcast:'Podcast',criador:'Criador de conteúdo',empresa:'Empresa / Produtora'};
+const mmss = s => s ? `${Math.floor(s/60)}:${String(s%60).padStart(2,'0')}` : '';
+async function load(){
+  const {data} = await sb.rpc('partner_me'); const p=data && data.partner, songs=(data && data.songs)||[];
+  if(p){
+    const st={pendente:['⏳ Cadastro em análise','A equipe do TocaPlay vai conferir e aprovar. Você pode atualizar os dados abaixo.'],
+              aprovado:['✅ Você é parceiro do TocaPlay!','Seu perfil aparece na fileira "Artistas parceiros" do app. Envie suas músicas logo abaixo.'],
+              recusado:['Cadastro não aprovado','Confira os dados, corrija e envie de novo.']}[p.status];
+    $('#statusBox').hidden=false;
+    $('#statusBox').innerHTML=`<div style="display:flex;gap:12px;align-items:center">${p.photo?`<img src="${esc(pub('parceiros',p.photo))}" alt="" style="width:64px;height:64px;border-radius:50%;object-fit:cover">`:''}<div><b style="font-size:18px">${esc(p.name)}</b><br><small style="color:var(--muted)">${esc(KIND[p.kind]||'')} · ${esc(p.genre||'')}</small></div></div><div class="msg ${p.status==='aprovado'?'ok':'warn'}" style="margin-bottom:0">${st[0]}<br><span style="font-weight:400">${st[1]}</span></div>`;
+    $('#pFormTitle').textContent='Atualizar meus dados';
+    ['name','city','bio'].forEach(k=>$('#'+k).value=p[k]||''); $('#kind').value=p.kind; $('#genre').value=p.genre||'Gospel'; $('#uf').value=p.uf||'';
+    $('#wa').value=p.whatsapp||''; $('#yt').value=p.youtube||''; $('#ig').value=p.instagram||''; $('#sp').value=p.spotify||'';
+    if(p.photo && !photoBlob){ photoPath=p.photo; $('#phPrev').innerHTML=`<img src="${esc(pub('parceiros',p.photo))}" alt="">`; }
+    $('#songBox').hidden = p.status!=='aprovado';
+  }
+  $('#songList').innerHTML = songs.map(s=>`<div class="song"><audio src="${esc(pub('musicas',s.path))}" controls preload="none"></audio><div><b>${esc(s.title)}</b><small>${mmss(s.seconds)} · ▶ ${s.plays} vezes · 🎬 usada ${s.uses} vezes</small></div><button data-del="${s.id}" aria-label="Tirar">🗑</button></div>`).join('');
+}
+(async ()=>{
+  const {data} = await sb.auth.getSession(); user = data.session?.user || null;
+  const real = user && !user.is_anonymous && user.email;
+  $('#loginBox').hidden = !!real; $('#pForm').hidden = !real;
+  if(real){ if(!$('#name').value) $('#name').value = user.user_metadata?.name || ''; load(); }
+})();
+</script>
+</body>
+</html>

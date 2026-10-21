@@ -141,6 +141,13 @@ h2{font-size:18px;font-weight:700;margin:20px 0 10px}
 .row-head{display:flex;align-items:baseline;justify-content:space-between;gap:10px}
 .row-note{color:var(--muted);font-size:12.5px}
 .ch.radio .av{border-radius:18px;background:#fff;color:#0b1410}
+.ch.parc .av{border:3px solid #ffd700;box-shadow:0 0 0 3px rgba(255,215,0,.25)}
+.ch.parc .ok{display:inline-block;margin-left:3px;color:#ffd700}
+.ch.parc.join .av{background:transparent;border:3px dashed #ffd700;color:#ffd700;font-size:30px}
+.ch.song .av{border-radius:18px}
+.ch.song .av::after{content:"▶";position:absolute;right:4px;bottom:4px;width:24px;height:24px;border-radius:50%;background:var(--green);color:#06120c;font-size:11px;display:grid;place-items:center}
+.ch.song small{display:block;color:var(--muted);font-weight:600;font-size:11px;margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.row-link{color:var(--yellow);font-weight:800;font-size:14px;text-decoration:none}
 .ch.radio .av img{object-fit:contain;padding:6px;background:#fff}
 .row-head button{font-size:13.5px;font-weight:600;color:var(--green)}
 .ag{display:grid;grid-template-columns:repeat(auto-fill,minmax(96px,1fr));gap:18px 12px}
@@ -652,6 +659,7 @@ body.in-nav main{max-width:none;padding:0 24px}
 .nav-tabs{display:flex;gap:6px;margin-left:auto}
 .nav-tabs button{padding:8px 16px;border-radius:999px;background:var(--card);font-weight:800;font-size:14px;color:var(--muted)}
 .nav-tabs button.on{background:var(--yellow);color:#1a1300}
+.nav-res-yt{grid-column:1/-1;font-size:17px;margin:14px 0 2px;color:var(--yellow)}
 .nav-grid{display:block}
 @media (min-width:900px){ .nav-grid{display:grid;grid-template-columns:minmax(0,1fr) 380px;gap:24px;align-items:start} }
 @media (min-width:1500px){ .nav-grid{grid-template-columns:minmax(0,1fr) 420px} }
@@ -751,6 +759,24 @@ body.in-nav main{max-width:none;padding:0 24px}
 .crt-drop b{color:var(--yellow);font-size:16px}.crt-drop small{color:var(--muted);font-size:13px}
 .crt-prev{margin-bottom:10px}.crt-prev video,.crt-prev img{width:100%;max-height:260px;border-radius:12px;background:#000;object-fit:contain;display:block}
 .crt-prev small{display:block;color:var(--muted);font-size:13px;margin-top:4px}
+.crt-stage{position:relative;margin:0 auto;border-radius:12px;overflow:hidden;background:#000}
+.crt-prev .crt-stage video,.crt-prev .crt-stage img{width:100%;height:100%;max-height:none;border-radius:0;object-fit:fill}
+.crt-ov{position:absolute;inset:0;width:100%;height:100%;touch-action:none;cursor:grab}
+.crt-deco{margin-top:12px;padding:12px;border-radius:14px;background:var(--card2);border:1px solid var(--line)}
+.crt-deco-h{display:block;font-size:15px;margin-bottom:8px}.crt-deco-h small{color:var(--muted);font-weight:600;font-size:12px}
+.crt-deco input#decoTxt{width:100%;background:#0f1c16;border:1px solid var(--line);border-radius:10px;padding:10px 12px;color:var(--txt);font:inherit;font-size:15px}
+.deco-row{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin:8px 0}
+.deco-col{width:28px;height:28px;border-radius:50%;border:2px solid var(--line)}.deco-col.on{outline:3px solid var(--yellow);outline-offset:1px}
+.deco-sep{width:6px}
+.deco-pos{padding:6px 10px;border-radius:999px;border:1.5px solid var(--line);font-size:12.5px;font-weight:800;color:var(--muted)}.deco-pos.on{border-color:var(--yellow);color:var(--yellow)}
+.deco-tip{display:block;color:var(--muted);font-size:12px;margin:4px 0 6px}
+.deco-emo{display:flex;flex-wrap:wrap;gap:4px}.deco-emo button{font-size:24px;width:40px;height:40px;border-radius:10px;background:rgba(255,255,255,.05)}
+.deco-emo .deco-clear{width:auto;font-size:12px;font-weight:800;color:var(--muted);padding:0 10px}
+.deco-songs{display:flex;flex-direction:column;gap:6px;max-height:190px;overflow-y:auto}
+.deco-song{text-align:left;padding:9px 12px;border-radius:10px;border:1.5px solid var(--line);font-weight:800;font-size:14px}
+.deco-song small{display:block;color:var(--muted);font-weight:600;font-size:12px;margin:0}.deco-song.on{border-color:var(--green);background:rgba(25,195,125,.12)}
+.deco-keep{display:flex;gap:8px;align-items:center;font-size:13px;color:var(--muted);margin-top:8px}
+.deco-keep input{width:20px !important;height:20px;flex:none;margin:0;accent-color:var(--green)}
 .crt-emo{display:flex;flex-wrap:wrap;gap:4px;margin:-4px 0 10px}.crt-emo button{font-size:20px;padding:4px 6px;border-radius:8px;background:var(--card)}
 .crt-prog{margin:4px 0 12px}.crt-prog span{display:block;font-size:13px;color:var(--muted);margin-bottom:6px}
 .crt-prog div{height:8px;border-radius:99px;background:var(--card);overflow:hidden}.crt-prog i{display:block;height:100%;width:0;background:linear-gradient(90deg,#ffd23f,#19c37d);transition:width .3s}
@@ -791,6 +817,56 @@ body.in-nav main{max-width:none;padding:0 24px}
 .nav-res-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:4px 0 14px}
 .nav-res-head h2{font-size:18px}.nav-res-head button{padding:8px 14px;border-radius:999px;border:1.5px solid var(--yellow);color:var(--yellow);font-weight:800;font-size:13.5px}
 .nav-res-empty{grid-column:1/-1;color:var(--muted);padding:20px 0}
+/* ===== Momentos: vídeos curtos em pé ===== */
+.mom{position:fixed;inset:0;z-index:300;background:#000;display:none}
+.mom.open{display:block}
+.mom-feed{position:absolute;inset:0;overflow-y:auto;scroll-snap-type:y mandatory;overscroll-behavior:contain;scrollbar-width:none}
+.mom-feed::-webkit-scrollbar{display:none}
+.mom-s{position:relative;height:100%;height:100dvh;scroll-snap-align:start;scroll-snap-stop:always;display:flex;align-items:center;justify-content:center;overflow:hidden}
+.mom-stage{position:relative;height:100%;width:100%;max-width:calc(100dvh * 9 / 16);background:#111;overflow:hidden}
+@media(min-width:700px){.mom-stage{border-radius:16px;height:calc(100% - 24px)}}
+.mom-stage>img.mom-poster{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;filter:brightness(.75)}
+.mom-stage>iframe,.mom-stage>video,.mom-stage>div[id^=momYt]{position:absolute;inset:0;width:100%;height:100%;border:0;object-fit:contain;background:#000}
+.mom-stage .mom-tap{position:absolute;inset:0;z-index:2}
+.mom-stage.ext .mom-tap{display:none}
+.mom-load{position:absolute;inset:0;display:grid;place-items:center;color:#fff;font-weight:800;z-index:1;pointer-events:none}
+.mom-heart{position:absolute;left:50%;top:45%;font-size:96px;transform:translate(-50%,-50%) scale(.2);opacity:0;z-index:3;pointer-events:none;transition:transform .35s cubic-bezier(.2,1.6,.4,1),opacity .35s}
+.mom-heart.show{transform:translate(-50%,-50%) scale(1);opacity:1}
+.mom-info{position:absolute;left:0;right:64px;bottom:0;z-index:4;padding:60px 14px calc(18px + env(safe-area-inset-bottom));background:linear-gradient(transparent,rgba(0,0,0,.75));color:#fff;pointer-events:none}
+.mom-info .who{display:flex;align-items:center;gap:8px;font-weight:900;font-size:15px;pointer-events:auto}
+.mom-info .who .av{width:34px;height:34px;border-radius:50%;display:grid;place-items:center;font-size:12px;font-weight:900;overflow:hidden;position:relative;border:2px solid #fff;flex:none}
+.mom-info .who .av img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.mom-info .who small{font-weight:700;font-size:11px;background:#e5191b;padding:2px 7px;border-radius:6px}
+.mom-info p{margin-top:6px;font-size:14px;line-height:1.35;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;text-shadow:0 1px 3px #000}
+.mom-acts{position:absolute;right:8px;bottom:calc(90px + env(safe-area-inset-bottom));z-index:4;display:flex;flex-direction:column;gap:16px;align-items:center}
+@media(min-width:700px){.mom-acts{right:calc(50% - (100dvh * 9 / 32) - 70px)}.mom-info{left:calc(50% - (100dvh * 9 / 32));right:calc(50% - (100dvh * 9 / 32) + 60px);border-radius:0 0 16px 16px;bottom:12px}}
+.mom-acts button{display:flex;flex-direction:column;align-items:center;gap:3px;color:#fff;font-weight:800;font-size:12px;text-shadow:0 1px 3px #000}
+.mom-acts button i{font-style:normal;width:50px;height:50px;border-radius:50%;display:grid;place-items:center;font-size:24px;background:rgba(0,0,0,.45);border:2px solid rgba(255,215,0,.85)}
+.mom-acts button.on i{background:#e5191b;border-color:#fff}
+.mom-top{position:absolute;left:0;right:0;top:0;z-index:6;display:flex;align-items:center;gap:10px;padding:calc(10px + env(safe-area-inset-top)) 12px 10px;background:linear-gradient(rgba(0,0,0,.6),transparent);pointer-events:none}
+.mom-top button,.mom-top a{pointer-events:auto}
+.mom-x{width:40px;height:40px;border-radius:50%;background:rgba(0,0,0,.5);color:#fff;font-size:20px;display:grid;place-items:center}
+.mom-top h2{color:#fff;font-size:19px;font-weight:900;flex:1;background:linear-gradient(100deg,#b8860b,#ffd700,#fff3b0,#ffd700,#b8860b);background-size:250% 100%;-webkit-background-clip:text;background-clip:text;color:transparent;animation:goldShine 3.2s linear infinite}
+@keyframes goldShine{to{background-position:-250% 0}}
+.mom-new{padding:8px 14px;border-radius:999px;background:#e5191b;color:#fff;font-weight:900;font-size:14px;border:2px solid #fff}
+.mom-arrows{position:absolute;right:18px;top:50%;transform:translateY(-50%);z-index:6;display:none;flex-direction:column;gap:10px}
+@media(min-width:900px){.mom-arrows{display:flex}}
+.mom-arrows button{width:46px;height:46px;border-radius:50%;background:rgba(255,255,255,.15);color:#fff;font-size:20px}
+.mom-empty{height:100%;display:grid;place-items:center;text-align:center;color:#fff;padding:30px;font-weight:700}
+.mom-sheet{position:absolute;left:0;right:0;bottom:0;z-index:8;max-height:70%;display:flex;flex-direction:column;background:var(--card,#16251d);color:var(--txt,#fff);border-radius:18px 18px 0 0;transform:translateY(100%);transition:transform .25s;max-width:560px;margin:0 auto}
+.mom-sheet.open{transform:none}
+.mom-sheet h3{display:flex;align-items:center;justify-content:space-between;padding:14px 16px;font-size:16px;border-bottom:1px solid var(--line,#25392e)}
+.mom-sheet h3 button{font-size:20px;color:var(--muted)}
+.mom-cl{overflow-y:auto;padding:8px 16px;flex:1}
+.mom-cl div{padding:8px 0;border-bottom:1px solid var(--line,#25392e);font-size:14px}
+.mom-cl b{display:block;font-size:13px;color:var(--yellow,#ffd23f)}
+.mom-cf{display:flex;gap:8px;padding:10px 12px calc(10px + env(safe-area-inset-bottom));border-top:1px solid var(--line,#25392e)}
+.mom-cf input{flex:1;min-width:0;background:#0f1c16;border:1px solid var(--line,#25392e);border-radius:999px;padding:10px 14px;color:inherit;font:inherit;font-size:15px}
+.mom-cf button{padding:10px 16px;border-radius:999px;background:var(--green,#19c37d);color:#06120c;font-weight:900}
+.nav-mom{display:flex;align-items:center;gap:6px;padding:8px 14px;border-radius:999px;background:linear-gradient(135deg,#ff2d55,#e5191b);color:#fff;font-weight:900;font-size:14px;border:2px solid #ffd700}
+body.mom-on{overflow:hidden}
+
+.feat-mom{position:absolute;z-index:5;left:12px;top:62px;display:flex;align-items:center;gap:6px;padding:8px 16px 8px 12px;border-radius:999px;background:linear-gradient(135deg,#ff2d55,#c2185b);color:#fff;font-weight:900;font-size:13px;letter-spacing:.5px;border:2px solid #ffd700;box-shadow:0 4px 14px rgba(0,0,0,.4)}
 </style>
 </head>
 <body>
@@ -849,6 +925,7 @@ body.in-nav main{max-width:none;padding:0 24px}
       <div class="feat-prog"><i id="featProg"></i></div>
       <button class="feat-sound" id="featSound" aria-label="Ligar som">🔇 <span>Ouvir</span></button>
       <button class="feat-nav" id="featNav" aria-label="Abrir a Navegação de vídeos"><b>▶</b>NAVEGAÇÃO</button>
+      <button class="feat-mom" id="featMom" aria-label="Abrir os Momentos, vídeos curtos">📱 MOMENTOS</button>
     </div>
     <div class="intro">
       <h1>Rádio boa, <span class="gold">de graça</span>, do Oiapoque ao Chuí.</h1>
@@ -874,6 +951,10 @@ body.in-nav main{max-width:none;padding:0 24px}
     <div class="chips-wrap row-wrap"><button class="chip-arrow l" data-rowscroll="-1" aria-label="Voltar"><svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg></button><div class="ch-row" id="rowPreg"></div><button class="chip-arrow r" data-rowscroll="1" aria-label="Ver mais"><svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></svg></button></div>
     <div class="row-head"><h2>🎤 Galeria Gospel</h2><button data-gotv="Cristão" data-gosub="Gospel Nacional">Ver todos</button></div>
     <div class="chips-wrap row-wrap"><button class="chip-arrow l" data-rowscroll="-1" aria-label="Voltar"><svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg></button><div class="ch-row" id="rowGospel"></div><button class="chip-arrow r" data-rowscroll="1" aria-label="Ver mais"><svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></svg></button></div>
+    <div id="rowParcBlock" hidden><div class="row-head"><h2>⭐ Artistas parceiros</h2><a class="row-link" href="seja-parceiro.html">Seja parceiro</a></div>
+    <div class="chips-wrap row-wrap"><button class="chip-arrow l" data-rowscroll="-1" aria-label="Voltar"><svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg></button><div class="ch-row" id="rowParc"></div><button class="chip-arrow r" data-rowscroll="1" aria-label="Ver mais"><svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></svg></button></div></div>
+    <div id="rowSongsBlock" hidden><div class="row-head"><h2>🎵 Músicas liberadas</h2><button id="rowSongsAll">Tocar todas</button></div><p class="row-note" style="margin:-6px 0 10px">Músicas dos artistas parceiros, liberadas para ouvir e usar nos seus vídeos.</p>
+    <div class="chips-wrap row-wrap"><button class="chip-arrow l" data-rowscroll="-1" aria-label="Voltar"><svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg></button><div class="ch-row" id="rowSongs"></div><button class="chip-arrow r" data-rowscroll="1" aria-label="Ver mais"><svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></svg></button></div></div>
     <div id="rowGospelRadioBlock" hidden><div class="row-head"><h2>📻 Rádios Gospel</h2></div><p class="row-note" style="margin:-6px 0 10px">Continuam tocando com a tela desligada ou com você em outro app.</p>
     <div class="chips-wrap row-wrap"><button class="chip-arrow l" data-rowscroll="-1" aria-label="Voltar"><svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg></button><div class="ch-row" id="rowGospelRadio"></div><button class="chip-arrow r" data-rowscroll="1" aria-label="Ver mais"><svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></svg></button></div></div>
     <div id="rowPodsBlock"><div class="row-head"><h2>Podcasts em vídeo</h2><button data-goview="pod">Ver todos</button></div>
@@ -896,7 +977,7 @@ body.in-nav main{max-width:none;padding:0 24px}
     <div class="list" id="homeList"></div>
     <button class="more" id="homeMore" hidden>Carregar mais rádios</button>
     <div class="ad-slot" data-ad="fim"></div>
-    <div class="site-links"><a href="sobre.html">Sobre o TocaPlay</a><a href="como-usar.html">Como usar</a><a href="radios-por-estado.html">Rádios por estado</a><a href="radios-gospel.html">Rádios gospel</a><a href="artistas-gospel.html">Artistas gospel</a><a href="radios-romanticas.html">Rádios românticas</a><a href="anunciar.html" style="color:var(--yellow)">📣 Anuncie aqui</a><a href="privacidade.html">Privacidade</a><a href="termos.html">Termos de uso</a><a href="admin.html" class="adm" rel="nofollow">Acesso ADM</a></div>
+    <div class="site-links"><a href="sobre.html">Sobre o TocaPlay</a><a href="como-usar.html">Como usar</a><a href="radios-por-estado.html">Rádios por estado</a><a href="radios-gospel.html">Rádios gospel</a><a href="artistas-gospel.html">Artistas gospel</a><a href="radios-romanticas.html">Rádios românticas</a><a href="seja-parceiro.html" style="color:var(--yellow)">⭐ Seja parceiro</a><a href="anunciar.html" style="color:var(--yellow)">📣 Anuncie aqui</a><a href="privacidade.html">Privacidade</a><a href="termos.html">Termos de uso</a><a href="admin.html" class="adm" rel="nofollow">Acesso ADM</a></div>
   </section>
 
   <!-- NAVEGAÇÃO: feed de vídeos com curtir, comentar e compartilhar (contagem do próprio TocaPlay) -->
@@ -904,7 +985,7 @@ body.in-nav main{max-width:none;padding:0 24px}
     <div class="nav-top stickbar">
       <div class="brand"><img src="icon.svg" alt="">Navegação</div>
       <form class="nav-search" id="navSearchF" role="search"><input id="navSearchQ" type="search" placeholder="Pesquisar vídeos, canais, cantores…" autocomplete="off" enterkeyhint="search" aria-label="Pesquisar na Navegação"><button aria-label="Pesquisar"><svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.4" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg></button></form>
-      <div class="nav-tabs" role="tablist"><button class="on" data-navtab="foryou">Para você</button><button data-navtab="geral">Geral</button></div>
+      <button class="nav-mom" id="navMomBtn" aria-label="Momentos: vídeos curtos">📱 Momentos</button><div class="nav-tabs" role="tablist"><button class="on" data-navtab="foryou">Para você</button><button data-navtab="geral">Geral</button></div>
       <div class="nav-me"><button class="nav-create" id="navCreate" aria-label="Criar post"><b>+</b> Criar</button><button class="nav-avatar" id="navMeBtn" aria-label="Meu canal">?</button></div>
     </div>
     <div id="navBrowse"><div id="navRes" hidden><div class="nav-res-head"><h2 id="navResTitle"></h2><button id="navResClear">✕ Limpar busca</button></div><div class="nav-cards" id="navResCards"></div></div><div class="nav-cards" id="navCards"></div><button class="nav-more" id="navMore2">Carregar mais vídeos</button></div>
@@ -1237,6 +1318,14 @@ body.in-nav main{max-width:none;padding:0 24px}
 
 <div class="toast" id="toast"></div>
 
+<div class="mom" id="mom" aria-label="Momentos" role="dialog">
+  <div class="mom-top"><button class="mom-x" id="momX" aria-label="Fechar Momentos">✕</button><span style="font-size:22px">📱</span><h2>Momentos</h2><button class="mom-new" id="momNew" aria-label="Postar um Momento"><b>+</b> Postar</button></div>
+  <div class="mom-feed" id="momFeed"></div>
+  <div class="mom-arrows"><button id="momUp" aria-label="Anterior">▲</button><button id="momDown" aria-label="Próximo">▼</button></div>
+  <div class="mom-sheet" id="momSheet"><h3><span>Comentários <span id="momComN"></span></span><button id="momComX" aria-label="Fechar">✕</button></h3>
+    <div class="mom-cl" id="momComList"></div>
+    <form class="mom-cf" id="momComForm"><input id="momComTxt" maxlength="500" placeholder="Escreva um comentário…" autocomplete="off" enterkeyhint="send"><button>Enviar</button></form></div>
+</div>
 <script>
 /* Configuração fica em config.js */
 
@@ -1356,9 +1445,10 @@ function play(s){
   loading = true; updatePlayer();
   audio.src = s.url; audio.play().catch(err=>{ if(err.name!=='AbortError') failed(); });
   if(s.pod){ audio.playbackRate = podRate; podResumeAt = (podPos()[s.id]||0); }
+  else if(s.song) navRpc('song_event',{p_id:s.songId, p_dev:deviceId(), p_kind:'play'});
   else API.click(s.id);
   if(sb) sb.from('plays').insert({station_id:s.id, station_name:(s.pod?'🎙️ ':'')+s.name}).then(()=>{});
-  logArea(s.pod ? 'Podcasts (áudio)' : 'Rádios');
+  logArea(s.pod ? 'Podcasts (áudio)' : s.song ? 'Músicas liberadas' : 'Rádios');
   playCount++;
   setMediaSession(s);
 }
@@ -1643,6 +1733,7 @@ function renderAccount(){
       <p style="margin-top:10px">Suas favoritas estão sincronizadas em todos os aparelhos.</p><div class="form"><button class="btn ghost" id="logoutBtn">Sair da conta</button></div></div>
     <div class="card creator-card"><div class="cc-head"><span class="cc-ic">🎬</span><div><b>Meu canal de criador</b><small>Poste seus vídeos e veja quantas pessoas assistiram, curtiram e comentaram.</small></div></div>
       <div class="cc-btns"><button class="cc-create" data-criar><b>+</b> Criar conteúdo</button><button class="cc-see" data-go-canal>Ver meu canal</button></div></div>
+    <a class="card" href="seja-parceiro.html" style="display:flex;gap:12px;align-items:center;text-decoration:none;color:inherit"><span style="font-size:30px">⭐</span><span><b style="color:var(--yellow)">Seja parceiro do TocaPlay</b><br><small style="color:var(--muted)">Cantor, banda, igreja ou rádio? Destaque grátis no app e suas músicas na biblioteca.</small></span></a>
     <a class="card" href="anunciar.html" style="display:flex;gap:12px;align-items:center;text-decoration:none;color:inherit"><span style="font-size:30px">📣</span><span><b style="color:var(--yellow)">Anuncie no TocaPlay</b><br><small style="color:var(--muted)">Sua empresa, igreja ou evento no destaque da página inicial. A partir de R$ 10.</small></span></a>` + ownerCard + installCard + inviteCard;
     $('#logoutBtn').onclick = async()=>{ await sb.auth.signOut(); toast('Você saiu da conta'); };
     return;
@@ -2466,6 +2557,7 @@ const FEAT_PER_CAT = (typeof CONFIG!=='undefined' && CONFIG.HOME_PER_CATEGORY) |
 const FEAT_SECONDS = (typeof CONFIG!=='undefined' && CONFIG.HOME_SECONDS) || 10;
 const PROMOS = [
   {promo:true, id:'nav', emoji:'🧭', name:'Navegação TocaPlay', desc:'Vídeos um atrás do outro: curta, comente e compartilhe.', cta:'🧭 Abrir a Navegação', bg:'linear-gradient(120deg,#2b2300,#19c37d,#2b2300)', act:()=>go('nav')},
+  {promo:true, id:'mom', emoji:'📱', name:'Momentos', desc:'Vídeos curtos em pé: arraste para cima e veja o próximo.', cta:'📱 Ver Momentos', bg:'linear-gradient(120deg,#3d0a1a,#ff2d55,#3d0a1a)', act:()=>openMom()},
   {promo:true, id:'app', emoji:'📲', name:'Baixe o app TocaPlay', desc:'Grátis. Fica com ícone no seu celular, computador ou TV.', cta:'📲 Baixar agora', bg:'linear-gradient(120deg,#0b3d2e,#14a37f,#0b3d2e)', act:()=>openInstall()},
   {promo:true, id:'gym', emoji:'🏋️', name:'Modo Academia', desc:'Música para treinar sem parar, em tela cheia.', cta:'▶ Começar o treino', bg:'linear-gradient(120deg,#3a0d0d,#d1362f,#3a0d0d)', act:()=>$('#gymBanner').click()},
   {promo:true, id:'gospel', emoji:'🎤', name:'Galeria Gospel', desc:'Os maiores artistas gospel do Brasil e do mundo, num lugar só.', cta:'▶ Ver artistas', bg:'linear-gradient(120deg,#2b1a00,#c99a1c,#2b1a00)', act:()=>{ tvCat='Cristão'; tvSub='Gospel Nacional'; tvQ=''; renderTv(); go('tv'); }},
@@ -2742,6 +2834,7 @@ async function openInstall(){
 $('#installClose').onclick = ()=>$('#installModal').classList.remove('open');
 $('#installModal').addEventListener('click', e=>{ if(e.target.id==='installModal') $('#installModal').classList.remove('open'); });
 window.addEventListener('popstate', e=>{
+  if(typeof momOn==='function' && momOn() && !e.state?.mom){ closeMom(); return; }
   if($('#sheet').classList.contains('open')){ closeSheet(); return; }
   ['shareModal','addModal','nameModal','sleepModal','songModal','importModal','installModal','welcomeModal','criarModal'].forEach(id=>$('#'+id).classList.remove('open'));
   if((e.state?.view)==='nav' && curView==='nav'){ navSetMode(e.state.watch ? 'watch' : 'grid'); return; }
@@ -2841,7 +2934,7 @@ async function navIds(c, kind='UULF'){
 function navIdsHarvest(c, kind='UULF'){
   const key='tp_nv_'+kind+c.channelId, hit=store.get(key,null);
   if(hit && hit.ids && Date.now()-hit.t < 6*3600e3) return Promise.resolve(hit.ids);
-  if(navHFail>=2 && !navHOk) return Promise.resolve([]);   // a lista não carregou: usa o modo simples, sem esperar
+  if(kind!=='UUSH' && navHFail>=2 && !navHOk) return Promise.resolve([]);   // a lista não carregou: usa o modo simples, sem esperar
   return new Promise(res=>{ navHq.push({c,kind,key,res}); navHRun(); });
 }
 function navHRun(){
@@ -2852,7 +2945,7 @@ function navHRun(){
     let done=false, iv=null, p=null;
     const finish=ids=>{ if(done) return; done=true; clearInterval(iv); clearTimeout(to);
       try{ p && p.destroy(); }catch{} box.innerHTML='';
-      if(ids.length){ navHOk++; store.set(job.key,{t:Date.now(), ids}); } else navHFail++;
+      if(ids.length){ navHOk++; store.set(job.key,{t:Date.now(), ids}); } else if(job.kind==='UUSH') store.set(job.key,{t:Date.now(), ids:[]}); else navHFail++;   // canal sem Shorts não conta como falha
       job.res(ids); navHBusy=false; setTimeout(navHRun,60); };
     const to=setTimeout(()=>finish([]), 5000);
     try{
@@ -3113,6 +3206,7 @@ async function enterNav(){
   if(navFeed.length){ navRenderList(); if(navMode==='watch') navPlay(0); }
   navExtend(9);
 }
+$('#featMom').onclick = e=>{ e.stopPropagation(); logArea('banner:momentos'); openMom(); };
 $('#featNav').onclick = e=>{ e.stopPropagation(); logArea('banner:navegacao'); navSetMode('grid'); go('nav'); };
 $('#navCards').addEventListener('click', e=>{ const b=e.target.closest('[data-nc]'); if(!b) return; navSetMode('watch', true); navPlay(+b.dataset.nc); });
 $('#navBackGrid').onclick = ()=>history.state && history.state.watch ? history.back() : navSetMode('grid');
@@ -3274,6 +3368,80 @@ let wmLogo = null;
 function loadWmLogo(){ if(wmLogo) return Promise.resolve(wmLogo);
   return new Promise(res=>{ const im=new Image(); im.onload=()=>{ wmLogo=im; res(im); }; im.onerror=()=>res(null); im.src='icon-192.png'; }); }
 // Marca d'água: logo + "TocaPlay Livre" no canto de baixo à direita
+// ===== Enfeitar o post: texto na tela, figurinhas e música liberada de fundo =====
+const DECO_EMO=['😂','😍','🥰','😎','🤩','😭','🙏','🙌','👏','💪','🔥','❤️','💛','✨','⭐','🎉','🎶','🎤','🎸','✝️','⛪','🕊️','⚽','🏆','🍲','🌴','☀️','🌙','👑','💯','📻','🇧🇷'];
+const DECO_COL=[['#ffffff','Branco'],['#ffd23f','Amarelo'],['#ff2d55','Rosa'],['#19c37d','Verde'],['#000000','Preto']];
+let crtDeco = {text:'', color:'#ffffff', pos:'bot', box:false, stickers:[], song:null, keep:true};
+function decoReset(){ crtDeco={text:'', color:'#ffffff', pos:'bot', box:false, stickers:[], song:null, keep:true}; }
+function decoLines(ctx, text, maxW){
+  const words=text.split(/\s+/), lines=[]; let cur='';
+  words.forEach(w=>{ const t=cur?cur+' '+w:w; if(ctx.measureText(t).width>maxW && cur){ lines.push(cur); cur=w; } else cur=t; });
+  if(cur) lines.push(cur); return lines.slice(0,4);
+}
+// Desenha o texto e as figurinhas no quadro (a mesma conta serve para a prévia e para o vídeo final)
+function drawDecor(ctx, w, h){
+  const d=crtDeco, m=Math.min(w,h);
+  d.stickers.forEach(s=>{ ctx.save(); ctx.font=`${Math.round(s.s*m)}px "Apple Color Emoji","Segoe UI Emoji","Noto Color Emoji",sans-serif`; ctx.textAlign='center'; ctx.textBaseline='middle'; ctx.fillText(s.e, s.x*w, s.y*h); ctx.restore(); });
+  if(!d.text) return;
+  const fs=Math.round(m*0.075); ctx.save(); ctx.font=`900 ${fs}px Outfit, system-ui, sans-serif`; ctx.textAlign='center'; ctx.textBaseline='middle';
+  const lines=decoLines(ctx, d.text, w*0.88), lh=fs*1.18, total=lines.length*lh;
+  const cy = d.pos==='top' ? h*0.13 + total/2 : d.pos==='mid' ? h*0.5 : h*0.80 - total/2;
+  lines.forEach((ln,i)=>{ const y=cy - total/2 + lh*(i+.5);
+    if(d.box || d.color==='#000000'){ const tw=ctx.measureText(ln).width; ctx.fillStyle = d.color==='#000000' ? 'rgba(255,255,255,.9)' : 'rgba(0,0,0,.6)';
+      ctx.beginPath(); ctx.roundRect ? ctx.roundRect(w/2-tw/2-fs*.35, y-lh/2, tw+fs*.7, lh, fs*.25) : ctx.rect(w/2-tw/2-fs*.35, y-lh/2, tw+fs*.7, lh); ctx.fill(); }
+    else { ctx.lineWidth=Math.max(2,fs*0.14); ctx.strokeStyle='rgba(0,0,0,.85)'; ctx.lineJoin='round'; ctx.strokeText(ln, w/2, y); }
+    ctx.fillStyle=d.color; ctx.fillText(ln, w/2, y); });
+  ctx.restore();
+}
+// Prévia: um quadro por cima da imagem/vídeo, na mesma proporção, onde as figurinhas podem ser arrastadas
+function decoStage(pv, media, ar){
+  const st=document.createElement('div'); st.className='crt-stage';
+  media.replaceWith(st); st.appendChild(media);
+  const cv=document.createElement('canvas'); cv.className='crt-ov'; st.appendChild(cv);
+  const fit=()=>{ const W=pv.clientWidth||320, H=Math.min(300, innerHeight*.42); let w=Math.min(W, H*ar), h=w/ar; st.style.width=w+'px'; st.style.height=h+'px'; cv.width=Math.round(w*devicePixelRatio); cv.height=Math.round(h*devicePixelRatio); decoPaint(); };
+  requestAnimationFrame(fit);
+  let drag=null;
+  cv.onpointerdown=e=>{ const r=cv.getBoundingClientRect(), x=(e.clientX-r.left)/r.width, y=(e.clientY-r.top)/r.height, m=Math.min(r.width,r.height);
+    for(let i=crtDeco.stickers.length-1;i>=0;i--){ const s=crtDeco.stickers[i]; if(Math.hypot((s.x-x)*r.width,(s.y-y)*r.height) < s.s*m*0.6){ drag={i, dx:s.x-x, dy:s.y-y, t:Date.now(), moved:false}; cv.setPointerCapture(e.pointerId); e.preventDefault(); return; } } };
+  cv.onpointermove=e=>{ if(!drag) return; const r=cv.getBoundingClientRect(), s=crtDeco.stickers[drag.i];
+    s.x=Math.min(.97,Math.max(.03,(e.clientX-r.left)/r.width+drag.dx)); s.y=Math.min(.97,Math.max(.03,(e.clientY-r.top)/r.height+drag.dy)); drag.moved=true; decoPaint(); };
+  cv.onpointerup=()=>{ if(drag && !drag.moved && Date.now()-drag.t<300){ const s=crtDeco.stickers[drag.i]; s.s = s.s>=0.3 ? 0.12 : s.s+0.06; decoPaint(); } drag=null; };   // tocar na figurinha: aumenta (e volta ao tamanho pequeno)
+  return fit;
+}
+function decoPaint(){ const cv=document.querySelector('#crtPreview .crt-ov'); if(!cv) return; const ctx=cv.getContext('2d'); ctx.clearRect(0,0,cv.width,cv.height); drawDecor(ctx, cv.width, cv.height); }
+let decoSongs=null, decoAudio=null;
+async function decoPanel(pv, isV){
+  const box=document.createElement('div'); box.className='crt-deco';
+  box.innerHTML=`<b class="crt-deco-h">✨ Enfeitar <small>(opcional)</small></b>
+    <input id="decoTxt" maxlength="80" placeholder="Escreva um texto na tela…">
+    <div class="deco-row">${DECO_COL.map(([c,n])=>`<button type="button" class="deco-col${c===crtDeco.color?' on':''}" data-dcol="${c}" style="background:${c}" aria-label="${n}"></button>`).join('')}
+      <span class="deco-sep"></span><button type="button" class="deco-pos" data-dpos="top">Em cima</button><button type="button" class="deco-pos" data-dpos="mid">Meio</button><button type="button" class="deco-pos on" data-dpos="bot">Embaixo</button><button type="button" class="deco-pos" data-dbox="1">▣ Fundo</button></div>
+    <small class="deco-tip">Figurinhas: toque para colocar · arraste no vídeo para mudar de lugar · toque nela para aumentar</small>
+    <div class="deco-emo">${DECO_EMO.map(e=>`<button type="button" data-demo="${e}">${e}</button>`).join('')}<button type="button" data-dclear="1" class="deco-clear">↺ Tirar todas</button></div>
+    ${isV?`<b class="crt-deco-h" style="margin-top:12px">🎵 Música de fundo <small>(músicas liberadas pelos artistas parceiros)</small></b>
+    <div class="deco-songs" id="decoSongs"><small style="color:var(--muted)">Carregando músicas…</small></div>
+    <label class="deco-keep"><input type="checkbox" id="decoKeep" checked> Manter o som original do vídeo (mais baixo)</label>`:''}`;
+  pv.appendChild(box);
+  $('#decoTxt').oninput=e=>{ crtDeco.text=e.target.value.trim(); decoPaint(); };
+  box.addEventListener('click', e=>{
+    const c=e.target.closest('[data-dcol]'); if(c){ crtDeco.color=c.dataset.dcol; box.querySelectorAll('[data-dcol]').forEach(x=>x.classList.toggle('on',x===c)); decoPaint(); return; }
+    const p=e.target.closest('[data-dpos]'); if(p){ crtDeco.pos=p.dataset.dpos; box.querySelectorAll('[data-dpos]').forEach(x=>x.classList.toggle('on',x===p)); decoPaint(); return; }
+    const bx=e.target.closest('[data-dbox]'); if(bx){ crtDeco.box=!crtDeco.box; bx.classList.toggle('on',crtDeco.box); decoPaint(); return; }
+    const em=e.target.closest('[data-demo]'); if(em){ if(crtDeco.stickers.length>=8) return toast('No máximo 8 figurinhas.'); const n=crtDeco.stickers.length; crtDeco.stickers.push({e:em.dataset.demo, x:.25+((n*.17)%.5), y:.3+((n*.11)%.35), s:.14}); decoPaint(); return; }
+    if(e.target.closest('[data-dclear]')){ crtDeco.stickers=[]; decoPaint(); return; }
+    const sg=e.target.closest('[data-dsong]'); if(sg){ const id=+sg.dataset.dsong; crtDeco.song = id ? decoSongs.find(s=>s.id===id) : null;
+      box.querySelectorAll('[data-dsong]').forEach(x=>x.classList.toggle('on', x===sg)); decoListen(crtDeco.song); return; }
+  });
+  if(!isV) return;
+  $('#decoKeep').onchange=e=>{ crtDeco.keep=e.target.checked; };
+  if(!decoSongs){ const d=await navRpc('songs_public',{p_genre:null}); decoSongs=Array.isArray(d)?d:[]; }
+  const el=$('#decoSongs'); if(!el) return;
+  el.innerHTML = `<button type="button" class="deco-song on" data-dsong="0">🔇 Sem música</button>` + (decoSongs.length ? decoSongs.slice(0,60).map(s=>`<button type="button" class="deco-song" data-dsong="${s.id}">🎵 ${esc(s.title)}<small>${esc(s.artist||'')}</small></button>`).join('')
+    : `<small style="color:var(--muted);display:block;margin-top:6px">Ainda não há músicas liberadas. Artistas podem liberar as suas em <a href="seja-parceiro.html" style="color:var(--yellow)">Seja parceiro</a>.</small>`);
+}
+function decoListen(s){ try{ decoAudio && decoAudio.pause(); }catch{} decoAudio=null; if(!s) return;
+  decoAudio=new Audio(pubFile('musicas',s.path)); decoAudio.volume=.7; decoAudio.play().catch(()=>{}); setTimeout(()=>{ try{ decoAudio && decoAudio.pause(); }catch{} },12000); }   // prévia de 12 segundos
+
 function drawWatermark(ctx, w, h){
   const s = Math.max(14, Math.round(Math.min(w,h)*0.045)), pad = Math.round(s*0.8);
   ctx.save(); ctx.font = `800 ${s}px Outfit, system-ui, sans-serif`; ctx.textBaseline='middle';
@@ -3294,7 +3462,7 @@ async function processPhoto(file){
   const url=URL.createObjectURL(file);
   const im = await new Promise((res,rej)=>{ const i=new Image(); i.onload=()=>res(i); i.onerror=rej; i.src=url; });
   const [w,h]=fitSize(im.naturalWidth, im.naturalHeight, 1440), cv=document.createElement('canvas'); cv.width=w; cv.height=h;
-  const ctx=cv.getContext('2d'); ctx.drawImage(im,0,0,w,h); drawWatermark(ctx,w,h); URL.revokeObjectURL(url);
+  const ctx=cv.getContext('2d'); ctx.drawImage(im,0,0,w,h); drawDecor(ctx,w,h); drawWatermark(ctx,w,h); URL.revokeObjectURL(url);
   const blob=await canvasBlob(cv,'image/jpeg',.85);
   return {blob, type:'image/jpeg', ext:'jpg', thumb:blob, wm:true};
 }
@@ -3315,22 +3483,28 @@ async function processVideo(file, onProgress, audioCtx){
   const cv=document.createElement('canvas'); cv.width=w; cv.height=h; const ctx=cv.getContext('2d');
   // capa (miniatura): um quadro do começo
   v.currentTime=Math.min(1, (dur||2)/3); await new Promise(r=>v.onseeked=r);
-  ctx.drawImage(v,0,0,w,h); drawWatermark(ctx,w,h); const thumb=await canvasBlob(cv,'image/jpeg',.8);
+  ctx.drawImage(v,0,0,w,h); drawDecor(ctx,w,h); drawWatermark(ctx,w,h); const thumb=await canvasBlob(cv,'image/jpeg',.8);
   v.currentTime=0; await new Promise(r=>v.onseeked=r);
   const type=pickRecorderType();
   if(!type || !cv.captureStream){ URL.revokeObjectURL(url); return null; }
   const stream=cv.captureStream(30);
-  try{ if(audioCtx){ const src=audioCtx.createMediaElementSource(v), dst=audioCtx.createMediaStreamDestination(); src.connect(dst); dst.stream.getAudioTracks().forEach(t=>stream.addTrack(t)); } }catch{}
+  let music=null;
+  try{ if(audioCtx){ const src=audioCtx.createMediaElementSource(v), dst=audioCtx.createMediaStreamDestination(), g=audioCtx.createGain();
+    g.gain.value = crtDeco.song ? (crtDeco.keep ? 0.45 : 0) : 1; src.connect(g); g.connect(dst);
+    if(crtDeco.song){ try{ music=new Audio(); music.crossOrigin='anonymous'; music.src=pubFile('musicas',crtDeco.song.path); music.loop=true; music.preload='auto';
+      await new Promise(r=>{ music.oncanplay=r; music.onerror=r; setTimeout(r,6000); });
+      const ms=audioCtx.createMediaElementSource(music), mg=audioCtx.createGain(); mg.gain.value=0.85; ms.connect(mg); mg.connect(dst); }catch{ music=null; } }   // música liberada por baixo do vídeo
+    dst.stream.getAudioTracks().forEach(t=>stream.addTrack(t)); } }catch{}
   const rec=new MediaRecorder(stream,{mimeType:type, videoBitsPerSecond:1200000, audioBitsPerSecond:96000}), parts=[];
   rec.ondataavailable=e=>{ if(e.data && e.data.size) parts.push(e.data); };
   const done=new Promise(r=>rec.onstop=r);
-  let raf=0; const draw=()=>{ ctx.drawImage(v,0,0,w,h); drawWatermark(ctx,w,h); onProgress && onProgress(Math.min(1, v.currentTime/Math.min(dur||MAX_SEC, MAX_SEC)));
+  let raf=0; const draw=()=>{ ctx.drawImage(v,0,0,w,h); drawDecor(ctx,w,h); drawWatermark(ctx,w,h); onProgress && onProgress(Math.min(1, v.currentTime/Math.min(dur||MAX_SEC, MAX_SEC)));
     if(v.currentTime >= MAX_SEC){ v.pause(); if(rec.state!=='inactive') rec.stop(); return; }
     raf=requestAnimationFrame(draw); };
   v.onended=()=>{ if(rec.state!=='inactive') rec.stop(); };
   rec.start(1000);
-  try{ await v.play(); }catch{ if(rec.state!=='inactive') rec.stop(); URL.revokeObjectURL(url); return null; }
-  draw(); await done; cancelAnimationFrame(raf); URL.revokeObjectURL(url);
+  try{ await v.play(); if(music){ music.currentTime=0; music.play().catch(()=>{}); } }catch{ if(rec.state!=='inactive') rec.stop(); URL.revokeObjectURL(url); return null; }
+  draw(); await done; cancelAnimationFrame(raf); URL.revokeObjectURL(url); try{ music && music.pause(); }catch{}
   const clean=type.split(';')[0], blob=new Blob(parts,{type:clean});
   if(!blob.size) return null;
   return {blob, type:clean, ext:clean==='video/mp4'?'mp4':'webm', thumb, wm:true, cut};
@@ -3355,10 +3529,12 @@ async function crtPick(file){
   const isV=file.type.startsWith('video/'), isI=file.type.startsWith('image/');
   if(!isV && !isI) return toast('Escolha um vídeo ou uma foto.');
   const url=URL.createObjectURL(file);
-  if(isI){ pv.innerHTML=`<img src="${url}" alt="">`; crtFile=file; return; }
-  pv.innerHTML=`<video src="${url}" muted playsinline controls></video><small id="crtDur"></small>`;
+  decoReset(); try{ decoAudio && decoAudio.pause(); }catch{}
+  if(isI){ pv.innerHTML=`<img src="${url}" alt="">`; crtFile=file; const im=pv.querySelector('img');
+    im.onload=()=>{ decoStage(pv, im, (im.naturalWidth||1)/(im.naturalHeight||1)); decoPanel(pv, false); }; return; }
+  pv.innerHTML=`<video src="${url}" muted playsinline loop autoplay></video><small id="crtDur"></small>`;
   const v=pv.querySelector('video');
-  v.onloadedmetadata=()=>{ const d=Math.round(v.duration||0);
+  v.onloadedmetadata=()=>{ const d=Math.round(v.duration||0); decoStage(pv, v, (v.videoWidth||9)/(v.videoHeight||16)); decoPanel(pv, true);
     $('#crtDur').textContent = d>MAX_SEC ? `Vídeo com ${d}s: vamos usar só os primeiros ${MAX_SEC} segundos.` : `Vídeo com ${d}s.`; };
   crtFile=file;
 }
@@ -3369,7 +3545,7 @@ async function crtUploadSubmit(e){
   if(title.length<2) return toast('Escreva um título.');
   if(navProibido(title)) return toast('🚫 Título não permitido: palavrão, ofensa ou conteúdo impróprio.');
   if(!$('#crtTerms').checked) return toast('Marque a caixa dos Termos de uso.');
-  const b=$('#crtBtn'); b.disabled=true;
+  const b=$('#crtBtn'); b.disabled=true; try{ decoAudio && decoAudio.pause(); }catch{}
   let audioCtx=null; try{ audioCtx=new (window.AudioContext||window.webkitAudioContext)(); audioCtx.resume(); }catch{}
   const isV=crtFile.type.startsWith('video/'); let out=null;
   try{
@@ -3397,6 +3573,7 @@ async function crtUploadSubmit(e){
   $('#criarModal').classList.remove('open');
   toast(d.status==='fila' ? 'Recebido! Aparece depois de uma revisão.' : (out.cut ? 'Publicado! 🎉 (usamos os primeiros 60 segundos)' : 'Publicado! 🎉 Já está na Navegação.'));
   logArea('Criadores · envio');
+  if(crtDeco.song && out.wm) navRpc('song_event',{p_id:crtDeco.song.id, p_dev:deviceId(), p_kind:'use'});
   navPosts=[]; navLoadPosts(); go('canal');
 }
 function postDownload(p){
@@ -3418,6 +3595,43 @@ async function renderHomeCria(){
 document.addEventListener('click', e=>{ const b=e.target.closest('[data-hcria]'); if(b){ const p=homePosts[+b.dataset.hcria]; if(p) navOpenPost(p); } });
 $('#rowCriaAll').onclick = ()=>{ if(navTab!=='geral'){ document.querySelector('[data-navtab="geral"]').click(); } navSetMode('grid'); go('nav'); };
 
+
+// ===== Artistas parceiros e Músicas liberadas (seja-parceiro.html) =====
+let homeParc=[], homeSongs=[];
+const pubFile = (b,p) => `${CONFIG.SUPABASE_URL}/storage/v1/object/public/${b}/${String(p).split('/').map(encodeURIComponent).join('/')}`;
+const PARC_KIND={artista:'Artista',banda:'Banda',igreja:'Igreja',radio:'Rádio',podcast:'Podcast',criador:'Criador',empresa:'Produtora'};
+async function renderHomeParc(){
+  const d = await navRpc('partners_public', {}); homeParc = Array.isArray(d) ? d : [];
+  if(!homeParc.length) return;
+  $('#rowParc').innerHTML = homeParc.map((p,i)=>`<button class="ch parc" data-parc="${i}"><div class="av" style="background:linear-gradient(135deg,#c99a1c,#6b4a00)">${esc(initials(p.name))}${p.photo?`<img src="${esc(pubFile('parceiros',p.photo))}" alt="" loading="lazy" onerror="this.remove()">`:''}</div><span>${esc(p.name)}<b class="ok">✓</b></span></button>`).join('')
+    + `<a class="ch parc join" href="seja-parceiro.html"><div class="av">+</div><span>Seja parceiro</span></a>`;
+  $('#rowParcBlock').hidden=false;
+  requestAnimationFrame(()=>rowArrows($('#rowParc').closest('.row-wrap')));
+}
+function parcChannel(p){ return {name:p.name, channelId:p.channel_id, cat:'Parceiros', sub:p.genre||'Parceiros', short:initials(p.name), color:'linear-gradient(135deg,#c99a1c,#6b4a00)', avatar:p.photo?pubFile('parceiros',p.photo):'', desc:p.bio||''}; }
+document.addEventListener('click', e=>{
+  const b=e.target.closest('[data-parc]'); if(!b) return; const p=homeParc[+b.dataset.parc]; if(!p) return;
+  logArea('Parceiros');
+  if(p.channel_id){ go('tv'); return openTv(parcChannel(p)); }
+  const songs=homeSongs.filter(s=>s.partner_id===p.id); if(songs.length) return playSongLib(homeSongs.indexOf(songs[0]));
+  const link=p.youtube||p.instagram||p.spotify||p.site; if(link) window.open(link,'_blank','noopener');
+});
+function songItem(s){ return {id:'song:'+s.id, songId:s.id, song:true, name:s.title, url:pubFile('musicas',s.path), favicon:s.photo?pubFile('parceiros',s.photo):'', state:s.artist, tags:'Música liberada'}; }
+async function renderHomeSongs(){
+  const d = await navRpc('songs_public', {p_genre:null}); homeSongs = Array.isArray(d) ? d : [];
+  if(!homeSongs.length) return;
+  $('#rowSongs').innerHTML = homeSongs.slice(0,30).map((s,i)=>`<button class="ch song" data-songlib="${i}"><div class="av" style="background:linear-gradient(135deg,#19c37d,#0b5a3a)">🎵${s.photo?`<img src="${esc(pubFile('parceiros',s.photo))}" alt="" loading="lazy" onerror="this.remove()">`:''}</div><span>${esc(s.title)}</span><small>${esc(s.artist||'')}</small></button>`).join('');
+  $('#rowSongsBlock').hidden=false;
+  requestAnimationFrame(()=>rowArrows($('#rowSongs').closest('.row-wrap')));
+}
+function playSongLib(i){
+  const list=homeSongs.map(songItem); if(!list[i]) return;
+  queue={id:null, name:'Músicas liberadas', list, i}; play(list[i]);
+}
+document.addEventListener('click', e=>{ const b=e.target.closest('[data-songlib]'); if(b) playSongLib(+b.dataset.songlib); });
+$('#rowSongsAll').onclick=()=>playSongLib(0);
+audio.addEventListener('ended', ()=>{ if(current && current.song) stepQueue(1); });
+
 // Busca da Navegação: canais, cantores, pregadores e vídeos do público (e títulos já carregados)
 const navFold = t => String(t||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase();
 let navResItems=[];
@@ -3435,10 +3649,28 @@ async function navSearch(q){
   $('#navRes').hidden=false; $('#navCards').hidden=true; $('#navMore2').hidden=true;
   if(navMode==='watch') navSetMode('grid');
   logArea('Navegação · busca');
+  navSearchYt(q);
   // capas reais dos canais encontrados
   for(const [n,it] of navResItems.entries()){ if(!it.isCh) continue;
     const ids=await Promise.race([navIds(it.c,'UULF'), new Promise(r=>setTimeout(()=>r([]),5000))]);
     if(ids.length && $('#navRes') && !$('#navRes').hidden){ it.vid=ids[0]; const el=document.querySelector(`[data-nr="r${n}"]`); if(el) el.outerHTML=navCardHTML(it,'r'+n).replace('data-nc=','data-nr='); } }
+}
+// Busca completa no YouTube (servidor do TocaPlay, com a chave grátis do Google). Se não estiver configurada, só some.
+let navYtQ='';
+async function navSearchYt(q){
+  navYtQ=q; let d=null;
+  try{ const ctl=new AbortController(); setTimeout(()=>ctl.abort(),8000); const r=await fetch('/api/ytsearch?q='+encodeURIComponent(q),{signal:ctl.signal}); if(r.ok) d=await r.json(); }catch{}
+  if(navYtQ!==q || !d || !Array.isArray(d.items) || $('#navRes').hidden) return;
+  const have=new Set(navResItems.map(it=>it.vid).filter(Boolean));
+  const add=d.items.filter(v=>!have.has(v.id) && !navProibido(v.title+' '+v.ch)).map(v=>{
+    const known=TV_CHANNELS.find(c=>c.channelId===v.cid);
+    return {c: known || {name:v.ch, channelId:v.cid, short:initials(v.ch), cat:'YouTube', sub:'YouTube', color:'linear-gradient(135deg,#3a0d0d,#c4302b)'}, vid:v.id, title:v.title, ytRes:true}; });
+  if(!add.length) return;
+  add.forEach(it=>{ try{ navTitleCache[it.vid]=it.title; }catch{} });
+  const start=navResItems.length; navResItems.push(...add);
+  $('#navResTitle').textContent = `Resultados para "${q}"`;
+  const empty=$('#navResCards .nav-res-empty'); if(empty) empty.remove();
+  $('#navResCards').insertAdjacentHTML('beforeend', `<h3 class="nav-res-yt">▶ Mais vídeos do YouTube</h3>` + add.map((it,i)=>navCardHTML(it,'r'+(start+i)).replace('data-nc=','data-nr=')).join(''));
 }
 function navSearchClear(){ $('#navSearchQ').value=''; $('#navRes').hidden=true; $('#navCards').hidden=false; $('#navMore2').hidden=false; }
 $('#navSearchF').onsubmit = e=>{ e.preventDefault(); $('#navSearchQ').blur(); navSearch($('#navSearchQ').value); };
@@ -3446,17 +3678,209 @@ $('#navResClear').onclick = navSearchClear;
 $('#navResCards').addEventListener('click', e=>{ const b=e.target.closest('[data-nr]'); if(!b) return; const it=navResItems[+b.dataset.nr.slice(1)]; if(!it) return;
   if(it.post) return navOpenPost(it.post);
   const k=navFeed.indexOf(it); if(k>=0){ navSetMode('watch', true); return navPlay(k); }
+  if(it.ytRes){ navFeed.splice(Math.max(0,navI+1), 0, it); $('#navList').innerHTML=''; $('#navList').dataset.n=0; $('#navCards').innerHTML=''; $('#navCards').dataset.n=0; navSetMode('watch', true); return navPlay(navFeed.indexOf(it)); }
   navOpenChannel(it.c); });
 
 /* ---------- Início do app ---------- */
 renderChips(); renderFavs(); renderAccount(); renderPlaylists(); loadHome(); updatePlayer(); checkImport();
-renderFeat(); loadPaidAds(); renderRows(); renderHomePods(); renderHomeGym(); renderGospelRadios(); renderRomRadios(); renderHomeCria(); setTimeout(fillAds, 800);
+renderFeat(); loadPaidAds(); renderRows(); renderHomePods(); renderHomeGym(); renderGospelRadios(); renderRomRadios(); renderHomeCria(); renderHomeParc(); renderHomeSongs(); setTimeout(fillAds, 800);
 $('#gymBanner').onclick = ()=>{ go('tv'); tvCat='Malhação'; tvSub=''; renderTv(); openTv(GYM()[0]); enterGym(); };
 $('#srTv').textContent = `📺 ${Math.floor(TV_CHANNELS.length/10)*10}+`;
+// ===== Momentos: vídeos curtos em pé (Shorts dos canais + vídeos dos criadores), arrastando para cima =====
+let momFeed=[], momI=-1, momP=null, momOrd=[], momOi=0, momBusy=false, momMuted=false, momObs=null, momViewT=null, momStartT=0, momPosts=null, momPostI=0, momTries=0, momDeep=null;
+const momOn = ()=>$('#mom').classList.contains('open');
+function momOrder(){
+  const p=navPref(), ranked=NAV_CHANS.filter(c=>c.cat!=='Músicas para Dormir').sort((a,b)=>navScore(b,p)-navScore(a,p));
+  const half=Math.ceil(ranked.length/2), top=ranked.slice(0,half), low=navShuffle(ranked.slice(half));
+  momOrd=[]; let k=0;
+  while(top.length || low.length){ momOrd.push((k%5===4 && low.length) || !top.length ? low.shift() : top.shift()); k++; }   // 1 em cada 5: novidade
+  momOi=0;
+}
+// Shorts de um canal: pelo nosso servidor; se não der, pela lista oficial de Shorts do canal (UUSH), sem chave e sem custo
+async function momShorts(c){
+  const d=await ytList(c);
+  if(d && d.videos){ const s=d.videos.filter(v=>v.shorts).map(v=>v.id); if(s.length) return s; }
+  return Promise.race([navIdsHarvest(c,'UUSH'), new Promise(r=>setTimeout(()=>r([]),6500))]);
+}
+const momSeen = vid => momFeed.some(x=>x.vid===vid);
+const momIsShort = p => p.kind!=='foto' && (p.platform==='upload' || p.platform==='tiktok' || p.platform==='instagram');
+function momNextPost(){
+  while(momPosts && momPostI<momPosts.length){ const p=momPosts[momPostI++]; if(momIsShort(p) && !momSeen('p:'+p.id)) return postItem(p); }
+  return null;
+}
+async function momMore(){
+  if(momBusy) return; momBusy=true;
+  try{
+    if(!momPosts){ await navLoadPosts(); momPosts = (navPosts||[]).slice(); momPostI=0;
+      if(momFeed.length===0){ const p=momNextPost(); if(p) momAdd(p); } }   // criador novo logo no começo
+    let added=0, tried=0;
+    while(added<4 && tried<8){
+      if(momOi>=momOrd.length) momOrder();
+      const c=momOrd[momOi++]; tried++;
+      const ids=(await momShorts(c)).filter(v=>!momSeen(v));
+      if(!momOn()) return;
+      navShuffle(ids.slice(0,15)).slice(0,2).forEach(vid=>{ momAdd({c, vid, short:true}); added++;
+        if(momFeed.length%3===0){ const p=momNextPost(); if(p) momAdd(p); } });   // 1 Momento de criador a cada 3
+    }
+    if(!added){ const p=momNextPost(); if(p){ momAdd(p); added++; } }
+    if(!momFeed.length && ++momTries>=2) $('#momFeed').innerHTML='<div class="mom-empty">Não deu para carregar os Momentos agora.<br>Confira a internet e tente de novo.</div>';
+    else if(!added && momTries<3){ momTries++; momBusy=false; return momMore(); }
+  } finally { momBusy=false; }
+}
+function momPoster(it){
+  if(it.post){ const th=postThumb(it.post); return th ? `<img class="mom-poster" src="${esc(th)}" alt="" referrerpolicy="no-referrer" onerror="this.remove()">` : ''; }
+  return `<img class="mom-poster" src="https://i.ytimg.com/vi/${esc(it.vid)}/oar2.jpg" alt="" referrerpolicy="no-referrer" onerror="if(!this.dataset.f){this.dataset.f=1;this.src='https://i.ytimg.com/vi/${esc(it.vid)}/hqdefault.jpg'}else this.remove()">`;
+}
+function momAdd(it){
+  const n=momFeed.push(it)-1, av=it.c.avatar || avatarUrl(it.c);
+  const ext = it.post && it.post.platform!=='upload';
+  const el=document.createElement('div'); el.className='mom-s'; el.dataset.mi=n;
+  el.innerHTML=`<div class="mom-stage${ext?' ext':''}">${momPoster(it)}<div class="mom-load">▶</div><div class="mom-tap"></div><div class="mom-heart">❤️</div></div>
+    <div class="mom-info"><div class="who"><span class="av" style="background:${esc(it.c.color||'var(--card2)')}">${esc(it.c.short||initials(it.c.name))}${av?`<img src="${esc(av)}" alt="" referrerpolicy="no-referrer" onerror="this.remove()">`:''}</span>${esc(it.c.name)}${it.post?'<small>CRIADOR</small>':''}</div>
+      <p data-mt>${esc(it.title||'')}</p></div>
+    <div class="mom-acts"><button data-ma="like" aria-label="Curtir"><i>❤️</i><span>0</span></button><button data-ma="com" aria-label="Comentários"><i>💬</i><span>0</span></button><button data-ma="share" aria-label="Compartilhar"><i>↗</i><span>Enviar</span></button><button data-ma="sound" aria-label="Som"><i>🔊</i><span>Som</span></button></div>`;
+  const empty=$('#momFeed .mom-empty'); if(empty) empty.remove();
+  $('#momFeed').appendChild(el); momObs && momObs.observe(el);
+  if(!it.title && it.vid && !it.post) navFetchOne(it, el);
+}
+// Título do Short (grátis, pelo oEmbed); guarda no mesmo cache da Navegação
+async function navFetchOne(it, el){
+  try{ if(navTitleCache[it.vid]){ it.title=navTitleCache[it.vid]; el.querySelector('[data-mt]').textContent=it.title; return; } }catch{}
+  try{ const r=await fetch('https://www.youtube.com/oembed?format=json&url='+encodeURIComponent('https://www.youtube.com/shorts/'+it.vid)); if(!r.ok) return;
+    const d=await r.json(); if(d.title){ it.title=d.title; el.querySelector('[data-mt]').textContent=d.title; try{ navTitleCache[it.vid]=d.title; }catch{} } }catch{}
+}
+function momStop(){
+  clearTimeout(momViewT);
+  if(momP){ try{ momP.destroy(); }catch{} momP=null; }
+  document.querySelectorAll('#momFeed .mom-stage').forEach(s=>{ s.querySelectorAll('video,iframe,div[id^=momYt]').forEach(x=>{ try{ x.pause && x.pause(); }catch{} x.remove(); }); const l=s.querySelector('.mom-load'); if(l) l.style.display=''; });
+}
+function momSoundIcon(){ document.querySelectorAll('#momFeed [data-ma=sound] i').forEach(i=>i.textContent=momMuted?'🔇':'🔊'); }
+function momActivate(n){
+  if(n===momI || !momFeed[n]) return;
+  const prev=momFeed[momI];
+  if(prev && momStartT){ const s=(Date.now()-momStartT)/1000; navLearn(prev.c, s<2 ? -0.5 : s>12 ? 1 : 0); }   // pulou rápido diminui, assistiu aumenta
+  momStop(); momI=n; momStartT=Date.now();
+  const it=momFeed[n], st=document.querySelector(`#momFeed [data-mi="${n}"] .mom-stage`); if(!st) return;
+  if(n>=momFeed.length-3) momMore();
+  momInfo(it);
+  momViewT=setTimeout(()=>{ if(momFeed[momI]===it) navRpc('nav_event',{p_vid:it.vid, p_dev:deviceId(), p_kind:'view', p_ch:it.c.name}); },3000);
+  const hideLoad=()=>{ const l=st.querySelector('.mom-load'); if(l) l.style.display='none'; };
+  if(it.post && it.post.platform==='upload'){
+    const v=document.createElement('video'); v.src=storageUrl(it.post.ref); v.loop=true; v.playsInline=true; v.muted=momMuted; v.setAttribute('playsinline','');
+    st.insertBefore(v, st.querySelector('.mom-tap')); v.onplaying=hideLoad;
+    v.play().catch(()=>{ v.muted=true; momMuted=true; momSoundIcon(); v.play().catch(()=>{}); }); return;
+  }
+  if(it.post){ const f=document.createElement('iframe'); f.src=postEmbed(it.post); f.allow='autoplay; encrypted-media; fullscreen; picture-in-picture'; f.referrerPolicy='strict-origin-when-cross-origin';
+    st.insertBefore(f, st.querySelector('.mom-tap')); f.onload=hideLoad; return; }
+  const holder=document.createElement('div'); holder.id='momYt'+n; st.insertBefore(holder, st.querySelector('.mom-tap'));
+  whenYT(()=>{
+    if(momFeed[momI]!==it || !document.getElementById('momYt'+n)) return;
+    let ok=false;
+    momP=new YT.Player('momYt'+n,{width:'100%',height:'100%',videoId:it.vid,
+      playerVars:{autoplay:1, playsinline:1, controls:0, rel:0, modestbranding:1, iv_load_policy:3, loop:1, playlist:it.vid, mute:momMuted?1:0, fs:0, disablekb:1},
+      events:{
+        onReady:e=>{ try{ if(momMuted) e.target.mute(); else e.target.unMute(); e.target.playVideo(); }catch{}
+          setTimeout(()=>{ if(!ok && momP===e.target){ try{ e.target.mute(); e.target.playVideo(); momMuted=true; momSoundIcon(); }catch{} } },1800); },   // o navegador bloqueou o som: toca mudo e mostra 🔇
+        onStateChange:e=>{ if(e.data===1){ ok=true; hideLoad(); if(!audio.paused) audio.pause(); } if(e.data===0){ try{ e.target.seekTo(0); e.target.playVideo(); }catch{} } },
+        onError:()=>{ const l=st.querySelector('.mom-load'); if(l){ l.style.display=''; l.textContent='Vídeo indisponível'; }
+          setTimeout(()=>{ if(momFeed[momI]===it) momGo(1); },1200); }
+      }});
+  });
+}
+async function momInfo(it){
+  const el=document.querySelector(`#momFeed [data-mi="${momFeed.indexOf(it)}"]`); if(!el) return;
+  const d=await navRpc('nav_info',{p_vid:it.vid, p_dev:deviceId()}); if(!d) return;
+  it.info=d;
+  const lk=el.querySelector('[data-ma=like]'); lk.classList.toggle('on', !!d.liked); lk.querySelector('span').textContent=fmtN(d.likes);
+  el.querySelector('[data-ma=com] span').textContent=fmtN((d.comments||[]).length);
+  if(d.hidden){ const l=el.querySelector('.mom-load'); if(l){ l.style.display=''; l.textContent='Vídeo em revisão'; } setTimeout(()=>{ if(momFeed[momI]===it) momGo(1); },1000); }
+}
+function momGo(step){ const j=momI+step, el=document.querySelector(`#momFeed [data-mi="${j}"]`); if(el) el.scrollIntoView({behavior:'smooth'}); else if(step>0) momMore(); }
+async function momLike(it, el, force){
+  const b=el.querySelector('[data-ma=like]'); const on=!b.classList.contains('on');
+  if(force && !on) return;   // dois toques só curte, não descurte
+  b.classList.toggle('on', on); const sp=b.querySelector('span'); sp.textContent=fmtN(Math.max(0,(parseInt(sp.textContent)||0)+(on?1:-1)));
+  navLearn(it.c, on?3:-3);
+  const d=await navRpc('nav_like',{p_vid:it.vid, p_dev:deviceId(), p_ch:it.c.name});
+  if(d){ sp.textContent=fmtN(d.likes); b.classList.toggle('on', !!d.liked); }
+}
+function momComOpen(it){
+  const list=(it.info && it.info.comments)||[];
+  $('#momComN').textContent=list.length?`(${fmtN(list.length)})`:'';
+  $('#momComList').innerHTML = list.length ? list.map(c=>`<div><b>${esc(c.name)}</b>${esc(c.body)}</div>`).join('') : '<div style="color:var(--muted)">Seja o primeiro a comentar 💬</div>';
+  $('#momSheet').classList.add('open'); setTimeout(()=>$('#momComTxt').focus(),250);
+}
+$('#momComX').onclick=()=>$('#momSheet').classList.remove('open');
+$('#momComForm').onsubmit=async e=>{
+  e.preventDefault(); const it=momFeed[momI]; if(!it) return;
+  let name=(navUserName() || store.get('tp_name','')).slice(0,40); const body=$('#momComTxt').value.trim().slice(0,500);
+  if(body.length<2) return toast('Escreva o comentário.');
+  if(!name){ name=(prompt('Qual é o seu nome?')||'').trim().slice(0,40); if(!name) return; store.set('tp_name', name); }
+  if(navProibido(name+' '+body)) return toast('🚫 Comentário não permitido: palavrão, ofensa ou conteúdo impróprio.');
+  const d=await navRpc('nav_comment',{p_vid:it.vid, p_dev:deviceId(), p_name:name, p_body:body, p_ch:it.c.name});
+  if(!d) return toast('Não deu para comentar agora. Tente de novo.');
+  if(d.status==='limite') return toast('Muitos comentários seguidos. Espere alguns minutos.');
+  if(d.status==='bloqueado') return toast('🚫 Comentário não permitido.');
+  $('#momComTxt').value='';
+  if(d.status==='fila') return toast('Comentário enviado. Ele aparece depois de uma revisão.');
+  navLearn(it.c, 3); await momInfo(it); momComOpen(it); toast('Comentário publicado 💬');
+};
+$('#momFeed').addEventListener('click', async e=>{
+  const s=e.target.closest('.mom-s'); if(!s) return; const n=+s.dataset.mi, it=momFeed[n];
+  const a=e.target.closest('[data-ma]');
+  if(!a){ if(e.target.closest('.mom-tap')){   // um toque: pausa/continua · dois toques: curte
+      const now=Date.now();
+      if(s._t && now-s._t<300){ s._t=0; clearTimeout(s._tt); const h=s.querySelector('.mom-heart'); h.classList.add('show'); setTimeout(()=>h.classList.remove('show'),700); momLike(it,s,true); return; }
+      s._t=now; s._tt=setTimeout(()=>{ s._t=0; const v=s.querySelector('video');
+        if(v){ v.paused ? v.play() : v.pause(); return; }
+        if(momP && momP.getPlayerState){ try{ momP.getPlayerState()===1 ? momP.pauseVideo() : momP.playVideo(); }catch{} } },300); }
+    return; }
+  const k=a.dataset.ma;
+  if(k==='like') return momLike(it,s);
+  if(k==='com') return momComOpen(it);
+  if(k==='sound'){ momMuted=!momMuted; momSoundIcon(); const v=s.querySelector('video'); if(v) v.muted=momMuted;
+    if(momP){ try{ momMuted ? momP.mute() : (momP.unMute(), momP.setVolume(100)); }catch{} } if(!momMuted && !audio.paused) audio.pause(); return; }
+  if(k==='share'){
+    const url = it.post ? location.origin+'/#m=p'+it.post.id : location.origin+'/#m='+encodeURIComponent(it.vid)+'&c='+encodeURIComponent(it.c.name);
+    const text=`Olha esse Momento de ${it.c.name} no TocaPlay Livre:`;
+    try{ if(navigator.share) await navigator.share({title:'TocaPlay Livre', text, url}); else openWhatsApp(`${text} ${url}`); }catch{ return; }
+    navLearn(it.c,4); navRpc('nav_event',{p_vid:it.vid, p_dev:deviceId(), p_kind:'share', p_ch:it.c.name});
+  }
+});
+function openMom(deep){
+  if(momOn()) return;
+  try{ document.body.appendChild($('#navHarvest')); }catch{}   // a coleta de vídeos funciona mesmo fora da Navegação
+  if(!audio.paused) audio.pause(); featStopVideo(); navPause();
+  $('#mom').classList.add('open'); document.body.classList.add('mom-on');
+  history.pushState({...(history.state||{}), mom:1},'');
+  logArea('Momentos');
+  if(!momObs) momObs=new IntersectionObserver(es=>es.forEach(en=>{ if(en.isIntersecting && en.intersectionRatio>=.6) momActivate(+en.target.dataset.mi); }),{root:$('#momFeed'), threshold:[.6]});
+  if(deep || !momFeed.length){
+    momStop(); momFeed=[]; momI=-1; momTries=0; $('#momFeed').innerHTML='<div class="mom-empty">Carregando Momentos…</div>';
+    if(!momOrd.length) momOrder();
+    if(deep && deep.post){ navRpc('creator_get',{p_id:+deep.post}).then(p=>{ if(p && p.id){ momAdd(postItem(p)); } momMore(); }); return; }
+    if(deep && deep.vid){ const c=TV_CHANNELS.find(x=>x.name===deep.c) || {name:deep.c||'TocaPlay', short:initials(deep.c||'TP'), cat:'Vídeos', color:'var(--card2)'}; momAdd({c, vid:deep.vid, short:true}); }
+    momMore();
+  } else { const el=document.querySelector(`#momFeed [data-mi="${Math.max(0,momI)}"]`); const k=momI; momI=-1; if(el){ el.scrollIntoView(); momActivate(Math.max(0,k)); } }
+}
+function closeMom(){ momStop(); momI=-1; $('#momSheet').classList.remove('open'); $('#mom').classList.remove('open'); document.body.classList.remove('mom-on'); }
+$('#momX').onclick=()=>history.state?.mom ? history.back() : closeMom();
+$('#momUp').onclick=()=>momGo(-1); $('#momDown').onclick=()=>momGo(1);
+$('#momNew').onclick=()=>{ if(history.state?.mom) history.back(); closeMom(); setTimeout(()=>openCriar(),50); };
+document.addEventListener('keydown', e=>{ if(!momOn()) return; if(e.key==='ArrowDown'){ e.preventDefault(); momGo(1); } if(e.key==='ArrowUp'){ e.preventDefault(); momGo(-1); } if(e.key==='Escape') $('#momX').click(); });
+document.addEventListener('visibilitychange', ()=>{ if(!momOn()) return; if(document.hidden){ const v=document.querySelector('#momFeed video'); if(v) v.pause(); if(momP && momP.pauseVideo) try{ momP.pauseVideo(); }catch{} } });
+
+$('#navMomBtn').onclick=()=>openMom();
 // Links das páginas de conteúdo: /#radios=gospel, /#radios=romanticas, /#canal=Nome do canal
 (function openFromContentLink(){
   const h = decodeURIComponent(location.hash||'');
-  let m = h.match(/^#p=(\d+)$/);
+  let m = h.match(/^#m=p(\d+)$/);
+  if(m){ history.replaceState(history.state,'',location.pathname); setTimeout(()=>openMom({post:m[1]}),300); return; }
+  m = h.match(/^#m=([\w-]{11})&c=(.+)$/);
+  if(m){ history.replaceState(history.state,'',location.pathname); setTimeout(()=>openMom({vid:m[1], c:m[2]}),300); return; }
+  m = h.match(/^#momentos$/);
+  if(m){ history.replaceState(history.state,'',location.pathname); setTimeout(()=>openMom(),300); return; }
+  m = h.match(/^#p=(\d+)$/);
   if(m){ history.replaceState(history.state,'',location.pathname); navDeep={postId:m[1]}; navSetMode('watch'); go('nav'); return; }
   m = h.match(/^#v=([\w-]*)&c=(.+)$/);
   if(m){ history.replaceState(history.state,'',location.pathname); navDeep={vid:m[1]||null, c:m[2]}; navSetMode('watch'); go('nav'); return; }

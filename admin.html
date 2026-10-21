@@ -154,6 +154,7 @@ function render(d){
     <div class="box"><h2>🔥 Rádios mais ouvidas (7 dias)</h2>${list(d.top_radios,'nome','plays')}</div>
     <div class="box"><h2>📍 Inscritos por estado</h2>${list(d.por_estado,'estado','total')}</div>
   </div>
+  <div id="parcBox"></div>
   <div id="adsBox"></div>
   <div id="navFila"></div>
   <div class="box"><h2>📲 Instalações por aparelho</h2>${list(d.instalacoes_por_tipo,'tipo','total')}
@@ -165,7 +166,7 @@ function render(d){
   </div>
   <div class="box" id="chkBox"><h2>🔎 Verificar canais (artistas e TV)</h2><p class="muted">Confere cada canal da aba TV: se o código está certo (pelo endereço @ do canal), se a foto aparece e se o nome bate. Leva uns 2 minutos.</p><button class="btn" id="chkGo">Verificar agora</button><div id="chkOut"></div></div>
   <p class="muted" style="margin:14px 0 30px;text-align:center">Atualizado em ${new Date().toLocaleString('pt-BR')}</p>`;
-  bind(); loadNavFila(); loadAds(); if($('#chkGo')) $('#chkGo').onclick=chkCanais;
+  bind(); loadNavFila(); loadAds(); loadParc(); if($('#chkGo')) $('#chkGo').onclick=chkCanais;
   if($('#areaSel')){ $('#areaSel').onchange=()=>areaChart(d); areaChart(d); }
 }
 // Verificar canais: código certo pelo @ do canal, foto e nome
@@ -189,6 +190,37 @@ async function chkCanais(){
   out.innerHTML=`<p><b>${L.length} canais conferidos • ${P.length} com problema</b></p>`+(P.length?`<div class="scroll"><table><tr><th>Canal no app</th><th>Problema</th><th>No YouTube</th><th>Código certo</th></tr>${P.map(r=>`<tr><td>${esc(r.c.name)}</td><td>${esc(r.prob)}</td><td>${esc(r.nome||'—')}</td><td>${r.certo?esc(r.certo.id+' ('+r.certo.name+')'):'—'}</td></tr>`).join('')}</table></div>
    <p class="muted" style="margin-top:10px">Copie a lista abaixo e mande para o Claude corrigir:</p><textarea id="chkTxt" rows="8" style="width:100%" readonly>${esc(txt)}</textarea><button class="btn ghost" id="chkCopy">📋 Copiar lista</button>`:'<div class="empty">Todos os canais estão certos.</div>');
   if($('#chkCopy')) $('#chkCopy').onclick=()=>{navigator.clipboard.writeText(txt).then(()=>{$('#chkCopy').textContent='✓ Copiado'}).catch(()=>{$('#chkTxt').select()})};
+}
+// Parceiros: aprovar cadastro, destacar no início e ver as músicas liberadas
+async function loadParc(){
+  const el=$('#parcBox'); if(!el) return;
+  const {data,error}=await sb.rpc('admin_partners');
+  if(error){ el.innerHTML=`<div class="box"><h2>⭐ Parceiros</h2><p class="muted">Rode o SQL dos parceiros (versão 39) no Supabase para ver esta parte.</p></div>`; return; }
+  const L=data.lista||[], M=data.musicas||[], pub=(b,p)=>CONFIG.SUPABASE_URL+'/storage/v1/object/public/'+b+'/'+p.split('/').map(encodeURIComponent).join('/');
+  const K={artista:'Artista',banda:'Banda',igreja:'Igreja',radio:'Rádio',podcast:'Podcast',criador:'Criador',empresa:'Produtora'};
+  const lnk=(u,t)=>u?`<a href="${esc(u)}" target="_blank" rel="noopener" style="color:var(--yellow)">${t}</a>`:'';
+  const card=p=>`<div class="fila"><div style="display:flex;gap:12px;align-items:flex-start">${p.photo?`<img src="${esc(pub('parceiros',p.photo))}" alt="" style="width:64px;height:64px;border-radius:50%;object-fit:cover;flex:none">`:''}
+    <div><b>${esc(p.name)}</b> ${p.featured?'⭐':''} <span class="muted">${esc(K[p.kind]||'')} · ${esc(p.genre||'')} · ${esc(p.city||'')}${p.uf?'/'+esc(p.uf):''}</span>
+    <p class="muted" style="margin:2px 0">${esc(p.bio||'')}</p>
+    <p class="muted" style="margin:2px 0">${esc(p.email||'')}${p.whatsapp?` · <a href="https://wa.me/${p.whatsapp.length<=11?'55':''}${esc(p.whatsapp)}" target="_blank" rel="noopener" style="color:var(--yellow)">WhatsApp</a>`:''} ${[lnk(p.youtube,'YouTube'),lnk(p.instagram,'Instagram'),lnk(p.spotify,'Spotify')].filter(Boolean).join(' · ')} · 🎵 ${fmt(p.musicas)} músicas</p></div></div>
+    <div class="fb">${p.status!=='aprovado'?`<button class="btn" data-pd="${p.id}|aprovado|">Aprovar</button>`:''}${p.status==='aprovado'?`<button class="btn ghost" data-pd="${p.id}|aprovado|${p.featured?0:1}">${p.featured?'Tirar destaque':'⭐ Destacar'}</button>`:''}${p.status!=='recusado'?`<button class="btn ghost" data-pd="${p.id}|recusado|0">${p.status==='aprovado'?'Remover':'Recusar'}</button>`:''}</div></div>`;
+  const pend=L.filter(p=>p.status==='pendente'), apr=L.filter(p=>p.status==='aprovado');
+  el.innerHTML=`<div class="box"><h2>⭐ Parceiros e músicas liberadas</h2>
+    <div class="tiles"><div class="tile hl"><div class="l">Esperando aprovação</div><div class="n">${fmt(data.pendentes)}</div></div>
+    <div class="tile"><div class="l">Parceiros aprovados</div><div class="n">${fmt(data.aprovados)}</div></div>
+    <div class="tile"><div class="l">Músicas liberadas</div><div class="n">${fmt(data.total_musicas)}</div></div></div>
+    <h2 style="margin-top:16px">🛡️ Cadastros novos ${pend.length?`(${pend.length})`:''}</h2>
+    ${pend.length?pend.map(card).join(''):'<div class="empty">Nenhum cadastro esperando. 🙌</div>'}
+    <h2 style="margin-top:16px">✅ Parceiros aprovados</h2>
+    ${apr.length?apr.map(card).join(''):'<div class="empty">Nenhum parceiro ainda.</div>'}
+    <h2 style="margin-top:16px">🎵 Últimas músicas enviadas</h2>
+    ${M.length?M.map(m=>`<div class="fila"><div><b>${esc(m.title)}</b> <span class="muted">${esc(m.artist||'')} · ${esc(m.genre||'')} · ▶ ${fmt(m.plays)} · 🎬 ${fmt(m.uses)}</span><audio src="${esc(pub('musicas',m.path))}" controls preload="none" style="width:100%;height:34px;margin-top:6px"></audio></div><div class="fb"><button class="btn ghost" data-sdel="${m.id}">Remover</button></div></div>`).join(''):'<div class="empty">Nenhuma música ainda.</div>'}
+    <p class="muted" style="margin-top:10px">Link para convidar artistas: <a href="/seja-parceiro.html" style="color:var(--yellow)">tocaplaylivre.com.br/seja-parceiro.html</a></p></div>`;
+  el.querySelectorAll('[data-pd]').forEach(b=>b.onclick=async()=>{ const [id,st,f]=b.dataset.pd.split('|'); b.disabled=true;
+    const {error}=await sb.rpc('admin_partner_decide',{p_id:+id, p_status:st, p_featured: f===''?null:f==='1'});
+    if(error){ alert('Erro: '+error.message); b.disabled=false; return; } loadParc(); });
+  el.querySelectorAll('[data-sdel]').forEach(b=>b.onclick=async()=>{ if(!confirm('Tirar esta música da biblioteca?')) return; b.disabled=true;
+    await sb.rpc('song_delete',{p_id:+b.dataset.sdel}); loadParc(); });
 }
 // Anúncios pagos: aprovar (entra no ar) ou recusar (devolve o dinheiro pelo Mercado Pago)
 async function loadAds(){
