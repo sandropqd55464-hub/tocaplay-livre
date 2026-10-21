@@ -27,7 +27,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="config.js"></script>
+<script src="config.js?v=55"></script>
 <style>
 :root{
   --bg:#0b1410; --bg2:#111d17; --card:#16251d; --card2:#1d3026; --line:#25392e;
@@ -1894,15 +1894,15 @@ const TV_ALL = (typeof CONFIG!=='undefined' && CONFIG.TV_CHANNELS) || [];
 const tvPath = c => ((c.url||'').match(/youtube\.com\/(@[\w.\-]+|user\/[\w.\-]+|c\/[\w.\-]+)/)||[])[1] || '';
 const TV_HID = store.get('tp_hid2', {});   // (tp_hid antigo descartado: guardava erros do servidor antigo)
 TV_ALL.forEach(c=>{ if(!c.channelId && !c.videoId && !c.playlist){ const h=TV_HID[tvPath(c).toLowerCase()]; if(h && h.id) c.channelId=h.id; } });
-const TV_CHANNELS = TV_ALL.filter(c=>c.channelId || c.videoId || c.playlist);
+const TV_CHANNELS = TV_ALL.filter(c=>c.channelId || c.videoId || c.playlist || (tvPath(c) && !(TV_HID[tvPath(c).toLowerCase()]||{}).nf));
 async function tvResolver(){
   const P = TV_ALL.filter(c=>!c.channelId && !c.videoId && !c.playlist && tvPath(c)); if(!P.length) return;
   let add = 0;
   for(let i=0;i<P.length;i+=4) await Promise.all(P.slice(i,i+4).map(async c=>{ const k=tvPath(c).toLowerCase(), h=TV_HID[k];
-    if(h && !h.id && Date.now()-h.t < 864e5) return;   // endereço não encontrado: tenta de novo só amanhã
+    if(h && !h.id && h.nf && Date.now()-h.t < 864e5) return;   // endereço não encontrado: tenta de novo só amanhã
     try{ const r=await fetch('/api/yt?h='+encodeURIComponent(tvPath(c))); if(!r.ok) return;   // erro do servidor: não anota, tenta de novo na próxima vez
       const d=await r.json(); if(d.error) return;
-      TV_HID[k]={id:d.id||null, t:Date.now()}; if(d.id){ c.channelId=d.id; TV_CHANNELS.push(c); add++; } }catch{} }));
+      TV_HID[k]={id:d.id||null, t:Date.now(), nf:!d.id}; if(d.id){ c.channelId=d.id; add++; } else { const i=TV_CHANNELS.indexOf(c); if(i>=0){ TV_CHANNELS.splice(i,1); add++; } } }catch{} }));
   store.set('tp_hid2', TV_HID); try{ localStorage.removeItem('tp_hid'); }catch{}
   if(add){ const order=(CONFIG.TV_CAT_ORDER||[]); TV_CHANNELS.forEach(c=>{ if(c.cat && !TV_CATS.includes(c.cat)) TV_CATS.push(c.cat); });
     TV_CATS.splice(1, TV_CATS.length-1, ...TV_CATS.slice(1).sort((a,b)=>{const x=order.indexOf(a),y=order.indexOf(b);return (x<0?99:x)-(y<0?99:y)}));
@@ -2407,6 +2407,15 @@ function openCine(f, lista){
 const _stopTvCine=stopTv;
 stopTv=function(){ document.body.classList.remove('cine'); const sd=$('#cineSide'); if(sd){ sd.hidden=true; sd.innerHTML=''; } $('#tvYtLink').textContent='Abrir no YouTube'; cineAtual=null; return _stopTvCine(); };
 $('#tvClose').onclick=stopTv;
+const _openTvSemId=openTv;
+openTv=async function(c,mode){
+  if(c && !c.channelId && !c.videoId && !c.playlist && tvPath(c)){
+    toast('Abrindo '+c.name+'…');
+    try{ const r=await fetch('/api/yt?h='+encodeURIComponent(tvPath(c))); const d=r.ok?await r.json():{}; if(d.id){ c.channelId=d.id; TV_HID[tvPath(c).toLowerCase()]={id:d.id,t:Date.now()}; store.set('tp_hid2',TV_HID); } }catch{}
+    if(!c.channelId){ toast('Este canal não está disponível agora.'); return; }
+  }
+  return _openTvSemId(c,mode);
+};
 const _openTvCine=openTv;
 openTv=function(c,mode){ if(document.body.classList.contains('cine')){ document.body.classList.remove('cine'); $('#cineSide').hidden=true; $('#tvYtLink').textContent='Abrir no YouTube'; cineAtual=null; } return _openTvCine(c,mode); };
 document.addEventListener('click',e=>{
@@ -2500,6 +2509,7 @@ function featStopVideo(){ featToken++; if(featYt){ try{ featYt.destroy(); }catch
 function avatarUrl(c){ if(c.avatar) return c.avatar;
   const m=(c.url||'').match(/youtube\.com\/@([\w.-]+)/);
   if(c.channelId) return `/api/yt?c=${c.channelId}&av=1${m?'&ah='+m[1]:''}`;   // nosso servidor: página do canal, depois o @
+  if(m) return `https://unavatar.io/youtube/${m[1]}?fallback=false`;
   return m ? `https://unavatar.io/youtube/${m[1]}?fallback=false` : ''; }
 // Últimos vídeos do canal que PODEM tocar aqui (os bloqueados pelo dono já vêm de fora), com título
 const ytListMem = {};

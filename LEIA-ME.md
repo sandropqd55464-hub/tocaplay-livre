@@ -1,4 +1,4 @@
-# TocaPlay VERSÃO 47 — canais novos (times, viagens) não somem mais; Cinema livre (filmes que tocam dentro do app); serviços de filmes grátis também na tela "Todos" da TV; fotos dos artistas pelo nosso servidor; Navegação na TV: tela inteira, margem de segurança e player maior; novas categorias, verificação de canais e TV com tudo de um lado
+# TocaPlay VERSÃO 49 — times, lutas e viagens aparecem na hora; config.js sem cache; canais novos (times, viagens) não somem mais; Cinema livre (filmes que tocam dentro do app); serviços de filmes grátis também na tela "Todos" da TV; fotos dos artistas pelo nosso servidor; Navegação na TV: tela inteira, margem de segurança e player maior; novas categorias, verificação de canais e TV com tudo de um lado
 
 Arquivos da raiz do GitHub: index.html, admin.html, config.js, sw.js, LEIA-ME.md
 Arquivos da pasta functions/api: yt.js e cine.js (novo)
