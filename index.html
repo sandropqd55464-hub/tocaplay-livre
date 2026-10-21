@@ -1892,7 +1892,7 @@ document.addEventListener('click', e=>{
 // Até descobrir, o canal não aparece; se o endereço estiver errado, ele simplesmente não entra.
 const TV_ALL = (typeof CONFIG!=='undefined' && CONFIG.TV_CHANNELS) || [];
 const tvPath = c => ((c.url||'').match(/youtube\.com\/(@[\w.\-]+|user\/[\w.\-]+|c\/[\w.\-]+)/)||[])[1] || '';
-const TV_HID = store.get('tp_hid', {});
+const TV_HID = store.get('tp_hid2', {});   // (tp_hid antigo descartado: guardava erros do servidor antigo)
 TV_ALL.forEach(c=>{ if(!c.channelId && !c.videoId && !c.playlist){ const h=TV_HID[tvPath(c).toLowerCase()]; if(h && h.id) c.channelId=h.id; } });
 const TV_CHANNELS = TV_ALL.filter(c=>c.channelId || c.videoId || c.playlist);
 async function tvResolver(){
@@ -1900,11 +1900,13 @@ async function tvResolver(){
   let add = 0;
   for(let i=0;i<P.length;i+=4) await Promise.all(P.slice(i,i+4).map(async c=>{ const k=tvPath(c).toLowerCase(), h=TV_HID[k];
     if(h && !h.id && Date.now()-h.t < 864e5) return;   // endereço não encontrado: tenta de novo só amanhã
-    try{ const r=await fetch('/api/yt?h='+encodeURIComponent(tvPath(c))); const d=r.ok?await r.json():{};
+    try{ const r=await fetch('/api/yt?h='+encodeURIComponent(tvPath(c))); if(!r.ok) return;   // erro do servidor: não anota, tenta de novo na próxima vez
+      const d=await r.json(); if(d.error) return;
       TV_HID[k]={id:d.id||null, t:Date.now()}; if(d.id){ c.channelId=d.id; TV_CHANNELS.push(c); add++; } }catch{} }));
-  store.set('tp_hid', TV_HID);
+  store.set('tp_hid2', TV_HID); try{ localStorage.removeItem('tp_hid'); }catch{}
   if(add){ const order=(CONFIG.TV_CAT_ORDER||[]); TV_CHANNELS.forEach(c=>{ if(c.cat && !TV_CATS.includes(c.cat)) TV_CATS.push(c.cat); });
     TV_CATS.splice(1, TV_CATS.length-1, ...TV_CATS.slice(1).sort((a,b)=>{const x=order.indexOf(a),y=order.indexOf(b);return (x<0?99:x)-(y<0?99:y)}));
+    { const ci=TV_CATS.indexOf('Cinema livre'); if(ci>0){ TV_CATS.splice(ci,1); const fi=TV_CATS.indexOf('Filmes'); TV_CATS.splice(fi>0?fi:TV_CATS.length,0,'Cinema livre'); } }
     try{ renderTv(); }catch{} }
 }
 setTimeout(tvResolver, 1500);
