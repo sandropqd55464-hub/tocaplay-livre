@@ -820,6 +820,15 @@ body.in-nav main{max-width:none;padding:0 24px}
 /* ===== Momentos: vídeos curtos em pé ===== */
 .mom{position:fixed;inset:0;z-index:300;background:#000;display:none}
 .mom.open{display:block}
+.mom-bg{position:absolute;inset:-60px;background-size:cover;background-position:center;filter:blur(40px) brightness(.38) saturate(1.3);transition:background-image .4s}
+.mom-yt{position:absolute;z-index:3;pointer-events:none;opacity:0;transition:opacity .2s;overflow:hidden;border-radius:0}
+.mom-yt.on{opacity:1}
+.mom-yt iframe{width:100%;height:100%;border:0;display:block}
+@media(min-width:700px){.mom-yt{border-radius:16px}}
+.mom-unmute{position:absolute;z-index:7;left:50%;top:84px;transform:translateX(-50%);padding:10px 18px;border-radius:999px;background:#fff;color:#111;font-weight:900;font-size:15px;box-shadow:0 6px 20px rgba(0,0,0,.5);animation:momPulse 1.4s ease-in-out infinite}
+@keyframes momPulse{50%{transform:translateX(-50%) scale(1.06)}}
+.mom-next{display:none}
+.mom-com-who{display:none}
 .mom-feed{position:absolute;inset:0;overflow-y:auto;scroll-snap-type:y mandatory;overscroll-behavior:contain;scrollbar-width:none}
 .mom-feed::-webkit-scrollbar{display:none}
 .mom-s{position:relative;height:100%;height:100dvh;scroll-snap-align:start;scroll-snap-stop:always;display:flex;align-items:center;justify-content:center;overflow:hidden}
@@ -830,7 +839,7 @@ body.in-nav main{max-width:none;padding:0 24px}
 .mom-stage .mom-tap{position:absolute;inset:0;z-index:2}
 .mom-stage.ext .mom-tap{display:none}
 .mom-load{position:absolute;inset:0;display:grid;place-items:center;color:#fff;font-weight:800;z-index:1;pointer-events:none}
-.mom-heart{position:absolute;left:50%;top:45%;font-size:96px;transform:translate(-50%,-50%) scale(.2);opacity:0;z-index:3;pointer-events:none;transition:transform .35s cubic-bezier(.2,1.6,.4,1),opacity .35s}
+.mom-heart{position:absolute;left:50%;top:45%;font-size:96px;transform:translate(-50%,-50%) scale(.2);opacity:0;z-index:5;pointer-events:none;transition:transform .35s cubic-bezier(.2,1.6,.4,1),opacity .35s}
 .mom-heart.show{transform:translate(-50%,-50%) scale(1);opacity:1}
 .mom-info{position:absolute;left:0;right:64px;bottom:0;z-index:4;padding:60px 14px calc(18px + env(safe-area-inset-bottom));background:linear-gradient(transparent,rgba(0,0,0,.75));color:#fff;pointer-events:none}
 .mom-info .who{display:flex;align-items:center;gap:8px;font-weight:900;font-size:15px;pointer-events:auto}
@@ -865,6 +874,18 @@ body.in-nav main{max-width:none;padding:0 24px}
 .mom-cf button{padding:10px 16px;border-radius:999px;background:var(--green,#19c37d);color:#06120c;font-weight:900}
 .nav-mom{display:flex;align-items:center;gap:6px;padding:8px 14px;border-radius:999px;background:linear-gradient(135deg,#ff2d55,#e5191b);color:#fff;font-weight:900;font-size:14px;border:2px solid #ffd700}
 body.mom-on{overflow:hidden}
+@media(min-width:1200px){
+  .mom-sheet{left:24px;right:auto;top:84px;bottom:24px;width:340px;max-height:none;transform:none;border-radius:18px;margin:0;background:rgba(15,28,22,.82);backdrop-filter:blur(10px);z-index:6}
+  .mom-sheet h3 button{display:none}
+  .mom-com-who{display:block;padding:10px 16px 0;font-weight:800;font-size:14px;color:var(--yellow)}.mom-com-who span{color:var(--muted);font-weight:600}
+  .mom-next{display:block;position:absolute;right:24px;top:84px;bottom:24px;width:300px;z-index:6;overflow-y:auto;padding:14px;border-radius:18px;background:rgba(15,28,22,.82);backdrop-filter:blur(10px);color:var(--txt)}
+  .mom-next h3{font-size:16px;margin-bottom:10px}
+  .mom-next button{display:flex;gap:10px;align-items:center;width:100%;text-align:left;padding:6px;border-radius:12px;color:var(--txt)}
+  .mom-next button:hover{background:rgba(255,255,255,.07)}
+  .mom-next .th{width:64px;aspect-ratio:9/14;border-radius:8px;overflow:hidden;background:#000;flex:none}.mom-next .th img{width:100%;height:100%;object-fit:cover}
+  .mom-next .tx{min-width:0}.mom-next b{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;font-size:13.5px}.mom-next small{color:var(--muted);font-size:12px}
+  .mom-arrows{right:auto;left:calc(50% + (100dvh * 9 / 32) + 90px);top:auto;bottom:40px;transform:none}
+}
 
 .feat-mom{position:absolute;z-index:5;left:12px;top:62px;display:flex;align-items:center;gap:6px;padding:8px 16px 8px 12px;border-radius:999px;background:linear-gradient(135deg,#ff2d55,#c2185b);color:#fff;font-weight:900;font-size:13px;letter-spacing:.5px;border:2px solid #ffd700;box-shadow:0 4px 14px rgba(0,0,0,.4)}
 </style>
@@ -1319,10 +1340,14 @@ body.mom-on{overflow:hidden}
 <div class="toast" id="toast"></div>
 
 <div class="mom" id="mom" aria-label="Momentos" role="dialog">
+  <div class="mom-bg" id="momBg"></div>
   <div class="mom-top"><button class="mom-x" id="momX" aria-label="Fechar Momentos">✕</button><span style="font-size:22px">📱</span><h2>Momentos</h2><button class="mom-new" id="momNew" aria-label="Postar um Momento"><b>+</b> Postar</button></div>
   <div class="mom-feed" id="momFeed"></div>
+  <div class="mom-yt" id="momYtBox"><div id="momYtP"></div></div>
+  <button class="mom-unmute" id="momUnmute" hidden>🔊 Toque para ativar o som</button>
+  <div class="mom-next" id="momNext"></div>
   <div class="mom-arrows"><button id="momUp" aria-label="Anterior">▲</button><button id="momDown" aria-label="Próximo">▼</button></div>
-  <div class="mom-sheet" id="momSheet"><h3><span>Comentários <span id="momComN"></span></span><button id="momComX" aria-label="Fechar">✕</button></h3>
+  <div class="mom-sheet" id="momSheet"><h3><span>Comentários <span id="momComN"></span></span><button id="momComX" aria-label="Fechar">✕</button></h3><p class="mom-com-who" id="momComWho"></p>
     <div class="mom-cl" id="momComList"></div>
     <form class="mom-cf" id="momComForm"><input id="momComTxt" maxlength="500" placeholder="Escreva um comentário…" autocomplete="off" enterkeyhint="send"><button>Enviar</button></form></div>
 </div>
@@ -3749,43 +3774,84 @@ async function navFetchOne(it, el){
   try{ const r=await fetch('https://www.youtube.com/oembed?format=json&url='+encodeURIComponent('https://www.youtube.com/shorts/'+it.vid)); if(!r.ok) return;
     const d=await r.json(); if(d.title){ it.title=d.title; el.querySelector('[data-mt]').textContent=d.title; try{ navTitleCache[it.vid]=d.title; }catch{} } }catch{}
 }
+// Um player só do YouTube para todos os Momentos: o som ligado uma vez continua nos próximos vídeos
+let momYT=null, momYTReady=false, momYTit=null, momYTok=false, momBlocked=false, momScrollT=null;
+function momStage(n){ return document.querySelector(`#momFeed [data-mi="${n}"] .mom-stage`); }
+function momLayerPlace(){
+  const st=momStage(momI), L=$('#momYtBox'); if(!st) return;
+  const r=st.getBoundingClientRect(), R=$('#mom').getBoundingClientRect();
+  Object.assign(L.style,{left:(r.left-R.left)+'px', top:(r.top-R.top)+'px', width:r.width+'px', height:r.height+'px'});
+}
+function momHint(on){ momBlocked=on; $('#momUnmute').hidden=!on; }
+function momUnmute(){   // um toque em qualquer lugar liga o som
+  momMuted=false; momHint(false); momSoundIcon();
+  if(momYT){ try{ momYT.unMute(); momYT.setVolume(100); momYT.playVideo(); }catch{} }
+  const v=momStage(momI)?.querySelector('video'); if(v){ v.muted=false; v.play().catch(()=>{}); }
+  if(!audio.paused) audio.pause();
+}
 function momStop(){
-  clearTimeout(momViewT);
-  if(momP){ try{ momP.destroy(); }catch{} momP=null; }
-  document.querySelectorAll('#momFeed .mom-stage').forEach(s=>{ s.querySelectorAll('video,iframe,div[id^=momYt]').forEach(x=>{ try{ x.pause && x.pause(); }catch{} x.remove(); }); const l=s.querySelector('.mom-load'); if(l) l.style.display=''; });
+  clearTimeout(momViewT); momYTit=null; momYTok=false;
+  if(momYT){ try{ momYT.pauseVideo(); }catch{} }
+  $('#momYtBox').classList.remove('on');
+  document.querySelectorAll('#momFeed .mom-stage').forEach(s=>{ s.querySelectorAll('video,iframe').forEach(x=>{ try{ x.pause && x.pause(); }catch{} x.remove(); }); const l=s.querySelector('.mom-load'); if(l) l.style.display=''; });
 }
 function momSoundIcon(){ document.querySelectorAll('#momFeed [data-ma=sound] i').forEach(i=>i.textContent=momMuted?'🔇':'🔊'); }
+function momYtStart(it){
+  try{ if(momMuted) momYT.mute(); else { momYT.unMute(); momYT.setVolume(100); } momYT.playVideo(); }catch{}
+  setTimeout(()=>{   // o navegador não deixou tocar com som: toca mudo e mostra o aviso "toque para ativar o som"
+    if(momYTit!==it || momYTok) return;
+    let st=-1; try{ st=momYT.getPlayerState(); }catch{}
+    if(st===3) return;   // ainda carregando: espera
+    try{ momYT.mute(); momYT.playVideo(); }catch{} if(!momMuted) momHint(true);
+  },2500);
+}
+function momYtPlay(it){
+  momYTit=it; momYTok=false; $('#momYtBox').classList.remove('on'); momLayerPlace();
+  whenYT(()=>{
+    if(momYTit!==it) return;
+    if(!momYT){
+      momYT=new YT.Player('momYtP',{width:'100%', height:'100%', videoId:it.vid,
+        playerVars:{autoplay:1, playsinline:1, controls:0, rel:0, modestbranding:1, iv_load_policy:3, fs:0, disablekb:1},
+        events:{
+          onReady:()=>{ momYTReady=true; if(momYTit){ if(momYTit!==it) momYT.loadVideoById(momYTit.vid); momYtStart(momYTit); } },
+          onStateChange:e=>{ const cur=momYTit; if(!cur) return;
+            if(e.data===1){ momYTok=true; momLayerPlace(); $('#momYtBox').classList.add('on'); const l=momStage(momI)?.querySelector('.mom-load'); if(l) l.style.display='none';
+              try{ if(!momYT.isMuted()) momHint(false); }catch{} if(!audio.paused && !momMuted && !momBlocked) audio.pause(); }
+            if(e.data===0){ try{ momYT.seekTo(0); momYT.playVideo(); }catch{} } },
+          onError:()=>{ const cur=momYTit; const l=momStage(momI)?.querySelector('.mom-load'); if(l){ l.style.display=''; l.textContent='Vídeo indisponível'; }
+            setTimeout(()=>{ if(cur && momFeed[momI]===cur) momGo(1); },1200); }
+        }});
+    } else if(momYTReady){ try{ momYT.loadVideoById(it.vid); }catch{} momYtStart(it); }
+  });
+}
+function momBackdrop(it){
+  const u = it.post ? postThumb(it.post) : `https://i.ytimg.com/vi/${it.vid}/hqdefault.jpg`;
+  $('#momBg').style.backgroundImage = u ? `url("${u}")` : '';
+}
+function momRenderNext(){
+  const box=$('#momNext'); if(!box || getComputedStyle(box).display==='none') return;
+  const list=momFeed.slice(momI+1, momI+7);
+  box.innerHTML = `<h3>A seguir</h3>` + (list.length ? list.map(it=>{ const n=momFeed.indexOf(it), th=it.post?postThumb(it.post):`https://i.ytimg.com/vi/${it.vid}/mqdefault.jpg`;
+    return `<button data-mnext="${n}"><span class="th">${th?`<img src="${esc(th)}" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="this.remove()">`:''}</span><span class="tx"><b>${esc(it.title||it.c.name)}</b><small>${esc(it.c.name)}</small></span></button>`; }).join('') : '<p style="color:var(--muted);font-size:13px">Carregando…</p>');
+}
 function momActivate(n){
   if(n===momI || !momFeed[n]) return;
   const prev=momFeed[momI];
   if(prev && momStartT){ const s=(Date.now()-momStartT)/1000; navLearn(prev.c, s<2 ? -0.5 : s>12 ? 1 : 0); }   // pulou rápido diminui, assistiu aumenta
   momStop(); momI=n; momStartT=Date.now();
-  const it=momFeed[n], st=document.querySelector(`#momFeed [data-mi="${n}"] .mom-stage`); if(!st) return;
+  const it=momFeed[n], st=momStage(n); if(!st) return;
   if(n>=momFeed.length-3) momMore();
-  momInfo(it);
+  momBackdrop(it); momComRender(it); momInfo(it); momRenderNext();
   momViewT=setTimeout(()=>{ if(momFeed[momI]===it) navRpc('nav_event',{p_vid:it.vid, p_dev:deviceId(), p_kind:'view', p_ch:it.c.name}); },3000);
   const hideLoad=()=>{ const l=st.querySelector('.mom-load'); if(l) l.style.display='none'; };
   if(it.post && it.post.platform==='upload'){
     const v=document.createElement('video'); v.src=storageUrl(it.post.ref); v.loop=true; v.playsInline=true; v.muted=momMuted; v.setAttribute('playsinline','');
     st.insertBefore(v, st.querySelector('.mom-tap')); v.onplaying=hideLoad;
-    v.play().catch(()=>{ v.muted=true; momMuted=true; momSoundIcon(); v.play().catch(()=>{}); }); return;
+    v.play().catch(()=>{ v.muted=true; if(!momMuted) momHint(true); v.play().catch(()=>{}); }); return;
   }
   if(it.post){ const f=document.createElement('iframe'); f.src=postEmbed(it.post); f.allow='autoplay; encrypted-media; fullscreen; picture-in-picture'; f.referrerPolicy='strict-origin-when-cross-origin';
     st.insertBefore(f, st.querySelector('.mom-tap')); f.onload=hideLoad; return; }
-  const holder=document.createElement('div'); holder.id='momYt'+n; st.insertBefore(holder, st.querySelector('.mom-tap'));
-  whenYT(()=>{
-    if(momFeed[momI]!==it || !document.getElementById('momYt'+n)) return;
-    let ok=false;
-    momP=new YT.Player('momYt'+n,{width:'100%',height:'100%',videoId:it.vid,
-      playerVars:{autoplay:1, playsinline:1, controls:0, rel:0, modestbranding:1, iv_load_policy:3, loop:1, playlist:it.vid, mute:momMuted?1:0, fs:0, disablekb:1},
-      events:{
-        onReady:e=>{ try{ if(momMuted) e.target.mute(); else e.target.unMute(); e.target.playVideo(); }catch{}
-          setTimeout(()=>{ if(!ok && momP===e.target){ try{ e.target.mute(); e.target.playVideo(); momMuted=true; momSoundIcon(); }catch{} } },1800); },   // o navegador bloqueou o som: toca mudo e mostra 🔇
-        onStateChange:e=>{ if(e.data===1){ ok=true; hideLoad(); if(!audio.paused) audio.pause(); } if(e.data===0){ try{ e.target.seekTo(0); e.target.playVideo(); }catch{} } },
-        onError:()=>{ const l=st.querySelector('.mom-load'); if(l){ l.style.display=''; l.textContent='Vídeo indisponível'; }
-          setTimeout(()=>{ if(momFeed[momI]===it) momGo(1); },1200); }
-      }});
-  });
+  momYtPlay(it);
 }
 async function momInfo(it){
   const el=document.querySelector(`#momFeed [data-mi="${momFeed.indexOf(it)}"]`); if(!el) return;
@@ -3793,6 +3859,7 @@ async function momInfo(it){
   it.info=d;
   const lk=el.querySelector('[data-ma=like]'); lk.classList.toggle('on', !!d.liked); lk.querySelector('span').textContent=fmtN(d.likes);
   el.querySelector('[data-ma=com] span').textContent=fmtN((d.comments||[]).length);
+  if(momFeed[momI]===it) momComRender(it);
   if(d.hidden){ const l=el.querySelector('.mom-load'); if(l){ l.style.display=''; l.textContent='Vídeo em revisão'; } setTimeout(()=>{ if(momFeed[momI]===it) momGo(1); },1000); }
 }
 function momGo(step){ const j=momI+step, el=document.querySelector(`#momFeed [data-mi="${j}"]`); if(el) el.scrollIntoView({behavior:'smooth'}); else if(step>0) momMore(); }
@@ -3804,12 +3871,13 @@ async function momLike(it, el, force){
   const d=await navRpc('nav_like',{p_vid:it.vid, p_dev:deviceId(), p_ch:it.c.name});
   if(d){ sp.textContent=fmtN(d.likes); b.classList.toggle('on', !!d.liked); }
 }
-function momComOpen(it){
+function momComRender(it){
   const list=(it.info && it.info.comments)||[];
   $('#momComN').textContent=list.length?`(${fmtN(list.length)})`:'';
+  $('#momComWho').innerHTML = `${esc(it.c.name)}${it.title?` · <span>${esc(it.title)}</span>`:''}`;
   $('#momComList').innerHTML = list.length ? list.map(c=>`<div><b>${esc(c.name)}</b>${esc(c.body)}</div>`).join('') : '<div style="color:var(--muted)">Seja o primeiro a comentar 💬</div>';
-  $('#momSheet').classList.add('open'); setTimeout(()=>$('#momComTxt').focus(),250);
 }
+function momComOpen(it){ momComRender(it); $('#momSheet').classList.add('open'); setTimeout(()=>$('#momComTxt').focus(),250); }
 $('#momComX').onclick=()=>$('#momSheet').classList.remove('open');
 $('#momComForm').onsubmit=async e=>{
   e.preventDefault(); const it=momFeed[momI]; if(!it) return;
@@ -3828,18 +3896,19 @@ $('#momComForm').onsubmit=async e=>{
 $('#momFeed').addEventListener('click', async e=>{
   const s=e.target.closest('.mom-s'); if(!s) return; const n=+s.dataset.mi, it=momFeed[n];
   const a=e.target.closest('[data-ma]');
+  if(!a && momBlocked){ momUnmute(); return; }
   if(!a){ if(e.target.closest('.mom-tap')){   // um toque: pausa/continua · dois toques: curte
       const now=Date.now();
       if(s._t && now-s._t<300){ s._t=0; clearTimeout(s._tt); const h=s.querySelector('.mom-heart'); h.classList.add('show'); setTimeout(()=>h.classList.remove('show'),700); momLike(it,s,true); return; }
       s._t=now; s._tt=setTimeout(()=>{ s._t=0; const v=s.querySelector('video');
         if(v){ v.paused ? v.play() : v.pause(); return; }
-        if(momP && momP.getPlayerState){ try{ momP.getPlayerState()===1 ? momP.pauseVideo() : momP.playVideo(); }catch{} } },300); }
+        if(momYT && momYT.getPlayerState){ try{ momYT.getPlayerState()===1 ? momYT.pauseVideo() : momYT.playVideo(); }catch{} } },300); }
     return; }
   const k=a.dataset.ma;
   if(k==='like') return momLike(it,s);
   if(k==='com') return momComOpen(it);
-  if(k==='sound'){ momMuted=!momMuted; momSoundIcon(); const v=s.querySelector('video'); if(v) v.muted=momMuted;
-    if(momP){ try{ momMuted ? momP.mute() : (momP.unMute(), momP.setVolume(100)); }catch{} } if(!momMuted && !audio.paused) audio.pause(); return; }
+  if(k==='sound'){ if(momBlocked || momMuted){ momUnmute(); return; }
+    momMuted=true; momSoundIcon(); const v=s.querySelector('video'); if(v) v.muted=true; if(momYT){ try{ momYT.mute(); }catch{} } return; }
   if(k==='share'){
     const url = it.post ? location.origin+'/#m=p'+it.post.id : location.origin+'/#m='+encodeURIComponent(it.vid)+'&c='+encodeURIComponent(it.c.name);
     const text=`Olha esse Momento de ${it.c.name} no TocaPlay Livre:`;
@@ -3867,8 +3936,13 @@ function closeMom(){ momStop(); momI=-1; $('#momSheet').classList.remove('open')
 $('#momX').onclick=()=>history.state?.mom ? history.back() : closeMom();
 $('#momUp').onclick=()=>momGo(-1); $('#momDown').onclick=()=>momGo(1);
 $('#momNew').onclick=()=>{ if(history.state?.mom) history.back(); closeMom(); setTimeout(()=>openCriar(),50); };
+$('#momUnmute').onclick=e=>{ e.stopPropagation(); momUnmute(); };
+$('#momNext').addEventListener('click', e=>{ const b=e.target.closest('[data-mnext]'); if(!b) return; const el=document.querySelector(`#momFeed [data-mi="${b.dataset.mnext}"]`); if(el) el.scrollIntoView({behavior:'smooth'}); });
+$('#momFeed').addEventListener('scroll', ()=>{ $('#momYtBox').classList.remove('on'); clearTimeout(momScrollT);
+  momScrollT=setTimeout(()=>{ momLayerPlace(); const it=momFeed[momI]; if(it && !it.post && momYTok) $('#momYtBox').classList.add('on'); },180); }, {passive:true});
+addEventListener('resize', ()=>{ if(momOn()) momLayerPlace(); });
 document.addEventListener('keydown', e=>{ if(!momOn()) return; if(e.key==='ArrowDown'){ e.preventDefault(); momGo(1); } if(e.key==='ArrowUp'){ e.preventDefault(); momGo(-1); } if(e.key==='Escape') $('#momX').click(); });
-document.addEventListener('visibilitychange', ()=>{ if(!momOn()) return; if(document.hidden){ const v=document.querySelector('#momFeed video'); if(v) v.pause(); if(momP && momP.pauseVideo) try{ momP.pauseVideo(); }catch{} } });
+document.addEventListener('visibilitychange', ()=>{ if(!momOn()) return; if(document.hidden){ const v=document.querySelector('#momFeed video'); if(v) v.pause(); if(momYT && momYT.pauseVideo) try{ momYT.pauseVideo(); }catch{} } });
 
 $('#navMomBtn').onclick=()=>openMom();
 // Links das páginas de conteúdo: /#radios=gospel, /#radios=romanticas, /#canal=Nome do canal
