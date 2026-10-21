@@ -148,6 +148,8 @@ h2{font-size:18px;font-weight:700;margin:20px 0 10px}
 .ch.song .av::after{content:"▶";position:absolute;right:4px;bottom:4px;width:24px;height:24px;border-radius:50%;background:var(--green);color:#06120c;font-size:11px;display:grid;place-items:center}
 .ch.song small{display:block;color:var(--muted);font-weight:600;font-size:11px;margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .row-link{color:var(--yellow);font-weight:800;font-size:14px;text-decoration:none}
+.parc-invite{flex:none;display:flex;flex-direction:column;justify-content:center;gap:4px;max-width:300px;padding:10px 14px;border-radius:14px;border:1.5px dashed rgba(255,215,0,.6);color:var(--txt);text-decoration:none;font-size:13px;align-self:center}
+.parc-invite b{color:var(--yellow);font-size:15px}.parc-invite span{color:var(--muted)}
 .ch.radio .av img{object-fit:contain;padding:6px;background:#fff}
 .row-head button{font-size:13.5px;font-weight:600;color:var(--green)}
 .ag{display:grid;grid-template-columns:repeat(auto-fill,minmax(96px,1fr));gap:18px 12px}
@@ -495,6 +497,22 @@ body.tvfull .tv-full-exit{display:block;position:absolute;z-index:3;top:16px;rig
 .pl-ad.pulsar{animation:adPulse .8s ease-in-out 3}
 @keyframes adPulse{50%{transform:scale(1.05);box-shadow:0 0 0 4px rgba(141,116,255,.35),0 0 28px rgba(109,74,255,.7)}}
 @media (prefers-reduced-motion:reduce){.pl-ad.pulsar{animation:none}}
+/* Card "Seja parceiro" (dourado, abaixo do Anuncie aqui) */
+.pl-ad.pl-parc{background:linear-gradient(135deg,#b8860b,#ffd700 45%,#8a6100);border-color:#ffe680;color:#1a1300;box-shadow:0 8px 24px rgba(255,200,0,.25);position:relative;overflow:hidden}
+.pl-ad.pl-parc .ic{background:rgba(0,0,0,.15)}
+.sp-gal{margin:12px 0 4px;padding:12px 10px;border-radius:16px;background:linear-gradient(180deg,rgba(255,215,0,.08),rgba(255,215,0,.02));border:1px solid rgba(255,215,0,.25)}
+.sp-gal h3{font-size:13px;letter-spacing:.5px;color:var(--yellow);margin:0 4px 10px}
+.sp-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px 6px}
+.sp-grid button{display:flex;flex-direction:column;align-items:center;text-align:center;min-width:0;color:var(--txt)}
+.sp-grid .av{position:relative;width:54px;height:54px;border-radius:50%;overflow:hidden;display:grid;place-items:center;font-weight:900;font-size:15px;color:#1a1300;background:linear-gradient(135deg,#ffd700,#b8860b);border:2px solid #ffd700;box-shadow:0 0 0 3px rgba(255,215,0,.15)}
+.sp-grid .av img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.sp-grid b{font-size:11.5px;margin-top:5px;max-width:100%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.sp-grid small{font-size:10px;color:var(--muted);max-width:100%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.sp-grid button:hover .av{transform:scale(1.06)}
+.pl-ad.pl-parc small{opacity:.8;font-weight:600}
+.pl-ad.pl-parc::after{content:"";position:absolute;top:0;left:-60%;width:40%;height:100%;background:linear-gradient(100deg,transparent,rgba(255,255,255,.55),transparent);transform:skewX(-20deg);animation:parcShine 3.5s ease-in-out infinite}
+@keyframes parcShine{0%,60%{left:-60%}100%{left:130%}}
+@media (prefers-reduced-motion:reduce){.pl-ad.pl-parc::after{animation:none}}
 body.gym .gym-ui{display:block;position:absolute;top:0;right:0;bottom:0;left:0;inset:0;pointer-events:none;
   padding:max(14px,env(safe-area-inset-top)) max(16px,env(safe-area-inset-right)) max(14px,env(safe-area-inset-bottom)) max(16px,env(safe-area-inset-left))}
 .gym-top{display:flex;justify-content:space-between;align-items:flex-start;gap:12px}
@@ -1094,6 +1112,7 @@ body.mom-on{overflow:hidden}
         </div>
         <button class="pl-cta" data-plnew><div class="ic"><svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.4" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg></div><b>Criar sua playlist</b></button>
         <a class="pl-ad" href="anunciar.html"><div class="ic">📣</div><b>Anuncie aqui</b><small>Sua marca para milhares de ouvintes</small></a>
+        <a class="pl-ad pl-parc" href="seja-parceiro.html"><div class="ic">⭐</div><b>Seja parceiro</b><small>Cantor, banda, igreja ou rádio? Seu trabalho no TocaPlay, grátis</small></a>
       </aside>
       <div class="gym-ui" id="gymUi">
         <div class="gym-top">
@@ -1864,9 +1883,10 @@ function renderPlaylists(){
       <div class="ic" style="background:${p.color}">${plIcon(p)}</div>
       <div><b>${esc(p.name)}</b><small>${p.stations.length} rádio${p.stations.length===1?'':'s'}</small></div></button>`).join('');
   // "Anuncie aqui" fica fixo logo depois de "Criar", mesmo quando a pessoa já tem playlists
-  const ad = `<a class="pl-ad" href="anunciar.html"><div class="ic">📣</div><b>Anuncie aqui</b><small>Sua marca para milhares de ouvintes</small></a>`;
+  const ad = `<a class="pl-ad" href="anunciar.html"><div class="ic">📣</div><b>Anuncie aqui</b><small>Sua marca para milhares de ouvintes</small></a>`
+    + `<a class="pl-ad pl-parc" href="seja-parceiro.html"><div class="ic">⭐</div><b>Seja parceiro</b><small>Cantor, banda, igreja ou rádio? Seu trabalho no TocaPlay, grátis</small></a>`;
   $('#homePl').innerHTML = cta + ad + cards;
-  $('#sidePl').innerHTML = cta + ad + (pls.length ? '<h3>SUAS PLAYLISTS</h3>' + cards : '<p style="color:var(--muted);font-size:13.5px;margin:12px 4px;line-height:1.45">Junte suas rádios preferidas em listas: uma para o trabalho, outra para relaxar, outra para o futebol…</p>');
+  $('#sidePl').innerHTML = cta + ad + `<div id="sideParc">${sideParcHTML||""}</div>` + (pls.length ? '<h3>SUAS PLAYLISTS</h3>' + cards : '<p style="color:var(--muted);font-size:13.5px;margin:12px 4px;line-height:1.45">Junte suas rádios preferidas em listas: uma para o trabalho, outra para relaxar, outra para o futebol…</p>');
   if(openPl && curView==='playlist') renderPlView();
   adPulseWatch();
 }
@@ -3623,14 +3643,22 @@ $('#rowCriaAll').onclick = ()=>{ if(navTab!=='geral'){ document.querySelector('[
 
 // ===== Artistas parceiros e Músicas liberadas (seja-parceiro.html) =====
 let homeParc=[], homeSongs=[];
+var sideParcHTML='';   // galeria dos parceiros na coluna da esquerda, logo abaixo do "Seja parceiro"
+function renderSideParc(){
+  const list=homeParc.slice(0,12);
+  sideParcHTML = list.length ? `<div class="sp-gal"><h3>⭐ Nossos parceiros</h3><div class="sp-grid">${list.map(p=>{ const i=homeParc.indexOf(p);
+      return `<button data-parc="${i}" title="${esc(p.name)}"><span class="av">${esc(initials(p.name))}${p.photo?`<img src="${esc(pubFile('parceiros',p.photo))}" alt="" loading="lazy" onerror="this.remove()">`:''}</span><b>${esc(p.name)}</b><small>${esc(PARC_KIND[p.kind]||'')}${p.genre?' · '+esc(p.genre):''}</small></button>`; }).join('')}</div></div>` : '';
+  const el=document.getElementById('sideParc'); if(el) el.innerHTML=sideParcHTML;
+}
 const pubFile = (b,p) => `${CONFIG.SUPABASE_URL}/storage/v1/object/public/${b}/${String(p).split('/').map(encodeURIComponent).join('/')}`;
 const PARC_KIND={artista:'Artista',banda:'Banda',igreja:'Igreja',radio:'Rádio',podcast:'Podcast',criador:'Criador',empresa:'Produtora'};
 async function renderHomeParc(){
   const d = await navRpc('partners_public', {}); homeParc = Array.isArray(d) ? d : [];
-  if(!homeParc.length) return;
+  if(!d && !sb) return;
   $('#rowParc').innerHTML = homeParc.map((p,i)=>`<button class="ch parc" data-parc="${i}"><div class="av" style="background:linear-gradient(135deg,#c99a1c,#6b4a00)">${esc(initials(p.name))}${p.photo?`<img src="${esc(pubFile('parceiros',p.photo))}" alt="" loading="lazy" onerror="this.remove()">`:''}</div><span>${esc(p.name)}<b class="ok">✓</b></span></button>`).join('')
-    + `<a class="ch parc join" href="seja-parceiro.html"><div class="av">+</div><span>Seja parceiro</span></a>`;
-  $('#rowParcBlock').hidden=false;
+    + `<a class="ch parc join" href="seja-parceiro.html"><div class="av">+</div><span>Seja parceiro</span></a>`
+    + (homeParc.length ? '' : `<a class="parc-invite" href="seja-parceiro.html"><b>Seu trabalho aqui, de graça</b><span>Cantor, banda, igreja, rádio ou podcast: cadastre-se e apareça para milhares de ouvintes.</span></a>`);
+  $('#rowParcBlock').hidden=false; renderSideParc();
   requestAnimationFrame(()=>rowArrows($('#rowParc').closest('.row-wrap')));
 }
 function parcChannel(p){ return {name:p.name, channelId:p.channel_id, cat:'Parceiros', sub:p.genre||'Parceiros', short:initials(p.name), color:'linear-gradient(135deg,#c99a1c,#6b4a00)', avatar:p.photo?pubFile('parceiros',p.photo):'', desc:p.bio||''}; }
