@@ -4011,7 +4011,13 @@ $('#navMomBtn').onclick=()=>openMom();
 
 /* Contagem de acessos: 1 registro por aparelho por dia (anônimo), sem robôs */
 function isBot(){ return store.get('tp_dc',0)===1 || /bot|crawl|spider|slurp|lighthouse|headless|preview|facebookexternalhit|whatsapp|bingpreview|google-inspectiontool/i.test(navigator.userAgent) || navigator.webdriver === true; }
-(async function logVisit(){
+// v53: só conta depois de um sinal de pessoa real (tocar, clicar, rolar, digitar) ou 10 segundos com a tela visível
+function whenHuman(cb){
+  let done=false; const go=()=>{ if(done) return; done=true; ['pointerdown','keydown','wheel','touchstart','scroll'].forEach(e=>removeEventListener(e,go,true)); clearInterval(iv); cb(); };
+  ['pointerdown','keydown','wheel','touchstart','scroll'].forEach(e=>addEventListener(e,go,{capture:true,passive:true}));
+  let vis=0; const iv=setInterval(()=>{ if(document.visibilityState==='visible' && document.hasFocus()) vis++; if(vis>=10) go(); },1000);
+}
+whenHuman(async function logVisit(){
   if(!sb || isBot()) return;
   const dev = deviceId(), today = new Date().toISOString().slice(0,10);
   if(store.get('tp_visit_day','')===today) return;
@@ -4021,7 +4027,7 @@ function isBot(){ return store.get('tp_dc',0)===1 || /bot|crawl|spider|slurp|lig
   if(geo.dc){ store.set('tp_dc', 1); return; }   // acesso vindo de servidor (robô de nuvem): não conta
   sb.from('visits').insert({device_id:dev, city:geo.city||null, region:geo.region||null, region_code:geo.regionCode||null, country:geo.country||null})
     .then(({error})=>{ if(!error) store.set('tp_visit_day', today); });
-})();
+});
 /* Acesso por área: 1 registro por aparelho, por área, por dia */
 // Só telas/áreas contam como acesso. Cliques (banner, sub-abas, envio) não entram; nomes repetidos viram um só.
 const AREA_ALIAS = {'Busca de rádios':'Rádios','Podcasts (áudio)':'Podcasts','TV · Podcasts':'Podcasts'};
