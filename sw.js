@@ -1,6 +1,6 @@
 // Service worker: deixa o app instalável e abre rápido mesmo com internet fraca.
 // Ao mudar o index.html, aumente a versão abaixo para os celulares pegarem a nova.
-const CACHE = 'tocaplay-v59';
+const CACHE = 'tocaplay-v60';
 const SHELL = ['/', '/index.html', '/manifest.json', '/icon.svg', '/icon-192.png', '/icon-512.png', '/privacidade.html'];
 
 self.addEventListener('install', e => {
