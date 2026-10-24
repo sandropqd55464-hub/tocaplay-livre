@@ -4,6 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>TocaPlay Livre</title>
+<script src="/i18n.js?v=1"></script>
 <meta name="description" content="TocaPlay Livre - Rádios do Brasil 100% gratuito">
 <meta name="theme-color" content="#0b1410">
 <meta property="og:type" content="website">
@@ -1990,7 +1991,7 @@ function plLink(p){
 }
 $('#plShare').onclick = ()=>{
   if(!openPl.stations.length) return toast('Adicione rádios ou músicas antes de compartilhar');
-  openShare({url:plLink(openPl), msg:`Ouve a minha playlist *${openPl.name}* no *TocaPlay Livre*:`});
+  openShare({url:plLink(openPl), msg:tpT(`Ouve a minha playlist *${openPl.name}* no *TocaPlay Livre*:`)});
 };
 let pendingImport=null;
 function checkImport(){
@@ -2253,7 +2254,7 @@ $('#tvFullExit').onclick = tvFullOff;
 addEventListener('keydown', e=>{ if(document.body.classList.contains('tvfull') && (e.key==='Escape'||e.key==='Backspace'||e.keyCode===461||e.key==='GoBack')){ e.preventDefault(); tvFullOff(); } });
 $('#tvModeLive').onclick = ()=>tvCurrent && openTv(tvCurrent,'live');
 $('#tvModeVid').onclick = ()=>tvCurrent && openTv(tvCurrent,'videos');
-$('#tvWa').onclick = ()=>tvCurrent && openWhatsApp(`Estou assistindo *${tvCurrent.name}* no *TocaPlay Livre*! ${SITE}`);
+$('#tvWa').onclick = ()=>tvCurrent && openWhatsApp(tpT(`Estou assistindo *${tvCurrent.name}* no *TocaPlay Livre*! ${SITE}`));
 renderTv();
 
 /* ---------- Podcasts (diretório público da Apple, sem chave) ---------- */
@@ -2609,7 +2610,7 @@ const PROMOS = [
   {promo:true, id:'rom', emoji:'💕', name:'Rádios Românticas', desc:'Músicas para o coração, ao vivo e de graça.', cta:'▶ Ouvir agora', bg:'linear-gradient(120deg,#3d0a24,#e0457b,#3d0a24)', act:()=>playRomRadio(0)},
   {promo:true, id:'grad', emoji:'📻', name:'Rádio gospel fora do app', desc:'Pode abrir o WhatsApp ou desligar a tela: a rádio continua tocando.', cta:'▶ Ouvir rádio gospel', bg:'linear-gradient(120deg,#0c1e3d,#2f6fd1,#0c1e3d)', act:()=>playGospelRadio(0)},
   {promo:true, id:'culto', emoji:'⛪', name:'Cultos e Missas ao vivo', desc:'Igrejas e santuários transmitindo agora.', cta:'▶ Assistir', bg:'linear-gradient(120deg,#1e0f3d,#7b4fd1,#1e0f3d)', act:()=>{ tvCat='Cultos e Missas'; tvSub=''; tvQ=''; renderTv(); go('tv'); }},
-  {promo:true, id:'convite', emoji:'💬', name:'Convide quem você ama', desc:'Mande o TocaPlay no WhatsApp para a família e os amigos.', cta:'💬 Enviar no WhatsApp', bg:'linear-gradient(120deg,#063d1f,#25d366,#063d1f)', act:()=>openWhatsApp(`Conhece o *TocaPlay Livre*? Milhares de rádios do Brasil ao vivo, TV e pregações, *de graça*, direto no celular: ${location.origin}`)}
+  {promo:true, id:'convite', emoji:'💬', name:'Convide quem você ama', desc:'Mande o TocaPlay no WhatsApp para a família e os amigos.', cta:'💬 Enviar no WhatsApp', bg:'linear-gradient(120deg,#063d1f,#25d366,#063d1f)', act:()=>openWhatsApp(tpT(`Conhece o *TocaPlay Livre*? Milhares de rádios do Brasil ao vivo, TV e pregações, *de graça*, direto no celular: ${location.origin}`))}
 ];
 const FEATURED = (()=>{
   const fixed = typeof CONFIG!=='undefined' && CONFIG.HOME_FEATURED;
@@ -2811,7 +2812,7 @@ $('#shareTop').onclick = ()=>openShare(null);
 $('#shareModal').addEventListener('click', async e=>{
   const b = e.target.closest('[data-net]');
   if(!b){ if(e.target.id==='shareModal') $('#shareModal').classList.remove('open'); return; }
-  const url = shareData?.url || SITE, msg = shareData?.msg || 'Conhece o *TocaPlay Livre*? Milhares de rádios do Brasil ao vivo, TV e pregações, *de graça*, direto no celular:';
+  const url = shareData?.url || SITE, msg = shareData?.msg || tpT('Conhece o *TocaPlay Livre*? Milhares de rádios do Brasil ao vivo, TV e pregações, *de graça*, direto no celular:');
   const u = encodeURIComponent(url), t = encodeURIComponent(msg);
   const links = {
     whatsapp:`https://api.whatsapp.com/send?text=${encodeURIComponent(msg+' '+url)}`,
@@ -2898,10 +2899,10 @@ $('#sleepModal').onclick = e=>{ const b=e.target.closest('[data-min]'); if(b) se
 $('#volBtn').onclick = ()=>toast('Use o volume do seu aparelho');
 const SITE = location.origin;
 function openWhatsApp(text){ window.open('https://api.whatsapp.com/send?text='+encodeURIComponent(text), '_blank'); }
-$('#waBtn').onclick = ()=>openWhatsApp(`Estou ouvindo *${current?.name||'rádio'}* ao vivo no *TocaPlay Livre*! Rádios do Brasil de graça: ${SITE}`);
-document.addEventListener('click', e=>{ if(e.target.closest('[data-invite]')) openWhatsApp(`Conhece o *TocaPlay Livre*? Milhares de rádios do Brasil ao vivo, TV e pregações, *de graça*, direto no celular: ${SITE}`); });
+$('#waBtn').onclick = ()=>openWhatsApp(tpT(`Estou ouvindo *${current?.name||'rádio'}* ao vivo no *TocaPlay Livre*! Rádios do Brasil de graça: ${SITE}`));
+document.addEventListener('click', e=>{ if(e.target.closest('[data-invite]')) openWhatsApp(tpT(`Conhece o *TocaPlay Livre*? Milhares de rádios do Brasil ao vivo, TV e pregações, *de graça*, direto no celular: ${SITE}`)); });
 $('#shareBtn').onclick = async()=>{
-  const text = `Estou ouvindo ${current?.name} no TocaPlay Livre`;
+  const text = tpT(`Estou ouvindo ${current?.name} no TocaPlay Livre`);
   try{ if(navigator.share) await navigator.share({title:'TocaPlay Livre', text, url:location.origin}); else { await navigator.clipboard.writeText(`${text} ${location.origin}`); toast('Link copiado!'); } }catch{}
 };
 
@@ -3171,7 +3172,7 @@ $('#navLike').onclick = async()=>{
 $('#navShare').onclick = async()=>{
   if(!navCur) return;
   const url = navCur.post ? location.origin + '/#p=' + navCur.post.id : location.origin + '/#v=' + encodeURIComponent(navCur.vid||'') + '&c=' + encodeURIComponent(navCur.c.name);
-  const text = `Olha esse vídeo de ${navCur.c.name} no TocaPlay Livre, de graça:`;
+  const text = tpT(`Olha esse vídeo de ${navCur.c.name} no TocaPlay Livre, de graça:`);
   try{ if(navigator.share) await navigator.share({title:'TocaPlay Livre', text, url}); else openWhatsApp(`${text} ${url}`); }catch{ return; }
   navLearn(navCur.c, 4);
   if(navCur.vid){ navRpc('nav_event', {p_vid:navCur.vid, p_dev:deviceId(), p_kind:'share', p_ch:navCur.c.name});
@@ -3388,7 +3389,7 @@ async function renderCanal(){
     const p = posts.find(x=>String(x.id)===(pl||sh||del)?.dataset[pl?'cpPlay':sh?'cpShare':'cpDel']);
     if(!p) return;
     if(pl){ navOpenPost({...p, name:n, avatar:pic}); }
-    if(sh){ const url=location.origin+'/#p='+p.id, text=`Olha o meu vídeo no TocaPlay Livre: ${p.title}`;
+    if(sh){ const url=location.origin+'/#p='+p.id, text=tpT(`Olha o meu vídeo no TocaPlay Livre: ${p.title}`);
       try{ if(navigator.share) await navigator.share({title:'TocaPlay Livre', text, url}); else openWhatsApp(`${text} ${url}`); }catch{ return; }
       navRpc('nav_event', {p_vid:'p:'+p.id, p_dev:deviceId(), p_kind:'share', p_ch:n}); }
     if(del){ if(!confirm('Apagar este vídeo do seu canal?')) return;
@@ -3939,7 +3940,7 @@ $('#momFeed').addEventListener('click', async e=>{
     momMuted=true; momSoundIcon(); const v=s.querySelector('video'); if(v) v.muted=true; if(momYT){ try{ momYT.mute(); }catch{} } return; }
   if(k==='share'){
     const url = it.post ? location.origin+'/#m=p'+it.post.id : location.origin+'/#m='+encodeURIComponent(it.vid)+'&c='+encodeURIComponent(it.c.name);
-    const text=`Olha esse Momento de ${it.c.name} no TocaPlay Livre:`;
+    const text=tpT(`Olha esse Momento de ${it.c.name} no TocaPlay Livre:`);
     try{ if(navigator.share) await navigator.share({title:'TocaPlay Livre', text, url}); else openWhatsApp(`${text} ${url}`); }catch{ return; }
     navLearn(it.c,4); navRpc('nav_event',{p_vid:it.vid, p_dev:deviceId(), p_kind:'share', p_ch:it.c.name});
   }
