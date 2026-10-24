@@ -10,5 +10,6 @@ No Supabase (SQL Editor): rodar UMA vez o supabase_v53.sql (só cria a função 
 - Painel ADM: quadro "🌍 Fora do Brasil" com a bandeira de cada país e o número de pessoas dentro dela, e as cidades de fora.
 - Painel ADM: "Federal District" agora aparece como Distrito Federal (somado ao DF).
 - Contagem de acessos mais limpa: só conta depois de a pessoa tocar, clicar, rolar ou ficar 10 s na tela; e o functions/api/geo.js reconhece as redes das empresas de nuvem (Amazon, Google, Microsoft…).
+- Correção (TV e celular): os vídeos do destaque da tela inicial não interrompem mais a rádio. Enquanto a pessoa ouve algo, o destaque mostra só a foto; na TV o destaque nunca roda vídeo.
 - Para corrigir uma tradução: arquivos de texto t1/t2/t3 (linha: português || inglês || espanhol || francês).
 (Inclui tudo das versões 50 a 52. config.js NÃO foi alterado.)
