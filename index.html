@@ -912,6 +912,11 @@ body.mom-on{overflow:hidden}
 .search .field,.field.tv-find,label.field.stickbar,.nav-search{border:2px solid var(--yellow)!important;box-shadow:0 0 0 3px rgba(255,210,63,.10),0 0 14px rgba(255,210,63,.18)}
 .search .field svg,.field.tv-find svg,label.field.stickbar svg{color:var(--yellow)}
 .search .field:focus-within,.field.tv-find:focus-within,label.field.stickbar:focus-within,.nav-search:focus-within{box-shadow:0 0 0 4px rgba(255,210,63,.22),0 0 18px rgba(255,210,63,.3)}
+
+/* v54: Modo TV leve. O navegador da TV é fraco: sem desfoque, sombras e animações a navegação fica mais solta e sobra força para o som */
+body.tvmode *,body.tvmode *::before,body.tvmode *::after{animation:none!important;transition:none!important;backdrop-filter:none!important;-webkit-backdrop-filter:none!important;box-shadow:none!important;text-shadow:none!important}
+body.tvmode .feat-media .bg{display:none!important}
+body.tvmode :focus-visible{outline:3px solid var(--yellow)!important;outline-offset:2px}
 </style>
 </head>
 <body>
@@ -1492,7 +1497,7 @@ function play(s){
   ensureRadioQueue(s);
   setTimeout(featQuiet,0);
   stopTv(); stopSong(); navPause(); $('#ytBox').hidden=true;
-  current = s; store.set('tp_last', s);
+  current = s; store.set('tp_last', s); radioOk=false; radioErr=0; wdTries=0;
   loading = true; updatePlayer();
   audio.src = s.url; audio.play().catch(err=>{ if(err.name!=='AbortError') failed(); });
   if(s.pod){ audio.playbackRate = podRate; podResumeAt = (podPos()[s.id]||0); }
@@ -1542,7 +1547,23 @@ function parseYt(url){
 }
 audio.addEventListener('waiting',()=>{loading=true;updatePlayer();});
 audio.addEventListener('pause',()=>{loading=false;updatePlayer();});
-audio.addEventListener('error',()=>{ if(audio.getAttribute('src')) failed(); });
+audio.addEventListener('error',()=>{ if(!audio.getAttribute('src')) return;
+  // v54: rádio que já estava tocando e caiu: tenta voltar sozinha (até 4 vezes) antes de avisar que saiu do ar
+  if(radioOk && listenIntent && isLiveRadio() && radioErr<4){ radioErr++; const u=audio.src; setTimeout(()=>{ if(listenIntent && audio.src===u){ audio.src=u; audio.play().catch(()=>{}); } }, 1500*radioErr); return; }
+  failed(); });
+/* v54: vigia da rádio ao vivo. Se o som parar sem a pessoa ter pausado (rede travou, TV pausou sozinha),
+   espera um pouco e reconecta. Antes a TV recarregava a rádio a cada "travadinha", o que causava as pausas. */
+let radioOk=false, radioErr=0, wdLast=-1, wdStill=0, wdTries=0;
+function isLiveRadio(){ return !!current && !current.yt && !current.pod && !current.song; }
+audio.addEventListener('playing',()=>{ radioOk=true; radioErr=0; });
+setInterval(()=>{
+  if(!listenIntent || !isLiveRadio() || !audio.getAttribute('src')){ wdStill=0; wdLast=-1; return; }
+  if(audio.paused){ if(document.body.classList.contains('tvmode') && !loading) audio.play().catch(()=>{}); return; }   // a TV pausou sozinha: volta a tocar
+  const t=audio.currentTime;
+  if(t===wdLast){ if(++wdStill>=3 && wdTries<6){ wdStill=0; wdTries++; const u=audio.src; audio.src=u; audio.play().catch(()=>{}); } }   // 12 s sem avançar: reconecta
+  else { wdStill=0; wdTries=0; }
+  wdLast=t;
+}, 4000);
 let failT=0;
 function failed(){
   loading=false; audio.pause(); audio.removeAttribute('src'); updatePlayer();
@@ -2575,9 +2596,7 @@ if(IS_TV){
   { const c=document.querySelector('.side-r .sr-card'), sd=document.querySelector('#side'); if(c && sd) sd.appendChild(c); }
   audio.preload = 'auto';
   // rádio caiu ou travou na TV: tenta reconectar sozinha até 3 vezes
-  let tvRetry = 0;
-  const reconnect = ()=>{ if(!current || current.yt || tvRetry>=3) return; tvRetry++; setTimeout(()=>{ if(audio.getAttribute('src')){ audio.load(); audio.play().catch(()=>{}); } }, 1500*tvRetry); };
-  audio.addEventListener('stalled', reconnect); audio.addEventListener('playing', ()=>{ tvRetry=0; });
+  // (v54) a reconexão agora é feita pelo vigia da rádio, que só age se o som parar de verdade
   // navegação pelas setas do controle remoto
   const focusables = ()=>[...document.querySelectorAll('header button, .view.active button, .view.active a[href], .view.active input, .view.active select, nav button, .mini button, .sheet.open button')]
     .filter(el=>{ const r=el.getBoundingClientRect(); return r.width>0 && r.height>0 && !el.disabled && getComputedStyle(el).visibility!=='hidden'; });
@@ -2748,7 +2767,7 @@ function featTimer(ms){
   clearTimeout(featT);
   const bar=$('#featProg'); bar.style.transition='none'; bar.style.width='0%'; void bar.offsetWidth;
   bar.style.transition=`width ${ms}ms linear`; bar.style.width='100%';
-  featT=setTimeout(function tick(){ if(curView==='home' && !document.hidden) featNext(); else featT=setTimeout(tick,3000); }, ms);
+  featT=setTimeout(function tick(){ if(curView==='home' && !document.hidden && !(document.body.classList.contains('tvmode') && mediaBusy())) featNext(); else featT=setTimeout(tick,3000); }, ms);
 }
 $('#featSound').onclick = e=>{ e.stopPropagation();
   if($('#featSound').classList.contains('on')){ featUserMuted=true; }
